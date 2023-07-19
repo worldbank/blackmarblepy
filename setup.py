@@ -1,4 +1,4 @@
-"""Python setup.py for project_name package"""
+"""Python setup.py for blackmarblepy package"""
 import io
 import os
 from setuptools import find_packages, setup
@@ -32,7 +32,7 @@ def read_requirements(path):
 setup(
     name="blackmarblepy",
     version=read("blackmarblepy", "VERSION"),
-    description="Black Marble NTL",
+    description="Black Marble Nighttime Lights",
     url="https://github.com/ramarty/blackmarblepy/",
     long_description=read("README.md"),
     long_description_content_type="text/markdown",

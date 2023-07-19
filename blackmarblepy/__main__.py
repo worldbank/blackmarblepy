@@ -1,6 +1,6 @@
-"""Entry point for project_name."""
+"""Entry point for blackmarblepy."""
 
-from project_name.cli import main  # pragma: no cover
+from blackmarblepy.cli import main  # pragma: no cover
 
 if __name__ == "__main__":  # pragma: no cover
     main()
