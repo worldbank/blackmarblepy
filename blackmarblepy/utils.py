@@ -178,7 +178,7 @@ def read_bm_csv(year, day, product_id):
         df['day'] = day
         return df
     except Exception as e:
-        print(f"Error with year: {year}; day: {day}")
+        #print(f"Error with year: {year}; day: {day}")
         return pd.DataFrame()
     
     time.sleep(0.1)
