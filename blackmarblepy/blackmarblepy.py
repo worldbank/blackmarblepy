@@ -8,7 +8,6 @@ import os
 import re
 import datetime 
 import tempfile
-import shutil
 import subprocess
 import glob
 import shutil

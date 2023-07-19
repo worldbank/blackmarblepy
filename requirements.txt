@@ -8,10 +8,6 @@ pandas
 numpy
 requests
 datetime
-subprocess
-glob
-shutil
-itertools
 geopandas
 rasterstats
 h5py
@@ -21,3 +17,6 @@ rasterio
 #re
 #tempfile
 #shutil
+#subprocess
+#itertools
+#glob
