@@ -7,7 +7,6 @@
 pandas
 numpy
 requests
-os
 re
 datetime
 tempfile
@@ -20,4 +19,5 @@ geopandas
 rasterstats
 h5py
 rasterio
-time
+#os
+#time
