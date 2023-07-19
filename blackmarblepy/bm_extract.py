@@ -43,7 +43,8 @@ def bm_extract(roi_sf,
                aggregation_fun = "mean",
                file_dir = None,
                file_prefix = "",
-               file_skip_if_exists = True):
+               file_skip_if_exists = True,
+               quiet = False):
 
     variable = define_variable(variable, product_id)
 
@@ -71,24 +72,28 @@ def bm_extract(roi_sf,
                 # Only make .tif if raster doesn't already exist
                 if (not file_skip_if_exists) | (not os.path.exists(out_path)):
 
-                    poly_ntl_df = bm_extract_i(roi_sf, product_id, date_i, bearer, variable, aggregation_fun, check_all_tiles_exist)
+                    poly_ntl_df = bm_extract_i(roi_sf, product_id, date_i, bearer, variable, aggregation_fun, check_all_tiles_exist, quiet)
 
                     #### Export data
-                    poly_ntl_df.to_csv(out_path, index=False)      
-                    print("File created: " + out_path)
+                    poly_ntl_df.to_csv(out_path, index=False)
+
+                    if quiet == False:      
+                        print("File created: " + out_path)
 
                 else:
-                    print('"' + out_path + '" already exists; skipping.\n')
+                    if quiet == False:
+                        print('"' + out_path + '" already exists; skipping.\n')
                     
             except:
-                print("Skipping " + str(date_i) + " due to error. Likely data is not available.\n")
+                if quiet == False:
+                    print("Skipping " + str(date_i) + " due to error. Likely data is not available.\n")
 
         r_out = None
 
     # File --------------------------------------------------------------------------
     if output_location_type == "memory":
 
-        poly_ntl_df_list = [bm_extract_i(roi_sf, product_id, date_i, bearer, variable, aggregation_fun, check_all_tiles_exist) for date_i in date]
+        poly_ntl_df_list = [bm_extract_i(roi_sf, product_id, date_i, bearer, variable, aggregation_fun, check_all_tiles_exist, quiet) for date_i in date]
         poly_ntl_df = pd.concat(poly_ntl_df_list, ignore_index=True)
 
         r_out = poly_ntl_df

@@ -42,7 +42,8 @@ def bm_raster(roi_sf,
               output_location_type="file",
               file_dir=None, 
               file_prefix="", 
-              file_skip_if_exists=True):
+              file_skip_if_exists=True,
+              quiet = False):
     
     variable = define_variable(variable, product_id)
     
@@ -69,20 +70,22 @@ def bm_raster(roi_sf,
                 # Only make .tif if raster doesn't already exist
                 if (not file_skip_if_exists) | (not os.path.exists(out_path)):
 
-                    raster_path_i = bm_raster_i(roi_sf, product_id, date_i, bearer, variable, check_all_tiles_exist)
+                    raster_path_i = bm_raster_i(roi_sf, product_id, date_i, bearer, variable, check_all_tiles_exist, quiet)
                     shutil.move(raster_path_i, out_path) # Move from tmp to main folder
-
-                    print("File created: " + out_path)
+                    
+                    if quiet == False:
+                        print("File created: " + out_path)
 
                 else:
-                    print('"' + out_path + '" already exists; skipping.\n')
+                    if quiet == False:
+                        print('"' + out_path + '" already exists; skipping.\n')
 
                 r_out = None
 
             # Memory --------------------------------------------------------------------------
             if output_location_type == "memory":
 
-                raster_path_i = bm_raster_i(roi_sf, product_id, date_i, bearer, variable, check_all_tiles_exist)
+                raster_path_i = bm_raster_i(roi_sf, product_id, date_i, bearer, variable, check_all_tiles_exist, quiet)
                 raster_path_list.append(raster_path_i) 
 
                 # Read the first file to get the dimensions and metadata
@@ -117,7 +120,8 @@ def bm_raster(roi_sf,
                 r_out = rasterio.open(os.path.join(temp_dir, tmp_raster_file_name))
                 
         except:
-            print("Skipping " + str(date_i) + " due to error. Data may not be available.\n")
+            if quiet == False:
+                print("Skipping " + str(date_i) + " due to error. Data may not be available.\n")
             r_out = None
 
     return r_out

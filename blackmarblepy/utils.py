@@ -264,7 +264,7 @@ def create_dataset_name_df(product_id, all=True, years=None, months=None, days=N
 
     return files_df
 
-def download_raster(file_name, temp_dir, variable, bearer):
+def download_raster(file_name, temp_dir, variable, bearer, quiet):
     
     # Path
     year = file_name[9:13]
@@ -274,7 +274,9 @@ def download_raster(file_name, temp_dir, variable, bearer):
     f = os.path.join(temp_dir, product_id, year, day, file_name)
 
     # Download
-    print("Downloading: " + file_name)
+    if quiet == False:
+        print("Downloading: " + file_name)
+
     wget_command = f"/usr/local/bin/wget -e robots=off -m -np .html,.tmp -nH --cut-dirs=3 'https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/5000/{product_id}/{year}/{day}/{file_name}' --header 'Authorization: Bearer {bearer}' -P {temp_dir}/" 
     #subprocess.run(wget_command, shell=True)
     subprocess.run(wget_command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -314,11 +316,12 @@ def bm_extract_i(roi_sf,
                  bearer, 
                  variable,
                  aggregation_fun,
-                 check_all_tiles_exist):
+                 check_all_tiles_exist,
+                 quiet):
     
     try:
         #### Extract data
-        raster_path_i = bm_raster_i(roi_sf, product_id, date_i, bearer, variable, check_all_tiles_exist)
+        raster_path_i = bm_raster_i(roi_sf, product_id, date_i, bearer, variable, check_all_tiles_exist, quiet)
 
         with rasterio.open(raster_path_i) as src:
             raster_data = src.read(1)
@@ -344,7 +347,8 @@ def bm_raster_i(roi_sf,
                 date, 
                 bearer, 
                 variable, 
-                check_all_tiles_exist):
+                check_all_tiles_exist,
+                quiet):
     
     #### Prep files to download
     
@@ -397,7 +401,7 @@ def bm_raster_i(roi_sf,
     
         for file_name in bm_files_df['name']:
 
-            download_raster(file_name, temp_dir, variable, bearer)
+            download_raster(file_name, temp_dir, variable, bearer, quiet)
 
         #### Mosaic together
         # List of raster files to be mosaiced
