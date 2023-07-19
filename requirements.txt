@@ -8,7 +8,6 @@ pandas
 numpy
 requests
 datetime
-shutil
 subprocess
 glob
 shutil
@@ -21,3 +20,4 @@ rasterio
 #time
 #re
 #tempfile
+#shutil
