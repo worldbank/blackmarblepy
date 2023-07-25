@@ -278,13 +278,17 @@ def download_raster(file_name, temp_dir, variable, bearer, quiet):
         print("Downloading: " + file_name)
 
     wget_command = f"/usr/local/bin/wget -e robots=off -m -np .html,.tmp -nH --cut-dirs=3 'https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/5000/{product_id}/{year}/{day}/{file_name}' --header 'Authorization: Bearer {bearer}' -P {temp_dir}/" 
-    #subprocess.run(wget_command, shell=True)
-    subprocess.run(wget_command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.run(wget_command, shell=True)
+    #subprocess.run(wget_command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     
     # Convert to raster
     file_name_tif = re.sub(".h5", ".tif", file_name)
 
     file_to_raster(f, variable, os.path.join(temp_dir, 'tif_files_tmp', file_name_tif))
+    
+    #shutil.rmtree(os.path.join(temp_dir, product_id), ignore_errors=True)
+    
+    os.remove(os.path.join(temp_dir, file_name)) # Delete .h5 file
     
     return None
 
@@ -386,7 +390,7 @@ def bm_raster_i(roi_sf,
     
     temp_dir = tempfile.gettempdir()
 
-    shutil.rmtree(os.path.join(temp_dir, product_id), ignore_errors=True)
+    #shutil.rmtree(os.path.join(temp_dir, product_id), ignore_errors=True)
 
     #### Create directory for tif files
     shutil.rmtree(os.path.join(temp_dir, 'tif_files_tmp'), ignore_errors=True)
@@ -401,6 +405,7 @@ def bm_raster_i(roi_sf,
     
         for file_name in bm_files_df['name']:
 
+            # Saves files in {temp_dir}/tif_files_tmp, which above is cleared and created
             download_raster(file_name, temp_dir, variable, bearer, quiet)
 
         #### Mosaic together
@@ -420,7 +425,7 @@ def bm_raster_i(roi_sf,
         shutil.rmtree(os.path.join(temp_dir, 'tif_files_tmp'), ignore_errors=True)
 
         #### Create directory for mosaiced tif files
-        # shutil.rmtree(os.path.join(temp_dir, 'tif_files_mosaic_tmp'), ignore_errors=True)
+        #shutil.rmtree(os.path.join(temp_dir, 'tif_files_mosaic_tmp'), ignore_errors=True)
         os.makedirs(os.path.join(temp_dir, 'tif_files_mosaic_tmp'), exist_ok = True)
 
         out_name = file_name[0:16] + '.tif'
