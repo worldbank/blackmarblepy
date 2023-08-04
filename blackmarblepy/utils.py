@@ -399,11 +399,8 @@ def bm_raster_i(roi_sf,
     #shutil.rmtree(os.path.join(temp_dir, product_id), ignore_errors=True)
 
     #### Create directory for tif files
-    print("a")
     shutil.rmtree(os.path.join(temp_dir, 'tif_files_tmp'), ignore_errors=True)
-    print("b")
     os.makedirs(os.path.join(temp_dir, 'tif_files_tmp'))
-    print("c")
     
     #### Download files and convert to rasters    
     if (bm_files_df.shape[0] < grid_use_sf.shape[0]) and check_all_tiles_exist:
