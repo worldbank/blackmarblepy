@@ -4,7 +4,7 @@
 [![CI](https://github.com/ramarty/blackmarblepy/actions/workflows/main.yml/badge.svg)](https://github.com/ramarty/blackmarblepy/actions/workflows/main.yml)
 
 <p align="center">
-<img src="ntl_usa.png" alt="Nighttime Lights Map" width="800"/>
+<img src="ntl_usa.png" alt="Nighttime Lights Map" width="500"/>
 </p>
 
 Create Georeferenced Rasters of Nighttime Lights from [NASA Black Marble data](https://blackmarble.gsfc.nasa.gov/). 
