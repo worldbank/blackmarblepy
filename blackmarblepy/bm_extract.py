@@ -108,19 +108,14 @@ def bm_extract(roi_sf,
     # File --------------------------------------------------------------------------
     if output_location_type == "memory":
 
-        print("A1")
         poly_ntl_df_list = [bm_extract_i(roi_sf, product_id, 
                                          date_i, bearer, variable, aggregation_fun, 
                                          check_all_tiles_exist, quiet, temp_dir) for date_i in date]
-        print("A2")
         poly_ntl_df = pd.concat(poly_ntl_df_list, ignore_index=True)
 
-        print("A3")
         r_out = poly_ntl_df
 
-    print("A4")
     # Delete temp files used to make raster
     shutil.rmtree(temp_dir, ignore_errors=True)
 
-    print("A5")
     return r_out

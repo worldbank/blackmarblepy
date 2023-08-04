@@ -326,31 +326,23 @@ def bm_extract_i(roi_sf,
                  temp_dir):
     
     try:
-        print("B1")
         print(temp_dir)
         print(os.path.exists(temp_dir))
         #### Extract data
         raster_path_i = bm_raster_i(roi_sf, product_id, date_i, bearer, variable, check_all_tiles_exist, quiet, temp_dir)
 
-        print("B2")
         with rasterio.open(raster_path_i) as src:
             raster_data = src.read(1)
 
-        print("B3")
         # nodata=src.nodata
         ntl_data = zonal_stats(roi_sf, raster_data, 
                                affine=src.transform, nodata=np.nan, masked=False, stats = aggregation_fun)
 
-        print("B4")
         ntl_data_df = pd.DataFrame(ntl_data)
-        print("B5")
         ntl_data_df = ntl_data_df.add_prefix('ntl_')
 
-        print("B6")
         roi_df = pd.DataFrame(roi_sf.drop('geometry', axis=1))
-        print("B7")
         poly_ntl_df = pd.concat([roi_df, ntl_data_df], axis=1)
-        print("B8")
         poly_ntl_df['date'] = date_i 
         
     except:
@@ -370,11 +362,9 @@ def bm_raster_i(roi_sf,
     
     #### Prep files to download
     
-    print("C1a")
     # Black marble grid: TODO: Add to python repo
     bm_tiles_sf = gpd.read_file("https://raw.githubusercontent.com/ramarty/blackmarbler/main/data/blackmarbletiles.geojson")
 
-    print("C1b")
     # Prep dates            
     if product_id == "VNP46A3":
         if len(date) <= 7:
@@ -384,7 +374,6 @@ def bm_raster_i(roi_sf,
         if len(date) in [4, 10]:
             date = date + "-01-01"
 
-    print("C1c")
     date = datetime.datetime.strptime(date, "%Y-%m-%d").date()
 
     # Grab tile dataframe
@@ -392,18 +381,15 @@ def bm_raster_i(roi_sf,
     month = date.month
     day = date.timetuple().tm_yday
     
-    print("C1d")
     bm_files_df = create_dataset_name_df(product_id=product_id, all=True, years=year, months=month, days=day)
     
     # Intersecting tiles
-    print("C1e")
     bm_tiles_sf = bm_tiles_sf[~bm_tiles_sf["TileID"].str.contains("h00")]
     bm_tiles_sf = bm_tiles_sf[~bm_tiles_sf["TileID"].str.contains("v00")]
 
     grid_use_sf = gpd.overlay(bm_tiles_sf, roi_sf.dissolve(), how='intersection')
 
     # Make raster
-    print("C1f")
     tile_ids_rx = "|".join(grid_use_sf["TileID"])
     bm_files_df = bm_files_df[bm_files_df["name"].str.contains(tile_ids_rx)]
     bm_files_df = bm_files_df.reset_index()
@@ -414,10 +400,8 @@ def bm_raster_i(roi_sf,
 
     #### Create directory for tif files
     shutil.rmtree(os.path.join(temp_dir, 'tif_files_tmp'), ignore_errors=True)
-    print("C1g")
     os.makedirs(os.path.join(temp_dir, 'tif_files_tmp'))
     
-    print("C1h")
     #### Download files and convert to rasters    
     if (bm_files_df.shape[0] < grid_use_sf.shape[0]) and check_all_tiles_exist:
         print("Not all satellite imagery tiles for this location exist, so skipping. To ignore this error and process anyway, set check_all_tiles_exist = False")
@@ -425,18 +409,15 @@ def bm_raster_i(roi_sf,
                 
     else:
     
-        print("C1")
         for file_name in bm_files_df['name']:
 
             # Saves files in {temp_dir}/tif_files_tmp, which above is cleared and created
             download_raster(file_name, temp_dir, variable, bearer, quiet)
 
-        print("C2")
         #### Mosaic together
         # List of raster files to be mosaiced
         filepaths = glob.glob(os.path.join(temp_dir, 'tif_files_tmp', "*.tif"))
 
-        print("C3")
         # Open the raster files
         src_files_to_mosaic = []
         for fp in filepaths:
