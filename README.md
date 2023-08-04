@@ -41,8 +41,8 @@ The function requires using a **Bearer Token**; to obtain a token, follow the be
 
 The package provides two functions:
     
-    * `bm_raster` produces a raster of Black Marble nighttime lights. 
-    * `bm_extract` produces a dataframe of aggregated nighttime lights to a region of interest (e.g., average nighttime lights within US States). 
+* `bm_raster` produces a raster of Black Marble nighttime lights. 
+* `bm_extract` produces a dataframe of aggregated nighttime lights to a region of interest (e.g., average nighttime lights within US States). 
     
 Both functions take the following arguments:
     
