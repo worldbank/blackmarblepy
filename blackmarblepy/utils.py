@@ -370,9 +370,11 @@ def bm_raster_i(roi_sf,
     
     #### Prep files to download
     
+    print("C1a")
     # Black marble grid: TODO: Add to python repo
     bm_tiles_sf = gpd.read_file("https://raw.githubusercontent.com/ramarty/blackmarbler/main/data/blackmarbletiles.geojson")
 
+    print("C1b")
     # Prep dates            
     if product_id == "VNP46A3":
         if len(date) <= 7:
@@ -382,6 +384,7 @@ def bm_raster_i(roi_sf,
         if len(date) in [4, 10]:
             date = date + "-01-01"
 
+    print("C1c")
     date = datetime.datetime.strptime(date, "%Y-%m-%d").date()
 
     # Grab tile dataframe
@@ -389,15 +392,18 @@ def bm_raster_i(roi_sf,
     month = date.month
     day = date.timetuple().tm_yday
     
+    print("C1d")
     bm_files_df = create_dataset_name_df(product_id=product_id, all=True, years=year, months=month, days=day)
     
     # Intersecting tiles
+    print("C1e")
     bm_tiles_sf = bm_tiles_sf[~bm_tiles_sf["TileID"].str.contains("h00")]
     bm_tiles_sf = bm_tiles_sf[~bm_tiles_sf["TileID"].str.contains("v00")]
 
     grid_use_sf = gpd.overlay(bm_tiles_sf, roi_sf.dissolve(), how='intersection')
 
     # Make raster
+    print("C1f")
     tile_ids_rx = "|".join(grid_use_sf["TileID"])
     bm_files_df = bm_files_df[bm_files_df["name"].str.contains(tile_ids_rx)]
     bm_files_df = bm_files_df.reset_index()
@@ -408,8 +414,12 @@ def bm_raster_i(roi_sf,
 
     #### Create directory for tif files
     #shutil.rmtree(os.path.join(temp_dir, 'tif_files_tmp'), ignore_errors=True)
+    print("C1g")
+    print(os.path.join(temp_dir, 'tif_files_tmp'))
+    os.listdir(os.path.join(temp_dir, 'tif_files_tmp'))
     os.makedirs(os.path.join(temp_dir, 'tif_files_tmp'))
     
+    print("C1h")
     #### Download files and convert to rasters    
     if (bm_files_df.shape[0] < grid_use_sf.shape[0]) and check_all_tiles_exist:
         print("Not all satellite imagery tiles for this location exist, so skipping. To ignore this error and process anyway, set check_all_tiles_exist = False")
