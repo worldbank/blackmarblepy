@@ -413,10 +413,8 @@ def bm_raster_i(roi_sf,
     #shutil.rmtree(os.path.join(temp_dir, product_id), ignore_errors=True)
 
     #### Create directory for tif files
-    #shutil.rmtree(os.path.join(temp_dir, 'tif_files_tmp'), ignore_errors=True)
+    shutil.rmtree(os.path.join(temp_dir, 'tif_files_tmp'), ignore_errors=True)
     print("C1g")
-    print(os.path.join(temp_dir, 'tif_files_tmp'))
-    os.listdir(os.path.join(temp_dir, 'tif_files_tmp'))
     os.makedirs(os.path.join(temp_dir, 'tif_files_tmp'))
     
     print("C1h")
