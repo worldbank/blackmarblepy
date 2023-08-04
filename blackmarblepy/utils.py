@@ -326,8 +326,6 @@ def bm_extract_i(roi_sf,
                  temp_dir):
     
     try:
-        print(temp_dir)
-        print(os.path.exists(temp_dir))
         #### Extract data
         raster_path_i = bm_raster_i(roi_sf, product_id, date_i, bearer, variable, check_all_tiles_exist, quiet, temp_dir)
 
