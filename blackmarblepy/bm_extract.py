@@ -82,7 +82,9 @@ def bm_extract(roi_sf,
                 # Only make .tif if raster doesn't already exist
                 if (not file_skip_if_exists) | (not os.path.exists(out_path)):
 
-                    poly_ntl_df = bm_extract_i(roi_sf, product_id, date_i, bearer, variable, aggregation_fun, check_all_tiles_exist, quiet)
+                    poly_ntl_df = bm_extract_i(roi_sf, product_id, 
+                                               date_i, bearer, variable, 
+                                               aggregation_fun, check_all_tiles_exist, quiet, temp_dir)
 
                     #### Export data
                     poly_ntl_df.to_csv(out_path, index=False)
@@ -95,6 +97,9 @@ def bm_extract(roi_sf,
                         print('"' + out_path + '" already exists; skipping.\n')
                     
             except:
+                # Delete temp files used to make raster
+                shutil.rmtree(temp_dir, ignore_errors=True)
+            
                 if quiet == False:
                     print("Skipping " + str(date_i) + " due to error. Likely data is not available.\n")
 
@@ -103,9 +108,14 @@ def bm_extract(roi_sf,
     # File --------------------------------------------------------------------------
     if output_location_type == "memory":
 
-        poly_ntl_df_list = [bm_extract_i(roi_sf, product_id, date_i, bearer, variable, aggregation_fun, check_all_tiles_exist, quiet) for date_i in date]
+        poly_ntl_df_list = [bm_extract_i(roi_sf, product_id, 
+                                         date_i, bearer, variable, aggregation_fun, 
+                                         check_all_tiles_exist, quiet, temp_dir) for date_i in date]
         poly_ntl_df = pd.concat(poly_ntl_df_list, ignore_index=True)
 
         r_out = poly_ntl_df
+
+    # Delete temp files used to make raster
+    shutil.rmtree(temp_dir, ignore_errors=True)
 
     return r_out

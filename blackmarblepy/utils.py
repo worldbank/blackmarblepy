@@ -322,11 +322,12 @@ def bm_extract_i(roi_sf,
                  variable,
                  aggregation_fun,
                  check_all_tiles_exist,
-                 quiet):
+                 quiet,
+                 temp_dir):
     
     try:
         #### Extract data
-        raster_path_i = bm_raster_i(roi_sf, product_id, date_i, bearer, variable, check_all_tiles_exist, quiet)
+        raster_path_i = bm_raster_i(roi_sf, product_id, date_i, bearer, variable, check_all_tiles_exist, quiet, temp_dir)
 
         with rasterio.open(raster_path_i) as src:
             raster_data = src.read(1)
@@ -395,7 +396,7 @@ def bm_raster_i(roi_sf,
     #shutil.rmtree(os.path.join(temp_dir, product_id), ignore_errors=True)
 
     #### Create directory for tif files
-    shutil.rmtree(os.path.join(temp_dir, 'tif_files_tmp'), ignore_errors=True)
+    #shutil.rmtree(os.path.join(temp_dir, 'tif_files_tmp'), ignore_errors=True)
     os.makedirs(os.path.join(temp_dir, 'tif_files_tmp'))
     
     #### Download files and convert to rasters    
