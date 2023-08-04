@@ -3,6 +3,10 @@
 [![codecov](https://codecov.io/gh/ramarty/blackmarblepy/branch/main/graph/badge.svg?token=blackmarblepy_token_here)](https://codecov.io/gh/ramarty/blackmarblepy)
 [![CI](https://github.com/ramarty/blackmarblepy/actions/workflows/main.yml/badge.svg)](https://github.com/ramarty/blackmarblepy/actions/workflows/main.yml)
 
+<p align="center">
+<img src="ntl_usa.png" alt="Nighttime Lights Map" width="800"/>
+</p>
+
 Create Georeferenced Rasters of Nighttime Lights from [NASA Black Marble data](https://blackmarble.gsfc.nasa.gov/). 
 
 * [Overview](#overview)
