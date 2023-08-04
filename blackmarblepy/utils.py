@@ -417,15 +417,18 @@ def bm_raster_i(roi_sf,
                 
     else:
     
+        print("C1")
         for file_name in bm_files_df['name']:
 
             # Saves files in {temp_dir}/tif_files_tmp, which above is cleared and created
             download_raster(file_name, temp_dir, variable, bearer, quiet)
 
+        print("C2")
         #### Mosaic together
         # List of raster files to be mosaiced
         filepaths = glob.glob(os.path.join(temp_dir, 'tif_files_tmp', "*.tif"))
 
+        print("C3")
         # Open the raster files
         src_files_to_mosaic = []
         for fp in filepaths:
