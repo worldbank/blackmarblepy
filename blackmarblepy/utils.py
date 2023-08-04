@@ -326,20 +326,29 @@ def bm_extract_i(roi_sf,
                  temp_dir):
     
     try:
+        print("B1")
         #### Extract data
         raster_path_i = bm_raster_i(roi_sf, product_id, date_i, bearer, variable, check_all_tiles_exist, quiet, temp_dir)
 
+        print("B2")
         with rasterio.open(raster_path_i) as src:
             raster_data = src.read(1)
 
+        print("B3")
         # nodata=src.nodata
-        ntl_data = zonal_stats(roi_sf, raster_data, affine=src.transform, nodata=np.nan, masked=False, stats = aggregation_fun)
+        ntl_data = zonal_stats(roi_sf, raster_data, 
+                               affine=src.transform, nodata=np.nan, masked=False, stats = aggregation_fun)
 
+        print("B4")
         ntl_data_df = pd.DataFrame(ntl_data)
+        print("B5")
         ntl_data_df = ntl_data_df.add_prefix('ntl_')
 
+        print("B6")
         roi_df = pd.DataFrame(roi_sf.drop('geometry', axis=1))
+        print("B7")
         poly_ntl_df = pd.concat([roi_df, ntl_data_df], axis=1)
+        print("B8")
         poly_ntl_df['date'] = date_i 
         
     except:
