@@ -39,7 +39,7 @@ def bm_raster(roi_sf,
               bearer, 
               variable=None, 
               check_all_tiles_exist = True,
-              output_location_type="memory",
+              output_location_type="tempfile",
               file_dir=None, 
               file_prefix="", 
               file_skip_if_exists=True,
@@ -63,7 +63,7 @@ def bm_raster(roi_sf,
     None (if output_location_type = "file")
         A geotif file is saved to the "file_dir" directory. Nothing is returned from the function.
 
-    Raster (if output_location_type = "memory")
+    Raster (if output_location_type = "tempfile")
     
     """
     
@@ -116,8 +116,8 @@ def bm_raster(roi_sf,
 
                 r_out = None
 
-            # Memory --------------------------------------------------------------------------
-            if output_location_type == "memory":
+            # Tempfile --------------------------------------------------------------------------
+            if output_location_type == "tempfile":
 
                 raster_path_i = bm_raster_i(roi_sf, product_id, 
                                             date_i, bearer, variable, check_all_tiles_exist, quiet, temp_dir)

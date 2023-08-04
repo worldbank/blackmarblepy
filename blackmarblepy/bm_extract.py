@@ -39,7 +39,7 @@ def bm_extract(roi_sf,
                bearer,
                variable = None,
                check_all_tiles_exist = True,
-               output_location_type = "memory",
+               output_location_type = "tempfile",
                aggregation_fun = "mean",
                file_dir = None,
                file_prefix = "",
@@ -106,7 +106,7 @@ def bm_extract(roi_sf,
         r_out = None
 
     # File --------------------------------------------------------------------------
-    if output_location_type == "memory":
+    if output_location_type == "tempfile":
 
         poly_ntl_df_list = [bm_extract_i(roi_sf, product_id, 
                                          date_i, bearer, variable, aggregation_fun, 
