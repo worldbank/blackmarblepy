@@ -87,7 +87,10 @@ def bm_extract(roi_sf,
                                                aggregation_fun, check_all_tiles_exist, quiet, temp_dir)
 
                     #### Export data
-                    poly_ntl_df.to_csv(out_path, index=False)
+                    # Only export if there's observations. Faciliates skipping over dates that may not be
+                    # available and trying to download later
+                    if poly_ntl_df.shape[0] >= 1:
+                        poly_ntl_df.to_csv(out_path, index=False)
 
                     if quiet == False:      
                         print("File created: " + out_path)

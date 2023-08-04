@@ -73,10 +73,11 @@ _Optional arguments_
 - For `product_id` `"VNP46A2"`, uses `Gap_Filled_DNB_BRDF-Corrected_NTL`. 
 - For `product_id`s `"VNP46A3"` and `"VNP46A4"`, uses `NearNadir_Composite_Snow_Free`. 
     
-* __output_location_type:__ Where output should be stored (default: `tempfile`). Either:
+* __output_location_type:__ Where output should be stored (default: for `bm_raster`, `"tempfile"`; for `bm_extract`, `"memory"`). Either:
 
-  - `tempfile` where the function will return an output in R
-  - `file` where the function will export the data as a file. For `bm_raster`, a `.tif` file will be saved; for `bm_extract`, a `.Rds` file will be saved. A file is saved for each date. Consequently, if `date = c(2018, 2019, 2020)`, three datasets will be saved: one for each year. Saving a dataset for each date can facilitate re-running the function later and only downloading data for dates where data have not been downloaded.
+  - [For `bm_raster`] `tempfile` where the function will export the raster as a tempfile
+  - [For `bm_extract`] `memory` where the function will export the data as pandas dataframe
+  - `file` where the function will export the data as a file. For `bm_raster`, a `.tif` file will be saved; for `bm_extract`, a `.csv` file will be saved. A file is saved for each date. Consequently, if `date = [2018, 2019, 2020]`, three datasets will be saved: one for each year. Saving a dataset for each date can facilitate re-running the function later and only downloading data for dates where data have not been downloaded.
 
 If `output_location_type = "file"`, the following arguments can be used:
 
