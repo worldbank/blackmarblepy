@@ -119,6 +119,7 @@ def bm_raster(roi_sf,
             # Memory --------------------------------------------------------------------------
             if output_location_type == "memory":
 
+                print("1")
                 raster_path_i = bm_raster_i(roi_sf, product_id, 
                                             date_i, bearer, variable, check_all_tiles_exist, quiet, temp_dir)
                 raster_path_list.append(raster_path_i) 
