@@ -45,6 +45,28 @@ def bm_raster(roi_sf,
               file_skip_if_exists=True,
               quiet = False):
     
+    """Make a raster of nighttime lights from [NASA Black Marble data](https://blackmarble.gsfc.nasa.gov/).
+
+    Parameters
+    ----------
+    
+    roi_sf: Region of interest; geopandas dataframe (polygon). Must be in the [WGS 84 (epsg:4326)](https://epsg.io/4326) coordinate reference system.
+    
+    product_id: string. One of the following:
+        * `"VNP46A1"`: Daily (raw)
+        * `"VNP46A2"`: Daily (corrected)
+        * `"VNP46A3"`: Monthly
+        * `"VNP46A4"`: Annual
+        
+    Returns
+    -------
+    None (if output_location_type = "file")
+        A geotif file is saved to the "file_dir" directory. Nothing is returned from the function.
+
+    Raster (if output_location_type = "memory")
+    
+    """
+    
     variable = define_variable(variable, product_id)
     
     if type(date) is not list:
@@ -111,11 +133,12 @@ def bm_raster(roi_sf,
                 timestamp = str(int(time.time()))
                 tmp_raster_file_name = product_id + "_" + date[0].replace("-", "_") + "_" + timestamp + ".tif"
 
-                with rasterio.open(os.path.join(temp_dir, tmp_raster_file_name), 'w', driver='GTiff', width=width, height=height,
+                with rasterio.open(os.path.join(temp_dir, 
+                                                tmp_raster_file_name), 
+                                   'w', driver='GTiff', width=width, height=height,
                                    count=count, dtype=dtype, crs=crs, transform=transform) as dst:
                     for i in range(count):
                         dst.write(data[i], i+1) 
-
 
                 r_out = rasterio.open(os.path.join(temp_dir, tmp_raster_file_name))
                 
