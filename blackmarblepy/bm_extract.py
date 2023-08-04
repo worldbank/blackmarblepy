@@ -50,7 +50,7 @@ def bm_extract(roi_sf,
     temp_main_dir = tempfile.gettempdir()
     
     current_time_millis = int(round(time.time() * 1000))
-    temp_dir = os.path.join(temp_dir, "bm_raster_temp_" + str(current_time_millis))
+    temp_dir = os.path.join(temp_main_dir, "bm_raster_temp_" + str(current_time_millis))
     
     os.makedirs(temp_dir)
     
