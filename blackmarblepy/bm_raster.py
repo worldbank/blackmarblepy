@@ -88,14 +88,21 @@ def bm_raster(roi_sf,
         file_dir = os.getcwd()
 
     raster_path_list = []    
-    for date_i in date:
-        
-        date_name_i = define_date_name(date_i, product_id)
-
-        try: 
+    #for date_i in date:
+    #    
+    #    date_name_i = define_date_name(date_i, product_id)
+    #
+    #    try: 
             
-            # File --------------------------------------------------------------------------
-            if output_location_type == "file":
+    # File --------------------------------------------------------------------------
+    if output_location_type == "file":
+        
+        for date_i in date:
+            
+            date_name_i = define_date_name(date_i, product_id)
+            
+            try:
+
                 out_name = file_prefix + product_id + "_" + date_name_i + ".tif"
                 out_path = os.path.join(file_dir, out_name)
 
@@ -106,68 +113,77 @@ def bm_raster(roi_sf,
                                                 product_id, 
                                                 date_i, bearer, variable, check_all_tiles_exist, quiet, temp_dir)
                     shutil.move(raster_path_i, out_path) # Move from tmp to main folder
-                    
+
                     if quiet == False:
                         print("File created: " + out_path)
 
                 else:
                     if quiet == False:
                         print('"' + out_path + '" already exists; skipping.\n')
-
+                        
+                r_out = None
+                        
+            except:
                 r_out = None
 
-            # Tempfile --------------------------------------------------------------------------
-            if output_location_type == "tempfile":
+    # Tempfile --------------------------------------------------------------------------
+    if output_location_type == "tempfile":
 
-                raster_path_i = bm_raster_i(roi_sf, product_id, 
-                                            date_i, bearer, variable, check_all_tiles_exist, quiet, temp_dir)
-                raster_path_list.append(raster_path_i) 
-                
-                #### Stack Rasters
-                # Read the first file to get the dimensions and metadata
-                with rasterio.open(raster_path_list[0]) as src:
-                    width = src.width
-                    height = src.height
-                    count = len(raster_path_list)
-                    crs = src.crs
-                    transform = src.transform
-                    dtype = src.dtypes[0]
+        try:
+            #### Create raster for each date
+            for date_i in date:
 
-                    # Create an empty numpy array to store the raster data
-                    data = np.zeros((count, height, width), dtype=dtype)
+                date_name_i = define_date_name(date_i, product_id)
 
-                    # Read data from each file and store it in the numpy array
-                    for i, file_path in enumerate(raster_path_list):
-                        with rasterio.open(file_path) as src:
-                            data[i] = src.read(1)  
+                    raster_path_i = bm_raster_i(roi_sf, product_id, 
+                                                date_i, bearer, variable, check_all_tiles_exist, quiet, temp_dir)
+                    raster_path_list.append(raster_path_i) 
 
-                # Create a new raster file and write the data
-                timestamp = str(int(time.time()))
-                tmp_raster_file_name = product_id + "_" + date[0].replace("-", "_") + "_" + timestamp + ".tif"
-                            
-                with rasterio.open(os.path.join(temp_dir, 
-                                                tmp_raster_file_name), 
-                                   'w', driver='GTiff', width=width, height=height,
-                                   count=count, dtype=dtype, crs=crs, transform=transform) as dst:
-                    for i in range(count):
-                        dst.write(data[i], i+1) 
+            #### Stack Rasters
+            # Read the first file to get the dimensions and metadata
+            with rasterio.open(raster_path_list[0]) as src:
+                width = src.width
+                height = src.height
+                count = len(raster_path_list)
+                crs = src.crs
+                transform = src.transform
+                dtype = src.dtypes[0]
 
-                # Move from black marble temp folder to main temp folder
-                shutil.move(os.path.join(temp_dir, tmp_raster_file_name), 
-                            temp_main_dir) 
-        
-                r_out = rasterio.open(os.path.join(temp_main_dir, tmp_raster_file_name))
-                                
+                # Create an empty numpy array to store the raster data
+                data = np.zeros((count, height, width), dtype=dtype)
+
+                # Read data from each file and store it in the numpy array
+                for i, file_path in enumerate(raster_path_list):
+                    with rasterio.open(file_path) as src:
+                        data[i] = src.read(1)  
+
+            # Create a new raster file and write the data
+            timestamp = str(int(time.time()))
+            tmp_raster_file_name = product_id + "_" + date[0].replace("-", "_") + "_" + timestamp + ".tif"
+
+            with rasterio.open(os.path.join(temp_dir, 
+                                            tmp_raster_file_name), 
+                               'w', driver='GTiff', width=width, height=height,
+                               count=count, dtype=dtype, crs=crs, transform=transform) as dst:
+                for i in range(count):
+                    dst.write(data[i], i+1) 
+
+            # Move from black marble temp folder to main temp folder
+            shutil.move(os.path.join(temp_dir, tmp_raster_file_name), 
+                        temp_main_dir) 
+
+            r_out = rasterio.open(os.path.join(temp_main_dir, tmp_raster_file_name))
+
         except:
             # Delete temp files used to make raster
             shutil.rmtree(temp_dir, ignore_errors=True)
-        
+
             if quiet == False:
                 print("Skipping " + str(date_i) + " due to error. Data may not be available.\n")
             r_out = None
         
-        # Delete temp files used to make raster
-        shutil.rmtree(temp_dir, ignore_errors=True)
+    # Delete temp files used to make raster
+    shutil.rmtree(temp_dir, ignore_errors=True)
 
     return r_out
 
