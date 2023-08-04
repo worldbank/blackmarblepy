@@ -297,7 +297,7 @@ def download_raster(file_name, temp_dir, variable, bearer, quiet):
     
     print("A3")
     print(os.path.join(temp_dir, file_name))
-    os.remove(os.path.join(temp_dir, file_name)) # Delete .h5 file
+    #os.remove(os.path.join(temp_dir, file_name)) # Delete .h5 file
     
     return None
 
