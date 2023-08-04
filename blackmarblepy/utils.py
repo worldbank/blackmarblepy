@@ -327,6 +327,8 @@ def bm_extract_i(roi_sf,
     
     try:
         print("B1")
+        print(temp_dir)
+        print(os.path.exists(temp_dir))
         #### Extract data
         raster_path_i = bm_raster_i(roi_sf, product_id, date_i, bearer, variable, check_all_tiles_exist, quiet, temp_dir)
 
@@ -352,7 +354,7 @@ def bm_extract_i(roi_sf,
         poly_ntl_df['date'] = date_i 
         
     except:
-        print("Skipping " + str(date_i) + " due to error. Likely data is not available.\n")
+        print("Skipping " + str(date_i) + " due to error. Data may not be available.\n")
         poly_ntl_df = pd.DataFrame()
     
     return poly_ntl_df
