@@ -67,8 +67,18 @@ def bm_raster(roi_sf,
     
     """
     
+    #### Make directory to put temporary files into
+    temp_dir = tempfile.gettempdir()
+    
+    current_time_millis = int(round(time.time() * 1000))
+    temp_dir = os.path.join(temp_dir, "bm_raster_temp_" + str(current_time_millis))
+    
+    os.makedirs(temp_dir)
+    
+    #### Define NTL Variable
     variable = define_variable(variable, product_id)
     
+    #### Ensure date is a list of strings
     if type(date) is not list:
         date = [date]
         
@@ -92,7 +102,9 @@ def bm_raster(roi_sf,
                 # Only make .tif if raster doesn't already exist
                 if (not file_skip_if_exists) | (not os.path.exists(out_path)):
 
-                    raster_path_i = bm_raster_i(roi_sf, product_id, date_i, bearer, variable, check_all_tiles_exist, quiet)
+                    raster_path_i = bm_raster_i(roi_sf, 
+                                                product_id, 
+                                                date_i, bearer, variable, check_all_tiles_exist, quiet, temp_dir)
                     shutil.move(raster_path_i, out_path) # Move from tmp to main folder
                     
                     if quiet == False:
@@ -107,7 +119,8 @@ def bm_raster(roi_sf,
             # Memory --------------------------------------------------------------------------
             if output_location_type == "memory":
 
-                raster_path_i = bm_raster_i(roi_sf, product_id, date_i, bearer, variable, check_all_tiles_exist, quiet)
+                raster_path_i = bm_raster_i(roi_sf, product_id, 
+                                            date_i, bearer, variable, check_all_tiles_exist, quiet, temp_dir)
                 raster_path_list.append(raster_path_i) 
 
                 # Read the first file to get the dimensions and metadata
@@ -128,7 +141,7 @@ def bm_raster(roi_sf,
                             data[i] = src.read(1)  
 
                 # Create a new raster file and write the data
-                temp_dir = tempfile.gettempdir()
+                #temp_dir = tempfile.gettempdir()
 
                 timestamp = str(int(time.time()))
                 tmp_raster_file_name = product_id + "_" + date[0].replace("-", "_") + "_" + timestamp + ".tif"

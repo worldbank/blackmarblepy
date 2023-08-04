@@ -354,11 +354,12 @@ def bm_raster_i(roi_sf,
                 bearer, 
                 variable, 
                 check_all_tiles_exist,
-                quiet):
+                quiet,
+                temp_dir):
     
     #### Prep files to download
     
-    # Black marble grid
+    # Black marble grid: TODO: Add to python repo
     bm_tiles_sf = gpd.read_file("https://raw.githubusercontent.com/ramarty/blackmarbler/main/data/blackmarbletiles.geojson")
 
     # Prep dates            
@@ -390,7 +391,7 @@ def bm_raster_i(roi_sf,
     bm_files_df = bm_files_df[bm_files_df["name"].str.contains(tile_ids_rx)]
     bm_files_df = bm_files_df.reset_index()
     
-    temp_dir = tempfile.gettempdir()
+    #temp_dir = tempfile.gettempdir()
 
     #shutil.rmtree(os.path.join(temp_dir, product_id), ignore_errors=True)
 
@@ -424,7 +425,7 @@ def bm_raster_i(roi_sf,
         mosaic, out_trans = merge(src_files_to_mosaic)
 
         # Delete folder of individual files
-        shutil.rmtree(os.path.join(temp_dir, 'tif_files_tmp'), ignore_errors=True)
+        #shutil.rmtree(os.path.join(temp_dir, 'tif_files_tmp'), ignore_errors=True)
 
         #### Create directory for mosaiced tif files
         #shutil.rmtree(os.path.join(temp_dir, 'tif_files_mosaic_tmp'), ignore_errors=True)

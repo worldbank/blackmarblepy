@@ -46,8 +46,18 @@ def bm_extract(roi_sf,
                file_skip_if_exists = True,
                quiet = False):
 
+    #### Make directory to put temporary files into
+    temp_dir = tempfile.gettempdir()
+    
+    current_time_millis = int(round(time.time() * 1000))
+    temp_dir = os.path.join(temp_dir, "bm_raster_temp_" + str(current_time_millis))
+    
+    os.makedirs(temp_dir)
+    
+    #### Define NTL Variable
     variable = define_variable(variable, product_id)
 
+    #### Ensure date is a list of strings
     if type(date) is not list:
         date = [date]
                 
