@@ -284,19 +284,12 @@ def download_raster(file_name, temp_dir, variable, bearer, quiet):
     subprocess.run(wget_command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     
     # Convert to raster
-    print("A1")
     file_name_tif = re.sub(".h5", ".tif", file_name)
 
-    print("A2")
-    print(f)
-    print(variable)
-    print(os.path.join(temp_dir, 'tif_files_tmp', file_name_tif))
     file_to_raster(f, variable, os.path.join(temp_dir, 'tif_files_tmp', file_name_tif))
     
     #shutil.rmtree(os.path.join(temp_dir, product_id), ignore_errors=True)
-    
-    print("A3")
-    print(os.path.join(temp_dir, file_name))
+
     #os.remove(os.path.join(temp_dir, file_name)) # Delete .h5 file
     
     return None

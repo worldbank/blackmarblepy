@@ -68,10 +68,10 @@ def bm_raster(roi_sf,
     """
     
     #### Make directory to put temporary files into
-    temp_dir = tempfile.gettempdir()
+    temp_main_dir = tempfile.gettempdir()
     
     current_time_millis = int(round(time.time() * 1000))
-    temp_dir = os.path.join(temp_dir, "bm_raster_temp_" + str(current_time_millis))
+    temp_dir = os.path.join(temp_main_dir, "bm_raster_temp_" + str(current_time_millis))
     
     os.makedirs(temp_dir)
     
@@ -119,13 +119,11 @@ def bm_raster(roi_sf,
             # Memory --------------------------------------------------------------------------
             if output_location_type == "memory":
 
-                print("1")
                 raster_path_i = bm_raster_i(roi_sf, product_id, 
                                             date_i, bearer, variable, check_all_tiles_exist, quiet, temp_dir)
                 raster_path_list.append(raster_path_i) 
                 
-                print(raster_path_list)
-
+                #### Stack Rasters
                 # Read the first file to get the dimensions and metadata
                 with rasterio.open(raster_path_list[0]) as src:
                     width = src.width
@@ -144,16 +142,9 @@ def bm_raster(roi_sf,
                             data[i] = src.read(1)  
 
                 # Create a new raster file and write the data
-                #temp_dir = tempfile.gettempdir()
-
-                print("a")
                 timestamp = str(int(time.time()))
                 tmp_raster_file_name = product_id + "_" + date[0].replace("-", "_") + "_" + timestamp + ".tif"
-
-                print("b")
-                
-                print(tmp_raster_file_name)
-                
+                            
                 with rasterio.open(os.path.join(temp_dir, 
                                                 tmp_raster_file_name), 
                                    'w', driver='GTiff', width=width, height=height,
@@ -161,14 +152,21 @@ def bm_raster(roi_sf,
                     for i in range(count):
                         dst.write(data[i], i+1) 
 
-                r_out = rasterio.open(os.path.join(temp_dir, tmp_raster_file_name))
-                
-                print(r_out)
-                
+                # Move from black marble temp folder to main temp folder
+                shutil.move(os.path.join(temp_dir, tmp_raster_file_name), 
+                            temp_main_dir) 
+        
+                r_out = rasterio.open(os.path.join(temp_main_dir, tmp_raster_file_name))
+                                
         except:
             if quiet == False:
                 print("Skipping " + str(date_i) + " due to error. Data may not be available.\n")
             r_out = None
+        
+        # Delete temp files used to make raster
+        print("DELETING")
+        print(temp_dir)
+        shutil.rmtree(temp_dir, ignore_errors=True)
 
     return r_out
 
