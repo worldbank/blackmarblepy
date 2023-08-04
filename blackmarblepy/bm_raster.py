@@ -122,6 +122,8 @@ def bm_raster(roi_sf,
                 raster_path_i = bm_raster_i(roi_sf, product_id, 
                                             date_i, bearer, variable, check_all_tiles_exist, quiet, temp_dir)
                 raster_path_list.append(raster_path_i) 
+                
+                print(raster_path_list)
 
                 # Read the first file to get the dimensions and metadata
                 with rasterio.open(raster_path_list[0]) as src:
