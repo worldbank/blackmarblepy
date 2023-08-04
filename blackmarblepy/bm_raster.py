@@ -159,13 +159,14 @@ def bm_raster(roi_sf,
                 r_out = rasterio.open(os.path.join(temp_main_dir, tmp_raster_file_name))
                                 
         except:
+            # Delete temp files used to make raster
+            shutil.rmtree(temp_dir, ignore_errors=True)
+        
             if quiet == False:
                 print("Skipping " + str(date_i) + " due to error. Data may not be available.\n")
             r_out = None
         
         # Delete temp files used to make raster
-        print("DELETING")
-        print(temp_dir)
         shutil.rmtree(temp_dir, ignore_errors=True)
 
     return r_out
