@@ -145,9 +145,14 @@ def bm_raster(roi_sf,
                 # Create a new raster file and write the data
                 #temp_dir = tempfile.gettempdir()
 
+                print("a")
                 timestamp = str(int(time.time()))
                 tmp_raster_file_name = product_id + "_" + date[0].replace("-", "_") + "_" + timestamp + ".tif"
 
+                print("b")
+                
+                print(tmp_raster_file_name)
+                
                 with rasterio.open(os.path.join(temp_dir, 
                                                 tmp_raster_file_name), 
                                    'w', driver='GTiff', width=width, height=height,
@@ -156,6 +161,8 @@ def bm_raster(roi_sf,
                         dst.write(data[i], i+1) 
 
                 r_out = rasterio.open(os.path.join(temp_dir, tmp_raster_file_name))
+                
+                print(r_out)
                 
         except:
             if quiet == False:
