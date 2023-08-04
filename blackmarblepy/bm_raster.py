@@ -87,7 +87,7 @@ def bm_raster(roi_sf,
     if file_dir is None:
         file_dir = os.getcwd()
 
-    raster_path_list = []    
+
     #for date_i in date:
     #    
     #    date_name_i = define_date_name(date_i, product_id)
@@ -131,13 +131,14 @@ def bm_raster(roi_sf,
 
         try:
             #### Create raster for each date
+            raster_path_list = []    
             for date_i in date:
 
                 date_name_i = define_date_name(date_i, product_id)
 
-                    raster_path_i = bm_raster_i(roi_sf, product_id, 
-                                                date_i, bearer, variable, check_all_tiles_exist, quiet, temp_dir)
-                    raster_path_list.append(raster_path_i) 
+                raster_path_i = bm_raster_i(roi_sf, product_id, 
+                                            date_i, bearer, variable, check_all_tiles_exist, quiet, temp_dir)
+                raster_path_list.append(raster_path_i) 
 
             #### Stack Rasters
             # Read the first file to get the dimensions and metadata
