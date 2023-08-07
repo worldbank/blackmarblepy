@@ -127,6 +127,7 @@ def file_to_raster(f, variable, output_path, quality_flag_rm):
         xMax = float(grid_i_sf.geometry.bounds.maxx)
         yMax = float(grid_i_sf.geometry.bounds.maxy)
               
+        print("check")
         global out
         global qr
         out = h5_data["HDFEOS"]["GRIDS"]["VNP_Grid_DNB"]["Data Fields"][variable]
