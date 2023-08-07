@@ -127,9 +127,6 @@ def file_to_raster(f, variable, output_path, quality_flag_rm):
         xMax = float(grid_i_sf.geometry.bounds.maxx)
         yMax = float(grid_i_sf.geometry.bounds.maxy)
               
-        print("check")
-        global out
-        global qr
         out = h5_data["HDFEOS"]["GRIDS"]["VNP_Grid_DNB"]["Data Fields"][variable]
         qf  = h5_data["HDFEOS"]["GRIDS"]["VNP_Grid_DNB"]["Data Fields"]["Mandatory_Quality_Flag"]
 
@@ -282,7 +279,7 @@ def download_raster(file_name, temp_dir, variable, bearer, quality_flag_rm, quie
         print("Downloading: " + file_name)
 
     wget_command = f"/usr/local/bin/wget -e robots=off -m -np .html,.tmp -nH --cut-dirs=3 'https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/5000/{product_id}/{year}/{day}/{file_name}' --header 'Authorization: Bearer {bearer}' -P {temp_dir}/" 
-    #print(wget_command)
+    print(wget_command)
     #subprocess.run(wget_command, shell=True)
     subprocess.run(wget_command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     
