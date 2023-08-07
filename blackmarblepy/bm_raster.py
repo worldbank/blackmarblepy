@@ -4,6 +4,7 @@ import requests
 import time
 import os
 import re
+import warnings
 import datetime 
 import tempfile
 import subprocess
@@ -78,6 +79,10 @@ def bm_raster(roi_sf,
     
     #### Define NTL Variable
     variable = define_variable(variable, product_id)
+    
+    #### Ensure quality_flag_rm is a list
+    if type(quality_flag_rm) is not list:
+        quality_flag_rm = [quality_flag_rm]
     
     #### Ensure date is a list of strings
     if type(date) is not list:

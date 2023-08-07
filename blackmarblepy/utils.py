@@ -4,6 +4,7 @@ import requests
 import time
 import os
 import re
+import warnings
 import datetime 
 import tempfile
 import subprocess
@@ -123,7 +124,9 @@ def file_to_raster(f, variable, output_path, quality_flag_rm):
         h5_names = list(h5_data["HDFEOS"]["GRIDS"]["VNP_Grid_DNB"]["Data Fields"].keys())
         
         if variable not in h5_names:
-            "'" + variable + "'" + " not a valid variable option. Valid options include: " + ', '.join(h5_names)
+            warnings.warn("'" + variable + "'" + " not a valid variable option. Valid options include: " + ', '.join(h5_names), UserWarning)
+
+            print("'" + variable + "'" + " not a valid variable option. Valid options include: " + ', '.join(h5_names))
         
         tile_i = re.findall(r'h\d{2}v\d{2}', f)[0]
         
@@ -152,7 +155,7 @@ def file_to_raster(f, variable, output_path, quality_flag_rm):
         h5_names = list(h5_data["HDFEOS"]["GRIDS"]["VIIRS_Grid_DNB_2d"]["Data Fields"].keys())
         
         if variable not in h5_names:
-            "'" + variable + "'" + " not a valid variable option. Valid options include: " + ', '.join(h5_names)
+            print("'" + variable + "'" + " not a valid variable option. Valid options include: " + ', '.join(h5_names))
             
         lat = h5_data["HDFEOS"]["GRIDS"]["VIIRS_Grid_DNB_2d"]["Data Fields"]["lat"]
         lon = h5_data["HDFEOS"]["GRIDS"]["VIIRS_Grid_DNB_2d"]["Data Fields"]["lon"]
