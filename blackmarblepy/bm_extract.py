@@ -38,15 +38,80 @@ def bm_extract(roi_sf,
                product_id,
                date,
                bearer,
+               aggregation_fun = "mean",
                variable = None,
                quality_flag_rm = [255],
                check_all_tiles_exist = True,
                output_location_type = "memory",
-               aggregation_fun = "mean",
                file_dir = None,
                file_prefix = "",
                file_skip_if_exists = True,
                quiet = False):
+    
+    """Extract and aggregate nighttime lights from [NASA Black Marble data](https://blackmarble.gsfc.nasa.gov/).
+
+    Parameters
+    ----------
+    
+    roi_sf: Region of interest; geopandas dataframe (polygon). Must be in the [WGS 84 (epsg:4326)](https://epsg.io/4326) coordinate reference system.
+    
+    product_id: string. One of the following:
+        * `"VNP46A1"`: Daily (raw)
+        * `"VNP46A2"`: Daily (corrected)
+        * `"VNP46A3"`: Monthly
+        * `"VNP46A4"`: Annual
+        
+    date: Date of raster data. Entering one date will produce a raster. Entering multiple dates will produce a raster stack.
+        * For `product_id`s `"VNP46A1"` and `"VNP46A2"`, a date (eg, `"2021-10-03"`).
+        * For `product_id` `"VNP46A3"`, a date or year-month (e.g., `"2021-10-01"`, where the day will be ignored, or `"2021-10"`).
+        * For `product_id` `"VNP46A4"`, year or date  (e.g., `"2021-10-01"`, where the month and day will be ignored, or `2021`).
+        
+    bearer: NASA bearer token. For instructions on how to create a token, see [here](https://github.com/ramarty/blackmarbler#bearer-token-).
+    
+    aggregation_fun: Function used to aggregate nighttime lights data to polygons; this values is passed to the `stats` argument in the `zonal_stats` function from [rasterstats](https://pythonhosted.org/rasterstats/) (Default: `mean`).
+
+    variable: Variable to used to create raster (default: `NULL`). If `NULL`, uses the following default variables:
+        * For `product_id` `:VNP46A1"`, uses `DNB_At_Sensor_Radiance_500m`.
+        * For `product_id` `"VNP46A2"`, uses `Gap_Filled_DNB_BRDF-Corrected_NTL`.
+        * For `product_id`s `"VNP46A3"` and `"VNP46A4"`, uses `NearNadir_Composite_Snow_Free`.
+    For information on other variable choices, see [here](https://ladsweb.modaps.eosdis.nasa.gov/api/v2/content/archives/Document%20Archive/Science%20Data%20Product%20Documentation/VIIRS_Black_Marble_UG_v1.2_April_2021.pdf); for `VNP46A1`, see Table 3; for `VNP46A2` see Table 6; for `VNP46A3` and `VNP46A4`, see Table 9.
+
+    quality_flag_rm: Quality flag values to use to set values to `NA`. Each pixel has a quality flag value, where low quality values can be removed. Values are set to `NA` for each value in ther `quality_flag_rm` vector. (Default: `c(255)`).
+
+    For `VNP46A1` and `VNP46A2` (daily data):
+    - `0`: High-quality, Persistent nighttime lights
+    - `1`: High-quality, Ephemeral nighttime Lights
+    - `2`: Poor-quality, Outlier, potential cloud contamination, or other issues
+    - `255`: No retrieval, Fill value (masked out on ingestion)
+
+    For `VNP46A3` and `VNP46A4` (monthly and annual data):
+    - `0`: Good-quality, The number of observations used for the composite is larger than 3
+    - `1`: Poor-quality, The number of observations used for the composite is less than or equal to 3
+    - `2`: Gap filled NTL based on historical data
+    - `255`: Fill value
+    
+    check_all_tiles_exist: Check whether all Black Marble nighttime light tiles exist for the region of interest. Sometimes not all tiles are available, so the full region of interest may not be covered. If `TRUE`, skips cases where not all tiles are available. (Default: `TRUE`).
+ 
+    output_location_type: Where to produce output; either `r_memory` or `file`. If `r_memory`, functions returns a raster in R. If `file`, function exports a `.tif` file and returns `NULL`.
+
+    For `output_location_type = file`:
+    
+        file_dir: The directory where data should be exported (default: `NULL`, so the working directory will be used)
+        
+        file_prefix: Prefix to add to the file to be saved. The file will be saved as the following: `[file_prefix][product_id]_t[date].tif`
+
+        file_skip_if_exists: Whether the function should first check wither the file already exists, and to skip downloading or extracting data if the data for that date if the file already exists (default: `TRUE`).
+
+    quiet: Suppress output that show downloading progress and other messages. (Default: `FALSE`).
+        
+    Returns
+    -------
+    None (if output_location_type = "file")
+        A geotif file is saved to the "file_dir" directory. Nothing is returned from the function.
+
+    Raster (if output_location_type = "tempfile")
+    
+    """
 
     #### Make directory to put temporary files into
     temp_main_dir = tempfile.gettempdir()
