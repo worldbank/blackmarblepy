@@ -77,7 +77,7 @@ _Optional arguments_
   - For `product_id` `"VNP46A2"`, uses `Gap_Filled_DNB_BRDF-Corrected_NTL`. 
   - For `product_id`s `"VNP46A3"` and `"VNP46A4"`, uses `NearNadir_Composite_Snow_Free`. 
 
-* __quality_flag_rm:__ Quality flag values to use to set values to `NA`. Each pixel has a quality flag value, where low quality values can be removed. Values are set to `NA` for each value in ther `quality_flag_rm` vector. (Default: `c(1, 2, 255)`).
+* __quality_flag_rm:__ Quality flag values to use to set values to `NA`. Each pixel has a quality flag value, where low quality values can be removed. Values are set to `NA` for each value in ther `quality_flag_rm` vector. (Default: `[255]`).
 
   - For `VNP46A1` and `VNP46A2` (daily data):
     - `0`: High-quality, Persistent nighttime lights
