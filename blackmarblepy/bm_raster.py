@@ -38,6 +38,7 @@ def bm_raster(roi_sf,
               date, 
               bearer, 
               variable=None, 
+              quality_flag_rm = [1, 2, 255],
               check_all_tiles_exist = True,
               output_location_type="tempfile",
               file_dir=None, 
@@ -111,7 +112,8 @@ def bm_raster(roi_sf,
 
                     raster_path_i = bm_raster_i(roi_sf, 
                                                 product_id, 
-                                                date_i, bearer, variable, check_all_tiles_exist, quiet, temp_dir)
+                                                date_i, 
+                                                bearer, variable, quality_flag_rm, check_all_tiles_exist, quiet, temp_dir)
                     shutil.move(raster_path_i, out_path) # Move from tmp to main folder
 
                     if quiet == False:
@@ -137,7 +139,8 @@ def bm_raster(roi_sf,
                 date_name_i = define_date_name(date_i, product_id)
 
                 raster_path_i = bm_raster_i(roi_sf, product_id, 
-                                            date_i, bearer, variable, check_all_tiles_exist, quiet, temp_dir)
+                                            date_i, bearer, 
+                                            variable, quality_flag_rm, check_all_tiles_exist, quiet, temp_dir)
                 raster_path_list.append(raster_path_i) 
 
             #### Stack Rasters

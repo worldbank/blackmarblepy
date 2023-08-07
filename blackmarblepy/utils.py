@@ -112,7 +112,7 @@ def pad3(x):
     return out
 
 
-def file_to_raster(f, variable, output_path):
+def file_to_raster(f, variable, output_path, quality_flag_rm):
     
     h5_data = h5py.File(f, "r")
 
@@ -126,8 +126,11 @@ def file_to_raster(f, variable, output_path):
         yMin = float(grid_i_sf.geometry.bounds.miny)
         xMax = float(grid_i_sf.geometry.bounds.maxx)
         yMax = float(grid_i_sf.geometry.bounds.maxy)
-                
+              
+        global out
+        global qr
         out = h5_data["HDFEOS"]["GRIDS"]["VNP_Grid_DNB"]["Data Fields"][variable]
+        qf  = h5_data["HDFEOS"]["GRIDS"]["VNP_Grid_DNB"]["Data Fields"]["Mandatory_Quality_Flag"]
 
     else:
         lat = h5_data["HDFEOS"]["GRIDS"]["VIIRS_Grid_DNB_2d"]["Data Fields"]["lat"]
@@ -264,7 +267,7 @@ def create_dataset_name_df(product_id, all=True, years=None, months=None, days=N
 
     return files_df
 
-def download_raster(file_name, temp_dir, variable, bearer, quiet):
+def download_raster(file_name, temp_dir, variable, bearer, quality_flag_rm, quiet):
     
     # Path
     year = file_name[9:13]
@@ -285,7 +288,7 @@ def download_raster(file_name, temp_dir, variable, bearer, quiet):
     # Convert to raster
     file_name_tif = re.sub(".h5", ".tif", file_name)
 
-    file_to_raster(f, variable, os.path.join(temp_dir, 'tif_files_tmp', file_name_tif))
+    file_to_raster(f, variable, os.path.join(temp_dir, 'tif_files_tmp', file_name_tif), quality_flag_rm)
     
     #shutil.rmtree(os.path.join(temp_dir, product_id), ignore_errors=True)
 
@@ -320,6 +323,7 @@ def bm_extract_i(roi_sf,
                  date_i, 
                  bearer, 
                  variable,
+                 quality_flag_rm,
                  aggregation_fun,
                  check_all_tiles_exist,
                  quiet,
@@ -327,7 +331,8 @@ def bm_extract_i(roi_sf,
     
     try:
         #### Extract data
-        raster_path_i = bm_raster_i(roi_sf, product_id, date_i, bearer, variable, check_all_tiles_exist, quiet, temp_dir)
+        raster_path_i = bm_raster_i(roi_sf, product_id, date_i, 
+                                    bearer, variable, quality_flag_rm, check_all_tiles_exist, quiet, temp_dir)
 
         with rasterio.open(raster_path_i) as src:
             raster_data = src.read(1)
@@ -354,6 +359,7 @@ def bm_raster_i(roi_sf,
                 date, 
                 bearer, 
                 variable, 
+                quality_flag_rm,
                 check_all_tiles_exist,
                 quiet,
                 temp_dir):
@@ -410,7 +416,7 @@ def bm_raster_i(roi_sf,
         for file_name in bm_files_df['name']:
 
             # Saves files in {temp_dir}/tif_files_tmp, which above is cleared and created
-            download_raster(file_name, temp_dir, variable, bearer, quiet)
+            download_raster(file_name, temp_dir, variable, bearer, quality_flag_rm, quiet)
 
         #### Mosaic together
         # List of raster files to be mosaiced

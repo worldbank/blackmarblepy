@@ -38,6 +38,7 @@ def bm_extract(roi_sf,
                date,
                bearer,
                variable = None,
+               quality_flag_rm = [1, 2, 255],
                check_all_tiles_exist = True,
                output_location_type = "memory",
                aggregation_fun = "mean",
@@ -83,7 +84,7 @@ def bm_extract(roi_sf,
                 if (not file_skip_if_exists) | (not os.path.exists(out_path)):
 
                     poly_ntl_df = bm_extract_i(roi_sf, product_id, 
-                                               date_i, bearer, variable, 
+                                               date_i, bearer, variable, quality_flag_rm,
                                                aggregation_fun, check_all_tiles_exist, quiet, temp_dir)
 
                     #### Export data
@@ -112,7 +113,7 @@ def bm_extract(roi_sf,
     if output_location_type == "memory":
 
         poly_ntl_df_list = [bm_extract_i(roi_sf, product_id, 
-                                         date_i, bearer, variable, aggregation_fun, 
+                                         date_i, bearer, variable, quality_flag_rm, aggregation_fun, 
                                          check_all_tiles_exist, quiet, temp_dir) for date_i in date]
         poly_ntl_df = pd.concat(poly_ntl_df_list, ignore_index=True)
 
