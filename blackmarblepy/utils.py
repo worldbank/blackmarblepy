@@ -115,8 +115,16 @@ def pad3(x):
 def file_to_raster(f, variable, output_path, quality_flag_rm):
     
     h5_data = h5py.File(f, "r")
-
+    
+    # Daily --------------------------------------------------
     if ("VNP46A1" in f) or ("VNP46A2" in f):
+        
+        #### Check
+        h5_names = list(h5_data["HDFEOS"]["GRIDS"]["VNP_Grid_DNB"]["Data Fields"].keys())
+        
+        if variable not in h5_names:
+            "'" + variable + "'" + " not a valid variable option. Valid options include: " + ', '.join(h5_names)
+        
         tile_i = re.findall(r'h\d{2}v\d{2}', f)[0]
         
         bm_tiles_sf = gpd.read_file("https://raw.githubusercontent.com/ramarty/blackmarbler/main/data/blackmarbletiles.geojson")
@@ -126,19 +134,55 @@ def file_to_raster(f, variable, output_path, quality_flag_rm):
         yMin = float(grid_i_sf.geometry.bounds.miny)
         xMax = float(grid_i_sf.geometry.bounds.maxx)
         yMax = float(grid_i_sf.geometry.bounds.maxy)
-              
+        
         out = h5_data["HDFEOS"]["GRIDS"]["VNP_Grid_DNB"]["Data Fields"][variable]
         qf  = h5_data["HDFEOS"]["GRIDS"]["VNP_Grid_DNB"]["Data Fields"]["Mandatory_Quality_Flag"]
 
+        out = out[:]
+        qf  = qf[:]
+        
+        if len(quality_flag_rm) > 0:
+            
+            for val in quality_flag_rm:
+                out = np.where(qf == val, np.nan, out)
+      
+    # Monthly / Annual --------------------------------------------------
     else:
+        
+        h5_names = list(h5_data["HDFEOS"]["GRIDS"]["VIIRS_Grid_DNB_2d"]["Data Fields"].keys())
+        
+        if variable not in h5_names:
+            "'" + variable + "'" + " not a valid variable option. Valid options include: " + ', '.join(h5_names)
+            
         lat = h5_data["HDFEOS"]["GRIDS"]["VIIRS_Grid_DNB_2d"]["Data Fields"]["lat"]
         lon = h5_data["HDFEOS"]["GRIDS"]["VIIRS_Grid_DNB_2d"]["Data Fields"]["lon"]
         out = h5_data["HDFEOS"]["GRIDS"]["VIIRS_Grid_DNB_2d"]["Data Fields"][variable]
 
+        out = out[:]
+        
+        #### Quality Flags
+        if len(quality_flag_rm) > 0:
+            
+            variable_short = variable 
+            variable_short = re.sub("_Num", "", variable_short)
+            variable_short = re.sub("_Std", "", variable_short)
+
+            qf_name = variable_short + "_Quality"
+
+            if qf_name in h5_names:
+
+                qf = h5_data["HDFEOS"]["GRIDS"]["VIIRS_Grid_DNB_2d"]["Data Fields"][variable + "_Quality"]
+                qf  = qf[:]
+                
+                for val in quality_flag_rm:
+                    out = np.where(qf == val, np.nan, out)
+            
         xMin = min(lon)
         yMin = min(lat)
         xMax = max(lon)
         yMax = max(lat)
+
+    # Cleanup --------------------------------------------------
 
     # Metadata
     nRows = out.shape[0]
@@ -148,8 +192,9 @@ def file_to_raster(f, variable, output_path, quality_flag_rm):
     myCrs = 4326
 
     # Makes raster
-    data = out[:]
-    data = np.where(data == 65535, np.nan, data)
+    #data = out[:]
+    data = out
+    #data = np.where(data == 65535, np.nan, data)
 
     # Define the pixel size and number of rows and columns
     pixel_size = 1  # Size of each pixel in the output raster
@@ -279,7 +324,7 @@ def download_raster(file_name, temp_dir, variable, bearer, quality_flag_rm, quie
         print("Downloading: " + file_name)
 
     wget_command = f"/usr/local/bin/wget -e robots=off -m -np .html,.tmp -nH --cut-dirs=3 'https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/5000/{product_id}/{year}/{day}/{file_name}' --header 'Authorization: Bearer {bearer}' -P {temp_dir}/" 
-    print(wget_command)
+    #print(wget_command)
     #subprocess.run(wget_command, shell=True)
     subprocess.run(wget_command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     
