@@ -139,7 +139,7 @@ ghana_adm1 = downloader.get_shape_data_by_country_name(country_name=country_name
 ### Raster of Nighttime Lights <a name="quickstart-raster"></a>
 ```python
 ## Raster of nighttime lights
-r = bm_raster(roi_sf = roi_sub_sf,
+r = bm_raster(roi_sf = ghana_adm1,
               product_id = "VNP46A4",
               date = 2022, 
               bearer = bearer)
@@ -160,7 +160,7 @@ plt.axis("off")
 ### Trends in Nighttime Lights <a name="quickstart-trends"></a>
 ```python
 ## Annual trends in nighttime lights
-ntl_df = bm_extract(roi_sf = roi_sf,
+ntl_df = bm_extract(roi_sf = ghana_adm1,
                     product_id = "VNP46A4",
                     date = list(range(2012, 2023)),
                     bearer = bearer)
