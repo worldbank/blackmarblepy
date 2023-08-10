@@ -154,7 +154,7 @@ plt.axis("off")
 ```
 
 <p align="center">
-<img src="raster_example.png" alt="Nighttime Lights Map" width="800"/>
+<img src="raster_example.png" alt="Nighttime Lights Map" width="600"/>
 </p>
 
 ### Trends in Nighttime Lights <a name="quickstart-trends"></a>
