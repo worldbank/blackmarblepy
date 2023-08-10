@@ -114,6 +114,9 @@ For `bm_extract` only:
 ## Quickstart <a name ="quickstart">
 
 ### Setup <a name="quickstart-setup"></a>
+
+Before downloading and extracting Black Marble data, we first load libraries, define the NASA bearer token, and define a region of interest.
+
 ```python
 ## Libraries
 from blackmarblepy.bm_raster import bm_raster
@@ -137,6 +140,9 @@ ghana_adm1 = downloader.get_shape_data_by_country_name(country_name=country_name
 ```
 
 ### Raster of Nighttime Lights <a name="quickstart-raster"></a>
+
+The below example shows making an annual raster of nighttime lights for Ghana.
+
 ```python
 ## Raster of nighttime lights
 r = bm_raster(roi_sf = ghana_adm1,
@@ -158,6 +164,9 @@ plt.axis("off")
 </p>
 
 ### Trends in Nighttime Lights <a name="quickstart-trends"></a>
+
+The below example shows extracting average annual nighttime lights data for Ghana at the administrative 1 level and plotting the trends.
+
 ```python
 ## Annual trends in nighttime lights
 ntl_df = bm_extract(roi_sf = ghana_adm1,
