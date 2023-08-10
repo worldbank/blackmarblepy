@@ -14,6 +14,10 @@ Create Georeferenced Rasters of Nighttime Lights from [NASA Black Marble data](h
 * [Bearer token](#token)
 * [Functions](#function)
 * [Quick start](#quickstart)
+  * [Setup](#quickstart-setup)
+  * [Nighttime Lights Raster](#quickstart-raster)
+  * [Nighttime Lights Trends ](#quickstart-trends)
+* [Additional Usage](#usage)
 
 ## Overview <a name="overview"></a>
 
@@ -93,9 +97,9 @@ _Optional arguments_
 
 * __output_location_type:__ Where output should be stored (default: for `bm_raster`, `"tempfile"`; for `bm_extract`, `"memory"`). Either:
 
-- [For `bm_raster`] `tempfile` where the function will export the raster as a tempfile
-- [For `bm_extract`] `memory` where the function will export the data as pandas dataframe
-- `file` where the function will export the data as a file. For `bm_raster`, a `.tif` file will be saved; for `bm_extract`, a `.csv` file will be saved. A file is saved for each date. Consequently, if `date = [2018, 2019, 2020]`, three datasets will be saved: one for each year. Saving a dataset for each date can facilitate re-running the function later and only downloading data for dates where data have not been downloaded.
+  - [For `bm_raster`] `tempfile` where the function will export the raster as a tempfile
+  - [For `bm_extract`] `memory` where the function will export the data as pandas dataframe
+  - `file` where the function will export the data as a file. For `bm_raster`, a `.tif` file will be saved; for `bm_extract`, a `.csv` file will be saved. A file is saved for each date. Consequently, if `date = [2018, 2019, 2020]`, three datasets will be saved: one for each year. Saving a dataset for each date can facilitate re-running the function later and only downloading data for dates where data have not been downloaded.
 
 If `output_location_type = "file"`, the following arguments can be used:
 
@@ -107,6 +111,78 @@ For `bm_extract` only:
 
 * __aggregation_fun:__ A vector of functions to aggregate data (default: `"mean"`). The `zonal_stats` function from the `rasterstats` package is used for aggregations; this parameter is passed to `stats` argument in `zonal_stats`.
 
-## Quickstart <a name="quickstart">
+## Quickstart <a name ="quickstart">
 
-To see examples of using the package, see [here](https://github.com/ramarty/blackmarblepy/blob/main/examples/blackmarbley_example.ipynb).
+### Setup <a name="quickstart-setup"></a>
+```python
+## Libraries
+from blackmarblepy.bm_raster import bm_raster
+from blackmarblepy.bm_extract import bm_extract
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from gadm import GADMDownloader
+import seaborn as sns
+
+## Bear token
+bearer == "BEARER TOKEN HERE"
+
+## Get Region of Interest - Ghana
+downloader = GADMDownloader(version="4.0")
+
+country_name = "Ghana"
+ghana_adm1 = downloader.get_shape_data_by_country_name(country_name=country_name, 
+                                                       ad_level=1)
+```
+
+### Raster of Nighttime Lights <a name="quickstart-raster"></a>
+```python
+## Raster of nighttime lights
+r = bm_raster(roi_sf = roi_sub_sf,
+              product_id = "VNP46A4",
+              date = 2022, 
+              bearer = bearer)
+              
+## Map raster
+r_np = r.read(1)
+r_np = np.log(r_np+1)
+
+plt.imshow(r_np, cmap='hot')
+plt.tight_layout()
+plt.axis("off")
+```
+
+<p align="center">
+<img src="raster_example.png" alt="Nighttime Lights Map" width="1000"/>
+</p>
+
+### Trends in Nighttime Lights <a name="quickstart-trends"></a>
+```python
+## Annual trends in nighttime lights
+ntl_df = bm_extract(roi_sf = roi_sf,
+                    product_id = "VNP46A4",
+                    date = list(range(2012, 2023)),
+                    bearer = bearer)
+                    
+## Plot Trends
+sns.set(style="whitegrid")
+g = sns.catplot(data=ntl_df, kind="bar", x="date", y="ntl_mean", col="NAME_1", height=2.5, col_wrap = 3, aspect=1.2, color = "orange")
+
+# Set the x-axis rotation for better visibility
+g.set_xticklabels(rotation=45)
+
+# Adjust spacing between subplots
+plt.tight_layout()
+
+# Show the plot
+plt.show()
+```
+
+<p align="center">
+<img src="trends_example.png" alt="Nighttime Lights Map" width="1000"/>
+</p>
+
+## Additional Usage <a name="usage">
+
+To see additional examples of using the package, see [here](https://github.com/ramarty/blackmarblepy/blob/main/examples/blackmarbley_example.ipynb).
