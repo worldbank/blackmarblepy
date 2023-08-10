@@ -56,7 +56,7 @@ Both functions take the following arguments:
 
 _Required arguments_
 
-* __roi_sf:__ Region of interest; sf polygon. Must be in the [WGS 84 (epsg:4326)](https://epsg.io/4326) coordinate reference system. For `bm_extract`, aggregates nighttime lights within each polygon of `roi_sf`.
+* __roi_sf:__ Region of interest; geopandas dataframe. Must be in the [WGS 84 (epsg:4326)](https://epsg.io/4326) coordinate reference system. For `bm_extract`, aggregates nighttime lights within each polygon of `roi_sf`.
 
 * __product_id:__ One of the following: 
 
