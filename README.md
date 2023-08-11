@@ -71,7 +71,7 @@ Both functions take the following arguments:
 
   - __For product IDs "VNP46A1" and "VNP46A2"__ a date (eg, `"2021-10-03"`). 
   - __For product ID "VNP46A3"__, a date or year-month (e.g., `"2021-10-01"`, where the day will be ignored, or `"2021-10"`).
-  - __For product ID "VNP46A4", year or date  (e.g., `"2021-10-01"`, where the month and day will be ignored, or `2021`). 
+  - __For product ID "VNP46A4"__, year or date  (e.g., `"2021-10-01"`, where the month and day will be ignored, or `2021`). 
 
 * __bearer:__ NASA bearer token. For instructions on how to create a token, see [here](https://github.com/ramarty/blackmarblepy#bearer-token-).
 
