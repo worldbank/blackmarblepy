@@ -69,9 +69,9 @@ Both functions take the following arguments:
 
 * __date:__  Date of raster data. Entering one date will produce a raster. Entering multiple dates will produce a raster stack. 
 
-  - __For product IDs "VNP46A1" and "VNP46A2"__ a date (eg, `"2021-10-03"`). 
-  - __For product ID "VNP46A3"__, a date or year-month (e.g., `"2021-10-01"`, where the day will be ignored, or `"2021-10"`).
-  - __For product ID "VNP46A4"__, year or date  (e.g., `"2021-10-01"`, where the month and day will be ignored, or `2021`). 
+  - For `product_id`s `"VNP46A1"` and `"VNP46A2"`, a date (eg, `"2021-10-03"`). 
+  - For `product_id` `"VNP46A3"`, a date or year-month (e.g., `"2021-10-01"`, where the day will be ignored, or `"2021-10"`).
+  - For `product_id` `"VNP46A4"`, year or date  (e.g., `"2021-10-01"`, where the month and day will be ignored, or `2021`). 
 
 * __bearer:__ NASA bearer token. For instructions on how to create a token, see [here](https://github.com/ramarty/blackmarblepy#bearer-token-).
 
@@ -79,7 +79,7 @@ Both functions take the following arguments:
 
 * __variable:__ Variable to used to create raster (default: `NULL`). For information on all variable choices, see [here](https://ladsweb.modaps.eosdis.nasa.gov/api/v2/content/archives/Document%20Archive/Science%20Data%20Product%20Documentation/VIIRS_Black_Marble_UG_v1.2_April_2021.pdf); for `VNP46A1`, see Table 3; for `VNP46A2` see Table 6; for `VNP46A3` and `VNP46A4`, see Table 9. If `NULL`, uses the following default variables: 
 
-  - For `product_id` `:VNP46A1"`, uses `DNB_At_Sensor_Radiance_500m`. 
+  - For `product_id` `"VNP46A1"`, uses `DNB_At_Sensor_Radiance_500m`. 
   - For `product_id` `"VNP46A2"`, uses `Gap_Filled_DNB_BRDF-Corrected_NTL`. 
   - For `product_id`s `"VNP46A3"` and `"VNP46A4"`, uses `NearNadir_Composite_Snow_Free`. 
 
