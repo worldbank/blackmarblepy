@@ -12,7 +12,11 @@ Create Georeferenced Rasters of Nighttime Lights from [NASA Black Marble data](h
 * [Overview](#overview)
 * [Installation](#installation)
 * [Bearer token](#token)
-* [Functions](#function)
+* [Functions and arguments](#function-args)
+  * [Functions](#functions)
+  * [Required Arguments](#args-required)
+  * [Optional Arguments](#args-optional)
+  * [Argument only for `bm_extract`](#args-extract)
 * [Quick start](#quickstart)
   * [Setup](#quickstart-setup)
   * [Nighttime Lights Raster](#quickstart-raster)
@@ -45,9 +49,9 @@ The function requires using a **Bearer Token**; to obtain a token, follow the be
 3. Click "See wget Download Command" (bottom near top, in the middle)
 4. After clicking, you will see text that can be used to download data. The "Bearer" token will be a long string in red.
 
-## Functions and arguments <a name="function">
+## Functions and arguments <a name="function-args">
 
-### Functions
+### Functions <a name="functions">
 
 The package provides two functions:
 
@@ -56,7 +60,7 @@ The package provides two functions:
 
 Both functions take the following arguments:
 
-### Required arguments
+### Required arguments <a name="args-required">
 
 * __roi_sf:__ Region of interest; geopandas dataframe. Must be in the [WGS 84 (epsg:4326)](https://epsg.io/4326) coordinate reference system. For `bm_extract`, aggregates nighttime lights within each polygon of `roi_sf`.
 
@@ -75,7 +79,7 @@ Both functions take the following arguments:
 
 * __bearer:__ NASA bearer token. For instructions on how to create a token, see [here](https://github.com/ramarty/blackmarblepy#bearer-token-).
 
-### Optional arguments
+### Optional arguments <a name="args-optional">
 
 * __variable:__ Variable to used to create raster (default: `NULL`). For information on all variable choices, see [here](https://ladsweb.modaps.eosdis.nasa.gov/api/v2/content/archives/Document%20Archive/Science%20Data%20Product%20Documentation/VIIRS_Black_Marble_UG_v1.2_April_2021.pdf); for `VNP46A1`, see Table 3; for `VNP46A2` see Table 6; for `VNP46A3` and `VNP46A4`, see Table 9. If `NULL`, uses the following default variables: 
 
@@ -109,7 +113,7 @@ If `output_location_type = "file"`, the following arguments can be used:
 * __file_prefix:__ Prefix to add to the file to be saved. The file will be saved as the following: `[file_prefix][product_id]_t[date].[tif/csv]`
 * __file_skip_if_exists:__ Whether the function should first check wither the file already exists, and to skip downloading or extracting data if the data for that date if the file already exists (default: `TRUE`). If the function is first run with `date = c(2018, 2019, 2020)`, then is later run with `date = c(2018, 2019, 2020, 2021)`, the function will only download/extract data for 2021. Skipping existing files can facilitate re-running the function at a later date to download only more recent data. 
 
-### Argument for `bm_extract` only:
+### Argument for `bm_extract` only <a name="args-extract">
 
 * __aggregation_fun:__ A vector of functions to aggregate data (default: `"mean"`). The `zonal_stats` function from the `rasterstats` package is used for aggregations; this parameter is passed to `stats` argument in `zonal_stats`.
 
