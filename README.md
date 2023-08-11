@@ -45,7 +45,9 @@ The function requires using a **Bearer Token**; to obtain a token, follow the be
 3. Click "See wget Download Command" (bottom near top, in the middle)
 4. After clicking, you will see text that can be used to download data. The "Bearer" token will be a long string in red.
 
-## Functions <a name="function">
+## Functions and arguments <a name="function">
+
+### Functions
 
 The package provides two functions:
 
@@ -54,7 +56,7 @@ The package provides two functions:
 
 Both functions take the following arguments:
 
-_Required arguments_
+### Required arguments
 
 * __roi_sf:__ Region of interest; geopandas dataframe. Must be in the [WGS 84 (epsg:4326)](https://epsg.io/4326) coordinate reference system. For `bm_extract`, aggregates nighttime lights within each polygon of `roi_sf`.
 
@@ -67,13 +69,13 @@ _Required arguments_
 
 * __date:__  Date of raster data. Entering one date will produce a raster. Entering multiple dates will produce a raster stack. 
 
-  - For `product_id`s `"VNP46A1"` and `"VNP46A2"`, a date (eg, `"2021-10-03"`). 
-  - For `product_id` `"VNP46A3"`, a date or year-month (e.g., `"2021-10-01"`, where the day will be ignored, or `"2021-10"`).
-  - For `product_id` `"VNP46A4"`, year or date  (e.g., `"2021-10-01"`, where the month and day will be ignored, or `2021`). 
+  - __For product IDs "VNP46A1" and "VNP46A2"__ a date (eg, `"2021-10-03"`). 
+  - __For product ID "VNP46A3"__, a date or year-month (e.g., `"2021-10-01"`, where the day will be ignored, or `"2021-10"`).
+  - __For product ID "VNP46A4", year or date  (e.g., `"2021-10-01"`, where the month and day will be ignored, or `2021`). 
 
 * __bearer:__ NASA bearer token. For instructions on how to create a token, see [here](https://github.com/ramarty/blackmarblepy#bearer-token-).
 
-_Optional arguments_
+### Optional arguments
 
 * __variable:__ Variable to used to create raster (default: `NULL`). For information on all variable choices, see [here](https://ladsweb.modaps.eosdis.nasa.gov/api/v2/content/archives/Document%20Archive/Science%20Data%20Product%20Documentation/VIIRS_Black_Marble_UG_v1.2_April_2021.pdf); for `VNP46A1`, see Table 3; for `VNP46A2` see Table 6; for `VNP46A3` and `VNP46A4`, see Table 9. If `NULL`, uses the following default variables: 
 
@@ -107,7 +109,7 @@ If `output_location_type = "file"`, the following arguments can be used:
 * __file_prefix:__ Prefix to add to the file to be saved. The file will be saved as the following: `[file_prefix][product_id]_t[date].[tif/csv]`
 * __file_skip_if_exists:__ Whether the function should first check wither the file already exists, and to skip downloading or extracting data if the data for that date if the file already exists (default: `TRUE`). If the function is first run with `date = c(2018, 2019, 2020)`, then is later run with `date = c(2018, 2019, 2020, 2021)`, the function will only download/extract data for 2021. Skipping existing files can facilitate re-running the function at a later date to download only more recent data. 
 
-For `bm_extract` only:
+### Argument for `bm_extract` only:
 
 * __aggregation_fun:__ A vector of functions to aggregate data (default: `"mean"`). The `zonal_stats` function from the `rasterstats` package is used for aggregations; this parameter is passed to `stats` argument in `zonal_stats`.
 

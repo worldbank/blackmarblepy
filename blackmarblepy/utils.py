@@ -311,7 +311,7 @@ def create_dataset_name_df(product_id, all=True, years=None, months=None, days=N
 
     return files_df
 
-def download_raster(file_name, temp_dir, variable, bearer, quality_flag_rm, quiet):
+def download_raster(file_name, temp_dir, variable, bearer, quality_flag_rm, quiet, tile_i, n_tile):
     
     # Path
     year = file_name[9:13]
@@ -322,8 +322,8 @@ def download_raster(file_name, temp_dir, variable, bearer, quality_flag_rm, quie
 
     # Download
     if quiet == False:
-        print("Downloading: " + file_name)
-
+        print("Downloading " + str(tile_i) + "/" + str(n_tile) + ": " + file_name)
+        
     wget_command = f"/usr/local/bin/wget -e robots=off -m -np .html,.tmp -nH --cut-dirs=3 'https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/5000/{product_id}/{year}/{day}/{file_name}' --header 'Authorization: Bearer {bearer}' -P {temp_dir}/" 
     #print(wget_command)
     #subprocess.run(wget_command, shell=True)
@@ -457,11 +457,16 @@ def bm_raster_i(roi_sf,
                 
     else:
     
+        tile_i = 1
         for file_name in bm_files_df['name']:
+            
+            n_tile = bm_files_df.shape[0] 
 
             # Saves files in {temp_dir}/tif_files_tmp, which above is cleared and created
-            download_raster(file_name, temp_dir, variable, bearer, quality_flag_rm, quiet)
+            download_raster(file_name, temp_dir, variable, bearer, quality_flag_rm, quiet, tile_i, n_tile)
 
+            tile_i = tile_i + 1
+            
         #### Mosaic together
         # List of raster files to be mosaiced
         filepaths = glob.glob(os.path.join(temp_dir, 'tif_files_tmp', "*.tif"))
