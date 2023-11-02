@@ -1,0 +1,762 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>blackmarblepy</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=365ca57ee442770a23c6" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=365ca57ee442770a23c6" />
+  <script src="_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=365ca57ee442770a23c6"></script>
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'quickstart';</script>
+    <link rel="canonical" href="https://worldbank.github.io/blackmarblepy/quickstart.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Examples Using blackmarblepy Package" href="examples/blackmarbley_example.html" />
+    <link rel="prev" title="CONTRIBUTING" href="CONTRIBUTING.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="Nov 02, 2023"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="README.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt=" - Home"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt=" - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="api/blackmarble.html">blackmarble package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CONTRIBUTING.html">CONTRIBUTING</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">blackmarblepy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/blackmarbley_example.html">Examples Using blackmarblepy Package</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/worldbank/blackmarblepy" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/worldbank/blackmarblepy/edit/main/quickstart.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/worldbank/blackmarblepy/issues/new?title=Issue%20on%20page%20%2Fquickstart.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/quickstart.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>blackmarblepy</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview-a-name-overview-a">Overview <a name="overview"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation-a-name-installation">Installation <a name="installation"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bearer-token-a-name-token">Bearer Token <a name="token"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions-and-arguments-a-name-function-args">Functions and arguments <a name="function-args"></a><ul class="nav section-nav flex-column">
+<li class="nav-item toc-entry"><a class="reference internal nav-link" href="#functions-a-name-functions">Functions <a name="functions"></a></a></li>
+<li class="nav-item toc-entry"><a class="reference internal nav-link" href="#required-arguments-a-name-args-required">Required arguments <a name="args-required"></a></a></li>
+<li class="nav-item toc-entry"><a class="reference internal nav-link" href="#optional-arguments-a-name-args-optional">Optional arguments <a name="args-optional"></a></a></li>
+<li class="nav-item toc-entry"><a class="reference internal nav-link" href="#argument-for-bm-extract-only-a-name-args-extract">Argument for <code class="docutils literal notranslate"><span class="pre">bm_extract</span></code> only <a name="args-extract"></a></a></li>
+</ul>
+</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quickstart-a-name-quickstart">Quickstart <a name="quickstart"></a><ul class="nav section-nav flex-column">
+<li class="nav-item toc-entry"><a class="reference internal nav-link" href="#setup-a-name-quickstart-setup-a">Setup <a name="quickstart-setup"></a></a></li>
+<li class="nav-item toc-entry"><a class="reference internal nav-link" href="#raster-of-nighttime-lights-a-name-quickstart-raster-a">Raster of Nighttime Lights <a name="quickstart-raster"></a></a></li>
+<li class="nav-item toc-entry"><a class="reference internal nav-link" href="#trends-in-nighttime-lights-a-name-quickstart-trends-a">Trends in Nighttime Lights <a name="quickstart-trends"></a></a></li>
+</ul>
+</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-usage-a-name-usage">Additional Usage <a name="usage"></a></a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="blackmarblepy">
+<h1>blackmarblepy<a class="headerlink" href="#blackmarblepy" title="Permalink to this heading">#</a></h1>
+<p><a class="reference external" href="https://codecov.io/gh/ramarty/blackmarblepy"><img alt="codecov" src="https://codecov.io/gh/ramarty/blackmarblepy/branch/main/graph/badge.svg?token=blackmarblepy_token_here" /></a>
+<a class="reference external" href="https://github.com/ramarty/blackmarblepy/actions/workflows/main.yml"><img alt="CI" src="https://github.com/ramarty/blackmarblepy/actions/workflows/main.yml/badge.svg" /></a></p>
+<p align="center">
+<img src="ntl_usa.png" alt="Nighttime Lights Map" width="1000"/>
+</p>
+<p>Create Georeferenced Rasters of Nighttime Lights from <a class="reference external" href="https://blackmarble.gsfc.nasa.gov/">NASA Black Marble data</a>.</p>
+<ul class="simple">
+<li><p><span class="xref myst">Overview</span></p></li>
+<li><p><span class="xref myst">Installation</span></p></li>
+<li><p><span class="xref myst">Bearer token</span></p></li>
+<li><p><span class="xref myst">Functions and arguments</span></p>
+<ul>
+<li><p><span class="xref myst">Functions</span></p></li>
+<li><p><span class="xref myst">Required Arguments</span></p></li>
+<li><p><span class="xref myst">Optional Arguments</span></p></li>
+<li><p><span class="xref myst">Argument only for <code class="docutils literal notranslate"><span class="pre">bm_extract</span></code></span></p></li>
+</ul>
+</li>
+<li><p><span class="xref myst">Quick start</span></p>
+<ul>
+<li><p><span class="xref myst">Setup</span></p></li>
+<li><p><span class="xref myst">Nighttime Lights Raster</span></p></li>
+<li><p><span class="xref myst">Nighttime Lights Trends</span></p></li>
+</ul>
+</li>
+<li><p><span class="xref myst">Additional Usage</span></p></li>
+</ul>
+<section id="overview-a-name-overview-a">
+<h2>Overview <a name="overview"></a><a class="headerlink" href="#overview-a-name-overview-a" title="Permalink to this heading">#</a></h2>
+<p>This package facilitates downloading nighttime lights <a class="reference external" href="https://blackmarble.gsfc.nasa.gov/">Black Marble</a> data. Black Marble data is downloaded from the <a class="reference external" href="https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/5000/VNP46A3/">NASA LAADS Archive</a>.  The package automates the process of downloading all relevant tiles from the NASA LAADS archive to cover a region of interest, converting the raw files (in H5 format) to georeferenced rasters, and mosaicing rasters together when needed.</p>
+</section>
+<section id="installation-a-name-installation">
+<h2>Installation <a name="installation"><a class="headerlink" href="#installation-a-name-installation" title="Permalink to this heading">#</a></h2>
+<p>The package can be installed via pip.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/ramarty/blackmarblepy.git
+</pre></div>
+</div>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">blackmarblepy.bm_raster</span> <span class="kn">import</span> <span class="n">bm_raster</span>
+<span class="kn">from</span> <span class="nn">blackmarblepy.bm_extract</span> <span class="kn">import</span> <span class="n">bm_extract</span>
+</pre></div>
+</div>
+</section>
+<section id="bearer-token-a-name-token">
+<h2>Bearer Token <a name="token"><a class="headerlink" href="#bearer-token-a-name-token" title="Permalink to this heading">#</a></h2>
+<p>The function requires using a <strong>Bearer Token</strong>; to obtain a token, follow the below steps:</p>
+<ol class="arabic simple">
+<li><p>Go to the <a class="reference external" href="https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/5000/VNP46A3/">NASA LAADS Archive</a></p></li>
+<li><p>Click “Login” (bottom on top right); create an account if needed.</p></li>
+<li><p>Click “See wget Download Command” (bottom near top, in the middle)</p></li>
+<li><p>After clicking, you will see text that can be used to download data. The “Bearer” token will be a long string in red.</p></li>
+</ol>
+</section>
+<section id="functions-and-arguments-a-name-function-args">
+<h2>Functions and arguments <a name="function-args"><a class="headerlink" href="#functions-and-arguments-a-name-function-args" title="Permalink to this heading">#</a></h2>
+<section id="functions-a-name-functions">
+<h3>Functions <a name="functions"><a class="headerlink" href="#functions-a-name-functions" title="Permalink to this heading">#</a></h3>
+<p>The package provides two functions:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">bm_raster</span></code> produces a raster of Black Marble nighttime lights.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bm_extract</span></code> produces a dataframe of aggregated nighttime lights to a region of interest (e.g., average nighttime lights within US States).</p></li>
+</ul>
+<p>Both functions take the following arguments:</p>
+</section>
+<section id="required-arguments-a-name-args-required">
+<h3>Required arguments <a name="args-required"><a class="headerlink" href="#required-arguments-a-name-args-required" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>roi_sf:</strong> Region of interest; geopandas dataframe. Must be in the <a class="reference external" href="https://epsg.io/4326">WGS 84 (epsg:4326)</a> coordinate reference system. For <code class="docutils literal notranslate"><span class="pre">bm_extract</span></code>, aggregates nighttime lights within each polygon of <code class="docutils literal notranslate"><span class="pre">roi_sf</span></code>.</p></li>
+<li><p><strong>product_id:</strong> One of the following:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;VNP46A1&quot;</span></code>: Daily (raw)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;VNP46A2&quot;</span></code>: Daily (corrected)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;VNP46A3&quot;</span></code>: Monthly</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;VNP46A4&quot;</span></code>: Annual</p></li>
+</ul>
+</li>
+<li><p><strong>date:</strong>  Date of raster data. Entering one date will produce a raster. Entering multiple dates will produce a raster stack.</p>
+<ul>
+<li><p>For <code class="docutils literal notranslate"><span class="pre">product_id</span></code>s <code class="docutils literal notranslate"><span class="pre">&quot;VNP46A1&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;VNP46A2&quot;</span></code>, a date (eg, <code class="docutils literal notranslate"><span class="pre">&quot;2021-10-03&quot;</span></code>).</p></li>
+<li><p>For <code class="docutils literal notranslate"><span class="pre">product_id</span></code> <code class="docutils literal notranslate"><span class="pre">&quot;VNP46A3&quot;</span></code>, a date or year-month (e.g., <code class="docutils literal notranslate"><span class="pre">&quot;2021-10-01&quot;</span></code>, where the day will be ignored, or <code class="docutils literal notranslate"><span class="pre">&quot;2021-10&quot;</span></code>).</p></li>
+<li><p>For <code class="docutils literal notranslate"><span class="pre">product_id</span></code> <code class="docutils literal notranslate"><span class="pre">&quot;VNP46A4&quot;</span></code>, year or date  (e.g., <code class="docutils literal notranslate"><span class="pre">&quot;2021-10-01&quot;</span></code>, where the month and day will be ignored, or <code class="docutils literal notranslate"><span class="pre">2021</span></code>).</p></li>
+</ul>
+</li>
+<li><p><strong>bearer:</strong> NASA bearer token. For instructions on how to create a token, see <a class="reference external" href="https://github.com/ramarty/blackmarblepy#bearer-token-">here</a>.</p></li>
+</ul>
+</section>
+<section id="optional-arguments-a-name-args-optional">
+<h3>Optional arguments <a name="args-optional"><a class="headerlink" href="#optional-arguments-a-name-args-optional" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>variable:</strong> Variable to used to create raster (default: <code class="docutils literal notranslate"><span class="pre">NULL</span></code>). For information on all variable choices, see <a class="reference external" href="https://ladsweb.modaps.eosdis.nasa.gov/api/v2/content/archives/Document%20Archive/Science%20Data%20Product%20Documentation/VIIRS_Black_Marble_UG_v1.2_April_2021.pdf">here</a>; for <code class="docutils literal notranslate"><span class="pre">VNP46A1</span></code>, see Table 3; for <code class="docutils literal notranslate"><span class="pre">VNP46A2</span></code> see Table 6; for <code class="docutils literal notranslate"><span class="pre">VNP46A3</span></code> and <code class="docutils literal notranslate"><span class="pre">VNP46A4</span></code>, see Table 9. If <code class="docutils literal notranslate"><span class="pre">NULL</span></code>, uses the following default variables:</p>
+<ul>
+<li><p>For <code class="docutils literal notranslate"><span class="pre">product_id</span></code> <code class="docutils literal notranslate"><span class="pre">&quot;VNP46A1&quot;</span></code>, uses <code class="docutils literal notranslate"><span class="pre">DNB_At_Sensor_Radiance_500m</span></code>.</p></li>
+<li><p>For <code class="docutils literal notranslate"><span class="pre">product_id</span></code> <code class="docutils literal notranslate"><span class="pre">&quot;VNP46A2&quot;</span></code>, uses <code class="docutils literal notranslate"><span class="pre">Gap_Filled_DNB_BRDF-Corrected_NTL</span></code>.</p></li>
+<li><p>For <code class="docutils literal notranslate"><span class="pre">product_id</span></code>s <code class="docutils literal notranslate"><span class="pre">&quot;VNP46A3&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;VNP46A4&quot;</span></code>, uses <code class="docutils literal notranslate"><span class="pre">NearNadir_Composite_Snow_Free</span></code>.</p></li>
+</ul>
+</li>
+<li><p><strong>quality_flag_rm:</strong> Quality flag values to use to set values to <code class="docutils literal notranslate"><span class="pre">NA</span></code>. Each pixel has a quality flag value, where low quality values can be removed. Values are set to <code class="docutils literal notranslate"><span class="pre">NA</span></code> for each value in ther <code class="docutils literal notranslate"><span class="pre">quality_flag_rm</span></code> vector. (Default: <code class="docutils literal notranslate"><span class="pre">[255]</span></code>).</p>
+<ul>
+<li><p>For <code class="docutils literal notranslate"><span class="pre">VNP46A1</span></code> and <code class="docutils literal notranslate"><span class="pre">VNP46A2</span></code> (daily data):</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">0</span></code>: High-quality, Persistent nighttime lights</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">1</span></code>: High-quality, Ephemeral nighttime Lights</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">2</span></code>: Poor-quality, Outlier, potential cloud contamination, or other issues</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">255</span></code>: No retrieval, Fill value (masked out on ingestion)</p></li>
+</ul>
+</li>
+<li><p>For <code class="docutils literal notranslate"><span class="pre">VNP46A3</span></code> and <code class="docutils literal notranslate"><span class="pre">VNP46A4</span></code> (monthly and annual data):</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">0</span></code>: Good-quality, The number of observations used for the composite is larger than 3</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">1</span></code>: Poor-quality, The number of observations used for the composite is less than or equal to 3</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">2</span></code>: Gap filled NTL based on historical data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">255</span></code>: Fill value</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>output_location_type:</strong> Where output should be stored (default: for <code class="docutils literal notranslate"><span class="pre">bm_raster</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;tempfile&quot;</span></code>; for <code class="docutils literal notranslate"><span class="pre">bm_extract</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;memory&quot;</span></code>). Either:</p>
+<ul>
+<li><p>[For <code class="docutils literal notranslate"><span class="pre">bm_raster</span></code>] <code class="docutils literal notranslate"><span class="pre">tempfile</span></code> where the function will export the raster as a tempfile</p></li>
+<li><p>[For <code class="docutils literal notranslate"><span class="pre">bm_extract</span></code>] <code class="docutils literal notranslate"><span class="pre">memory</span></code> where the function will export the data as pandas dataframe</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">file</span></code> where the function will export the data as a file. For <code class="docutils literal notranslate"><span class="pre">bm_raster</span></code>, a <code class="docutils literal notranslate"><span class="pre">.tif</span></code> file will be saved; for <code class="docutils literal notranslate"><span class="pre">bm_extract</span></code>, a <code class="docutils literal notranslate"><span class="pre">.csv</span></code> file will be saved. A file is saved for each date. Consequently, if <code class="docutils literal notranslate"><span class="pre">date</span> <span class="pre">=</span> <span class="pre">[2018,</span> <span class="pre">2019,</span> <span class="pre">2020]</span></code>, three datasets will be saved: one for each year. Saving a dataset for each date can facilitate re-running the function later and only downloading data for dates where data have not been downloaded.</p></li>
+</ul>
+</li>
+</ul>
+<p>If <code class="docutils literal notranslate"><span class="pre">output_location_type</span> <span class="pre">=</span> <span class="pre">&quot;file&quot;</span></code>, the following arguments can be used:</p>
+<ul class="simple">
+<li><p><strong>file_dir:</strong> The directory where data should be exported (default: <code class="docutils literal notranslate"><span class="pre">NULL</span></code>, so the working directory will be used)</p></li>
+<li><p><strong>file_prefix:</strong> Prefix to add to the file to be saved. The file will be saved as the following: <code class="docutils literal notranslate"><span class="pre">[file_prefix][product_id]_t[date].[tif/csv]</span></code></p></li>
+<li><p><strong>file_skip_if_exists:</strong> Whether the function should first check wither the file already exists, and to skip downloading or extracting data if the data for that date if the file already exists (default: <code class="docutils literal notranslate"><span class="pre">TRUE</span></code>). If the function is first run with <code class="docutils literal notranslate"><span class="pre">date</span> <span class="pre">=</span> <span class="pre">c(2018,</span> <span class="pre">2019,</span> <span class="pre">2020)</span></code>, then is later run with <code class="docutils literal notranslate"><span class="pre">date</span> <span class="pre">=</span> <span class="pre">c(2018,</span> <span class="pre">2019,</span> <span class="pre">2020,</span> <span class="pre">2021)</span></code>, the function will only download/extract data for 2021. Skipping existing files can facilitate re-running the function at a later date to download only more recent data.</p></li>
+</ul>
+</section>
+<section id="argument-for-bm-extract-only-a-name-args-extract">
+<h3>Argument for <code class="docutils literal notranslate"><span class="pre">bm_extract</span></code> only <a name="args-extract"><a class="headerlink" href="#argument-for-bm-extract-only-a-name-args-extract" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>aggregation_fun:</strong> A vector of functions to aggregate data (default: <code class="docutils literal notranslate"><span class="pre">&quot;mean&quot;</span></code>). The <code class="docutils literal notranslate"><span class="pre">zonal_stats</span></code> function from the <code class="docutils literal notranslate"><span class="pre">rasterstats</span></code> package is used for aggregations; this parameter is passed to <code class="docutils literal notranslate"><span class="pre">stats</span></code> argument in <code class="docutils literal notranslate"><span class="pre">zonal_stats</span></code>.</p></li>
+</ul>
+</section>
+</section>
+<section id="quickstart-a-name-quickstart">
+<h2>Quickstart <a name ="quickstart"><a class="headerlink" href="#quickstart-a-name-quickstart" title="Permalink to this heading">#</a></h2>
+<section id="setup-a-name-quickstart-setup-a">
+<h3>Setup <a name="quickstart-setup"></a><a class="headerlink" href="#setup-a-name-quickstart-setup-a" title="Permalink to this heading">#</a></h3>
+<p>Before downloading and extracting Black Marble data, we first load libraries, define the NASA bearer token, and define a region of interest.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">## Libraries</span>
+<span class="kn">from</span> <span class="nn">blackmarblepy.bm_raster</span> <span class="kn">import</span> <span class="n">bm_raster</span>
+<span class="kn">from</span> <span class="nn">blackmarblepy.bm_extract</span> <span class="kn">import</span> <span class="n">bm_extract</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">gadm</span> <span class="kn">import</span> <span class="n">GADMDownloader</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+
+<span class="c1">## Bear token</span>
+<span class="n">bearer</span> <span class="o">==</span> <span class="s2">&quot;BEARER TOKEN HERE&quot;</span>
+
+<span class="c1">## Get Region of Interest - Ghana</span>
+<span class="n">downloader</span> <span class="o">=</span> <span class="n">GADMDownloader</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="s2">&quot;4.0&quot;</span><span class="p">)</span>
+
+<span class="n">country_name</span> <span class="o">=</span> <span class="s2">&quot;Ghana&quot;</span>
+<span class="n">ghana_adm1</span> <span class="o">=</span> <span class="n">downloader</span><span class="o">.</span><span class="n">get_shape_data_by_country_name</span><span class="p">(</span><span class="n">country_name</span><span class="o">=</span><span class="n">country_name</span><span class="p">,</span>
+                                                       <span class="n">ad_level</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="raster-of-nighttime-lights-a-name-quickstart-raster-a">
+<h3>Raster of Nighttime Lights <a name="quickstart-raster"></a><a class="headerlink" href="#raster-of-nighttime-lights-a-name-quickstart-raster-a" title="Permalink to this heading">#</a></h3>
+<p>The below example shows making an annual raster of nighttime lights for Ghana.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">## Raster of nighttime lights</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">bm_raster</span><span class="p">(</span><span class="n">roi_sf</span> <span class="o">=</span> <span class="n">ghana_adm1</span><span class="p">,</span>
+              <span class="n">product_id</span> <span class="o">=</span> <span class="s2">&quot;VNP46A4&quot;</span><span class="p">,</span>
+              <span class="n">date</span> <span class="o">=</span> <span class="mi">2022</span><span class="p">,</span>
+              <span class="n">bearer</span> <span class="o">=</span> <span class="n">bearer</span><span class="p">)</span>
+
+<span class="c1">## Map raster</span>
+<span class="n">r_np</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">r_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">r_np</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">r_np</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;hot&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p align="center">
+<img src="raster_example.png" alt="Nighttime Lights Map" width="500"/>
+</p>
+</section>
+<section id="trends-in-nighttime-lights-a-name-quickstart-trends-a">
+<h3>Trends in Nighttime Lights <a name="quickstart-trends"></a><a class="headerlink" href="#trends-in-nighttime-lights-a-name-quickstart-trends-a" title="Permalink to this heading">#</a></h3>
+<p>The below example shows extracting average annual nighttime lights data for Ghana at the administrative 1 level and plotting the trends.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">## Annual trends in nighttime lights</span>
+<span class="n">ntl_df</span> <span class="o">=</span> <span class="n">bm_extract</span><span class="p">(</span><span class="n">roi_sf</span> <span class="o">=</span> <span class="n">ghana_adm1</span><span class="p">,</span>
+                    <span class="n">product_id</span> <span class="o">=</span> <span class="s2">&quot;VNP46A4&quot;</span><span class="p">,</span>
+                    <span class="n">date</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">2012</span><span class="p">,</span> <span class="mi">2023</span><span class="p">)),</span>
+                    <span class="n">bearer</span> <span class="o">=</span> <span class="n">bearer</span><span class="p">)</span>
+
+<span class="c1">## Plot Trends</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">)</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">catplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">ntl_df</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;bar&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;ntl_mean&quot;</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="s2">&quot;NAME_1&quot;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">col_wrap</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;orange&quot;</span><span class="p">)</span>
+
+<span class="c1"># Set the x-axis rotation for better visibility</span>
+<span class="n">g</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+
+<span class="c1"># Adjust spacing between subplots</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+<span class="c1"># Show the plot</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p align="center">
+<img src="trends_example.png" alt="Nighttime Lights Map" width="1000"/>
+</p>
+</section>
+</section>
+<section id="additional-usage-a-name-usage">
+<h2>Additional Usage <a name="usage"><a class="headerlink" href="#additional-usage-a-name-usage" title="Permalink to this heading">#</a></h2>
+<p>To see additional examples of using the package, see <a class="reference external" href="https://github.com/ramarty/blackmarblepy/blob/main/examples/blackmarbley_example.ipynb">here</a>.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="CONTRIBUTING.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">CONTRIBUTING</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="examples/blackmarbley_example.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Examples Using blackmarblepy Package</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview-a-name-overview-a">Overview <a name="overview"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation-a-name-installation">Installation <a name="installation"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bearer-token-a-name-token">Bearer Token <a name="token"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions-and-arguments-a-name-function-args">Functions and arguments <a name="function-args"></a><ul class="nav section-nav flex-column">
+<li class="nav-item toc-entry"><a class="reference internal nav-link" href="#functions-a-name-functions">Functions <a name="functions"></a></a></li>
+<li class="nav-item toc-entry"><a class="reference internal nav-link" href="#required-arguments-a-name-args-required">Required arguments <a name="args-required"></a></a></li>
+<li class="nav-item toc-entry"><a class="reference internal nav-link" href="#optional-arguments-a-name-args-optional">Optional arguments <a name="args-optional"></a></a></li>
+<li class="nav-item toc-entry"><a class="reference internal nav-link" href="#argument-for-bm-extract-only-a-name-args-extract">Argument for <code class="docutils literal notranslate"><span class="pre">bm_extract</span></code> only <a name="args-extract"></a></a></li>
+</ul>
+</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quickstart-a-name-quickstart">Quickstart <a name="quickstart"></a><ul class="nav section-nav flex-column">
+<li class="nav-item toc-entry"><a class="reference internal nav-link" href="#setup-a-name-quickstart-setup-a">Setup <a name="quickstart-setup"></a></a></li>
+<li class="nav-item toc-entry"><a class="reference internal nav-link" href="#raster-of-nighttime-lights-a-name-quickstart-raster-a">Raster of Nighttime Lights <a name="quickstart-raster"></a></a></li>
+<li class="nav-item toc-entry"><a class="reference internal nav-link" href="#trends-in-nighttime-lights-a-name-quickstart-trends-a">Trends in Nighttime Lights <a name="quickstart-trends"></a></a></li>
+</ul>
+</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-usage-a-name-usage">Additional Usage <a name="usage"></a></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Development Data Group
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  Last updated on Nov 02, 2023.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=365ca57ee442770a23c6"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=365ca57ee442770a23c6"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
