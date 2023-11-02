@@ -1,0 +1,12 @@
+format: jb-book
+root: README
+
+parts:
+  - caption: Documentation
+    chapters:
+      - file: api/blackmarble.rst
+      - file: CONTRIBUTING
+  - caption: Examples
+    chapters:
+      - file: quickstart
+      - file: examples/blackmarbley_example.ipynb
