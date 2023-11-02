@@ -411,7 +411,7 @@ def bm_raster_i(roi_sf,
     #### Prep files to download
     
     # Black marble grid: TODO: Add to python repo
-    bm_tiles_sf = gpd.read_file("https://raw.githubusercontent.com/ramarty/blackmarbler/main/data/blackmarbletiles.geojson")
+    bm_tiles_sf = gpd.read_file("https://raw.githubusercontent.com/worldbank/blackmarbler/main/data/blackmarbletiles.geojson")
 
     # Prep dates            
     if product_id == "VNP46A3":
