@@ -1,4 +1,4 @@
-# blackmarblepy 
+# blackmarblepy
 
 [![codecov](https://codecov.io/gh/ramarty/blackmarblepy/branch/main/graph/badge.svg?token=blackmarblepy_token_here)](https://codecov.io/gh/ramarty/blackmarblepy)
 [![CI](https://github.com/ramarty/blackmarblepy/actions/workflows/main.yml/badge.svg)](https://github.com/ramarty/blackmarblepy/actions/workflows/main.yml)
@@ -7,7 +7,7 @@
 <img src="ntl_usa.png" alt="Nighttime Lights Map" width="1000"/>
 </p>
 
-Create Georeferenced Rasters of Nighttime Lights from [NASA Black Marble data](https://blackmarble.gsfc.nasa.gov/). 
+Create Georeferenced Rasters of Nighttime Lights from [NASA Black Marble data](https://blackmarble.gsfc.nasa.gov/).
 
 * [Overview](#overview)
 * [Installation](#installation)
@@ -20,7 +20,7 @@ Create Georeferenced Rasters of Nighttime Lights from [NASA Black Marble data](h
 * [Quick start](#quickstart)
   * [Setup](#quickstart-setup)
   * [Nighttime Lights Raster](#quickstart-raster)
-  * [Nighttime Lights Trends ](#quickstart-trends)
+  * [Nighttime Lights Trends](#quickstart-trends)
 * [Additional Usage](#usage)
 
 ## Overview <a name="overview"></a>
@@ -32,7 +32,7 @@ This package facilitates downloading nighttime lights [Black Marble](https://bla
 The package can be installed via pip.
 
 ```bash
-$ pip install git+https://github.com/ramarty/blackmarblepy.git
+pip install git+https://github.com/ramarty/blackmarblepy.git
 ```
 
 ```py
@@ -55,67 +55,67 @@ The function requires using a **Bearer Token**; to obtain a token, follow the be
 
 The package provides two functions:
 
-* `bm_raster` produces a raster of Black Marble nighttime lights. 
-* `bm_extract` produces a dataframe of aggregated nighttime lights to a region of interest (e.g., average nighttime lights within US States). 
+* `bm_raster` produces a raster of Black Marble nighttime lights.
+* `bm_extract` produces a dataframe of aggregated nighttime lights to a region of interest (e.g., average nighttime lights within US States).
 
 Both functions take the following arguments:
 
 ### Required arguments <a name="args-required">
 
-* __roi_sf:__ Region of interest; geopandas dataframe. Must be in the [WGS 84 (epsg:4326)](https://epsg.io/4326) coordinate reference system. For `bm_extract`, aggregates nighttime lights within each polygon of `roi_sf`.
+* **roi_sf:** Region of interest; geopandas dataframe. Must be in the [WGS 84 (epsg:4326)](https://epsg.io/4326) coordinate reference system. For `bm_extract`, aggregates nighttime lights within each polygon of `roi_sf`.
 
-* __product_id:__ One of the following: 
+* **product_id:** One of the following:
 
-  - `"VNP46A1"`: Daily (raw)
-  - `"VNP46A2"`: Daily (corrected)
-  - `"VNP46A3"`: Monthly
-  - `"VNP46A4"`: Annual
+  * `"VNP46A1"`: Daily (raw)
+  * `"VNP46A2"`: Daily (corrected)
+  * `"VNP46A3"`: Monthly
+  * `"VNP46A4"`: Annual
 
-* __date:__  Date of raster data. Entering one date will produce a raster. Entering multiple dates will produce a raster stack. 
+* **date:**  Date of raster data. Entering one date will produce a raster. Entering multiple dates will produce a raster stack.
 
-  - For `product_id`s `"VNP46A1"` and `"VNP46A2"`, a date (eg, `"2021-10-03"`). 
-  - For `product_id` `"VNP46A3"`, a date or year-month (e.g., `"2021-10-01"`, where the day will be ignored, or `"2021-10"`).
-  - For `product_id` `"VNP46A4"`, year or date  (e.g., `"2021-10-01"`, where the month and day will be ignored, or `2021`). 
+  * For `product_id`s `"VNP46A1"` and `"VNP46A2"`, a date (eg, `"2021-10-03"`).
+  * For `product_id` `"VNP46A3"`, a date or year-month (e.g., `"2021-10-01"`, where the day will be ignored, or `"2021-10"`).
+  * For `product_id` `"VNP46A4"`, year or date  (e.g., `"2021-10-01"`, where the month and day will be ignored, or `2021`).
 
-* __bearer:__ NASA bearer token. For instructions on how to create a token, see [here](https://github.com/ramarty/blackmarblepy#bearer-token-).
+* **bearer:** NASA bearer token. For instructions on how to create a token, see [here](https://github.com/ramarty/blackmarblepy#bearer-token-).
 
 ### Optional arguments <a name="args-optional">
 
-* __variable:__ Variable to used to create raster (default: `NULL`). For information on all variable choices, see [here](https://ladsweb.modaps.eosdis.nasa.gov/api/v2/content/archives/Document%20Archive/Science%20Data%20Product%20Documentation/VIIRS_Black_Marble_UG_v1.2_April_2021.pdf); for `VNP46A1`, see Table 3; for `VNP46A2` see Table 6; for `VNP46A3` and `VNP46A4`, see Table 9. If `NULL`, uses the following default variables: 
+* **variable:** Variable to used to create raster (default: `NULL`). For information on all variable choices, see [here](https://ladsweb.modaps.eosdis.nasa.gov/api/v2/content/archives/Document%20Archive/Science%20Data%20Product%20Documentation/VIIRS_Black_Marble_UG_v1.2_April_2021.pdf); for `VNP46A1`, see Table 3; for `VNP46A2` see Table 6; for `VNP46A3` and `VNP46A4`, see Table 9. If `NULL`, uses the following default variables:
 
-  - For `product_id` `"VNP46A1"`, uses `DNB_At_Sensor_Radiance_500m`. 
-  - For `product_id` `"VNP46A2"`, uses `Gap_Filled_DNB_BRDF-Corrected_NTL`. 
-  - For `product_id`s `"VNP46A3"` and `"VNP46A4"`, uses `NearNadir_Composite_Snow_Free`. 
+  * For `product_id` `"VNP46A1"`, uses `DNB_At_Sensor_Radiance_500m`.
+  * For `product_id` `"VNP46A2"`, uses `Gap_Filled_DNB_BRDF-Corrected_NTL`.
+  * For `product_id`s `"VNP46A3"` and `"VNP46A4"`, uses `NearNadir_Composite_Snow_Free`.
 
-* __quality_flag_rm:__ Quality flag values to use to set values to `NA`. Each pixel has a quality flag value, where low quality values can be removed. Values are set to `NA` for each value in ther `quality_flag_rm` vector. (Default: `[255]`).
+* **quality_flag_rm:** Quality flag values to use to set values to `NA`. Each pixel has a quality flag value, where low quality values can be removed. Values are set to `NA` for each value in ther `quality_flag_rm` vector. (Default: `[255]`).
 
-  - For `VNP46A1` and `VNP46A2` (daily data):
-    - `0`: High-quality, Persistent nighttime lights
-    - `1`: High-quality, Ephemeral nighttime Lights
-    - `2`: Poor-quality, Outlier, potential cloud contamination, or other issues
-    - `255`: No retrieval, Fill value (masked out on ingestion)
+  * For `VNP46A1` and `VNP46A2` (daily data):
+    * `0`: High-quality, Persistent nighttime lights
+    * `1`: High-quality, Ephemeral nighttime Lights
+    * `2`: Poor-quality, Outlier, potential cloud contamination, or other issues
+    * `255`: No retrieval, Fill value (masked out on ingestion)
 
-  - For `VNP46A3` and `VNP46A4` (monthly and annual data):
-    - `0`: Good-quality, The number of observations used for the composite is larger than 3
-    - `1`: Poor-quality, The number of observations used for the composite is less than or equal to 3
-    - `2`: Gap filled NTL based on historical data
-    - `255`: Fill value
+  * For `VNP46A3` and `VNP46A4` (monthly and annual data):
+    * `0`: Good-quality, The number of observations used for the composite is larger than 3
+    * `1`: Poor-quality, The number of observations used for the composite is less than or equal to 3
+    * `2`: Gap filled NTL based on historical data
+    * `255`: Fill value
 
-* __output_location_type:__ Where output should be stored (default: for `bm_raster`, `"tempfile"`; for `bm_extract`, `"memory"`). Either:
+* **output_location_type:** Where output should be stored (default: for `bm_raster`, `"tempfile"`; for `bm_extract`, `"memory"`). Either:
 
-  - [For `bm_raster`] `tempfile` where the function will export the raster as a tempfile
-  - [For `bm_extract`] `memory` where the function will export the data as pandas dataframe
-  - `file` where the function will export the data as a file. For `bm_raster`, a `.tif` file will be saved; for `bm_extract`, a `.csv` file will be saved. A file is saved for each date. Consequently, if `date = [2018, 2019, 2020]`, three datasets will be saved: one for each year. Saving a dataset for each date can facilitate re-running the function later and only downloading data for dates where data have not been downloaded.
+  * [For `bm_raster`] `tempfile` where the function will export the raster as a tempfile
+  * [For `bm_extract`] `memory` where the function will export the data as pandas dataframe
+  * `file` where the function will export the data as a file. For `bm_raster`, a `.tif` file will be saved; for `bm_extract`, a `.csv` file will be saved. A file is saved for each date. Consequently, if `date = [2018, 2019, 2020]`, three datasets will be saved: one for each year. Saving a dataset for each date can facilitate re-running the function later and only downloading data for dates where data have not been downloaded.
 
 If `output_location_type = "file"`, the following arguments can be used:
 
-* __file_dir:__ The directory where data should be exported (default: `NULL`, so the working directory will be used)
-* __file_prefix:__ Prefix to add to the file to be saved. The file will be saved as the following: `[file_prefix][product_id]_t[date].[tif/csv]`
-* __file_skip_if_exists:__ Whether the function should first check wither the file already exists, and to skip downloading or extracting data if the data for that date if the file already exists (default: `TRUE`). If the function is first run with `date = c(2018, 2019, 2020)`, then is later run with `date = c(2018, 2019, 2020, 2021)`, the function will only download/extract data for 2021. Skipping existing files can facilitate re-running the function at a later date to download only more recent data. 
+* **file_dir:** The directory where data should be exported (default: `NULL`, so the working directory will be used)
+* **file_prefix:** Prefix to add to the file to be saved. The file will be saved as the following: `[file_prefix][product_id]_t[date].[tif/csv]`
+* **file_skip_if_exists:** Whether the function should first check wither the file already exists, and to skip downloading or extracting data if the data for that date if the file already exists (default: `TRUE`). If the function is first run with `date = c(2018, 2019, 2020)`, then is later run with `date = c(2018, 2019, 2020, 2021)`, the function will only download/extract data for 2021. Skipping existing files can facilitate re-running the function at a later date to download only more recent data.
 
 ### Argument for `bm_extract` only <a name="args-extract">
 
-* __aggregation_fun:__ A vector of functions to aggregate data (default: `"mean"`). The `zonal_stats` function from the `rasterstats` package is used for aggregations; this parameter is passed to `stats` argument in `zonal_stats`.
+* **aggregation_fun:** A vector of functions to aggregate data (default: `"mean"`). The `zonal_stats` function from the `rasterstats` package is used for aggregations; this parameter is passed to `stats` argument in `zonal_stats`.
 
 ## Quickstart <a name ="quickstart">
 
@@ -141,7 +141,7 @@ bearer == "BEARER TOKEN HERE"
 downloader = GADMDownloader(version="4.0")
 
 country_name = "Ghana"
-ghana_adm1 = downloader.get_shape_data_by_country_name(country_name=country_name, 
+ghana_adm1 = downloader.get_shape_data_by_country_name(country_name=country_name,
                                                        ad_level=1)
 ```
 
@@ -153,9 +153,9 @@ The below example shows making an annual raster of nighttime lights for Ghana.
 ## Raster of nighttime lights
 r = bm_raster(roi_sf = ghana_adm1,
               product_id = "VNP46A4",
-              date = 2022, 
+              date = 2022,
               bearer = bearer)
-              
+
 ## Map raster
 r_np = r.read(1)
 r_np = np.log(r_np+1)
@@ -179,7 +179,7 @@ ntl_df = bm_extract(roi_sf = ghana_adm1,
                     product_id = "VNP46A4",
                     date = list(range(2012, 2023)),
                     bearer = bearer)
-                    
+
 ## Plot Trends
 sns.set(style="whitegrid")
 g = sns.catplot(data=ntl_df, kind="bar", x="date", y="ntl_mean", col="NAME_1", height=2.5, col_wrap = 3, aspect=1.2, color = "orange")
