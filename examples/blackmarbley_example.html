@@ -428,24 +428,27 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Found existing installation: blackmarblepy 0.1.0
-Uninstalling blackmarblepy-0.1.0:
-  Successfully uninstalled blackmarblepy-0.1.0
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Yellow">WARNING: Skipping blackmarblepy as it is not installed.</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/ramarty/blackmarblepy.git
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="ch">#! pip install git+https://github.com/worldbank/blackmarblepy.git</span>
+
+<span class="o">!</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/worldbank/blackmarblepy.git@rob-documentation
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting git+https://github.com/ramarty/blackmarblepy.git
-  Cloning https://github.com/ramarty/blackmarblepy.git to /private/var/folders/m1/8h14xfm56hd6qfgz6btm1rd80000gn/T/pip-req-build-sxp11589
-  Running command git clone -q https://github.com/ramarty/blackmarblepy.git /private/var/folders/m1/8h14xfm56hd6qfgz6btm1rd80000gn/T/pip-req-build-sxp11589
-  Resolved https://github.com/ramarty/blackmarblepy.git to commit f11d63dd310e117c2ec0f2ad857db69d8576ae9f
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting git+https://github.com/worldbank/blackmarblepy.git@rob-documentation
+  Cloning https://github.com/worldbank/blackmarblepy.git (to revision rob-documentation) to /private/var/folders/m1/8h14xfm56hd6qfgz6btm1rd80000gn/T/pip-req-build-ue8ckc4a
+  Running command git clone -q https://github.com/worldbank/blackmarblepy.git /private/var/folders/m1/8h14xfm56hd6qfgz6btm1rd80000gn/T/pip-req-build-ue8ckc4a
+  Running command git checkout -b rob-documentation --track origin/rob-documentation
+  Switched to a new branch &#39;rob-documentation&#39;
+  Branch &#39;rob-documentation&#39; set up to track remote branch &#39;rob-documentation&#39; from &#39;origin&#39;.
+  Resolved https://github.com/worldbank/blackmarblepy.git to commit fadb542197a2ad46705f11290aa9d5ed465ce739
 Requirement already satisfied: pandas in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from blackmarblepy==0.1.0) (1.4.1)
 Requirement already satisfied: numpy in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from blackmarblepy==0.1.0) (1.21.2)
 Requirement already satisfied: requests in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from blackmarblepy==0.1.0) (2.27.1)
@@ -454,31 +457,36 @@ Requirement already satisfied: geopandas in /Users/robmarty/opt/anaconda3/lib/py
 Requirement already satisfied: rasterstats in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from blackmarblepy==0.1.0) (0.18.0)
 Requirement already satisfied: h5py in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from blackmarblepy==0.1.0) (2.10.0)
 Requirement already satisfied: rasterio in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from blackmarblepy==0.1.0) (1.3.6)
+Requirement already satisfied: httpx in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from blackmarblepy==0.1.0) (0.25.0)
 Requirement already satisfied: zope.interface in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from datetime-&gt;blackmarblepy==0.1.0) (5.4.0)
 Requirement already satisfied: pytz in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from datetime-&gt;blackmarblepy==0.1.0) (2021.3)
-Requirement already satisfied: pyproj&gt;=2.2.0 in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from geopandas-&gt;blackmarblepy==0.1.0) (3.3.0)
 Requirement already satisfied: shapely&gt;=1.6 in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from geopandas-&gt;blackmarblepy==0.1.0) (1.8.1.post1)
 Requirement already satisfied: fiona&gt;=1.8 in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from geopandas-&gt;blackmarblepy==0.1.0) (1.8.21)
-Requirement already satisfied: click&gt;=4.0 in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from fiona&gt;=1.8-&gt;geopandas-&gt;blackmarblepy==0.1.0) (8.0.4)
-Requirement already satisfied: cligj&gt;=0.5 in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from fiona&gt;=1.8-&gt;geopandas-&gt;blackmarblepy==0.1.0) (0.7.2)
+Requirement already satisfied: pyproj&gt;=2.2.0 in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from geopandas-&gt;blackmarblepy==0.1.0) (3.3.0)
+Requirement already satisfied: six&gt;=1.7 in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from fiona&gt;=1.8-&gt;geopandas-&gt;blackmarblepy==0.1.0) (1.16.0)
+Requirement already satisfied: munch in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from fiona&gt;=1.8-&gt;geopandas-&gt;blackmarblepy==0.1.0) (2.5.0)
 Requirement already satisfied: click-plugins&gt;=1.0 in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from fiona&gt;=1.8-&gt;geopandas-&gt;blackmarblepy==0.1.0) (1.1.1)
 Requirement already satisfied: setuptools in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from fiona&gt;=1.8-&gt;geopandas-&gt;blackmarblepy==0.1.0) (58.0.4)
-Requirement already satisfied: six&gt;=1.7 in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from fiona&gt;=1.8-&gt;geopandas-&gt;blackmarblepy==0.1.0) (1.16.0)
-Requirement already satisfied: certifi in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from fiona&gt;=1.8-&gt;geopandas-&gt;blackmarblepy==0.1.0) (2021.10.8)
-Requirement already satisfied: munch in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from fiona&gt;=1.8-&gt;geopandas-&gt;blackmarblepy==0.1.0) (2.5.0)
+Requirement already satisfied: click&gt;=4.0 in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from fiona&gt;=1.8-&gt;geopandas-&gt;blackmarblepy==0.1.0) (8.0.4)
 Requirement already satisfied: attrs&gt;=17 in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from fiona&gt;=1.8-&gt;geopandas-&gt;blackmarblepy==0.1.0) (21.4.0)
+Requirement already satisfied: certifi in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from fiona&gt;=1.8-&gt;geopandas-&gt;blackmarblepy==0.1.0) (2021.10.8)
+Requirement already satisfied: cligj&gt;=0.5 in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from fiona&gt;=1.8-&gt;geopandas-&gt;blackmarblepy==0.1.0) (0.7.2)
 Requirement already satisfied: python-dateutil&gt;=2.8.1 in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from pandas-&gt;blackmarblepy==0.1.0) (2.8.2)
+Requirement already satisfied: idna in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from httpx-&gt;blackmarblepy==0.1.0) (3.3)
+Requirement already satisfied: sniffio in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from httpx-&gt;blackmarblepy==0.1.0) (1.2.0)
+Requirement already satisfied: httpcore&lt;0.19.0,&gt;=0.18.0 in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from httpx-&gt;blackmarblepy==0.1.0) (0.18.0)
+Requirement already satisfied: h11&lt;0.15,&gt;=0.13 in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from httpcore&lt;0.19.0,&gt;=0.18.0-&gt;httpx-&gt;blackmarblepy==0.1.0) (0.13.0)
+Requirement already satisfied: anyio&lt;5.0,&gt;=3.0 in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from httpcore&lt;0.19.0,&gt;=0.18.0-&gt;httpx-&gt;blackmarblepy==0.1.0) (3.5.0)
 Requirement already satisfied: snuggs&gt;=1.4.1 in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from rasterio-&gt;blackmarblepy==0.1.0) (1.4.7)
 Requirement already satisfied: affine in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from rasterio-&gt;blackmarblepy==0.1.0) (2.4.0)
 Requirement already satisfied: pyparsing&gt;=2.1.6 in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from snuggs&gt;=1.4.1-&gt;rasterio-&gt;blackmarblepy==0.1.0) (3.0.4)
 Requirement already satisfied: simplejson in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from rasterstats-&gt;blackmarblepy==0.1.0) (3.19.1)
-Requirement already satisfied: urllib3&lt;1.27,&gt;=1.21.1 in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from requests-&gt;blackmarblepy==0.1.0) (1.26.8)
-Requirement already satisfied: idna&lt;4,&gt;=2.5 in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from requests-&gt;blackmarblepy==0.1.0) (3.3)
 Requirement already satisfied: charset-normalizer~=2.0.0 in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from requests-&gt;blackmarblepy==0.1.0) (2.0.4)
+Requirement already satisfied: urllib3&lt;1.27,&gt;=1.21.1 in /Users/robmarty/opt/anaconda3/lib/python3.8/site-packages (from requests-&gt;blackmarblepy==0.1.0) (1.26.8)
 Building wheels for collected packages: blackmarblepy
   Building wheel for blackmarblepy (setup.py) ... ?25ldone
-?25h  Created wheel for blackmarblepy: filename=blackmarblepy-0.1.0-py3-none-any.whl size=15026 sha256=ccda0ca35fa38c50d7adcd0bb2586ae1516f44fc1ff08e41f250fffa5bae8a4e
-  Stored in directory: /private/var/folders/m1/8h14xfm56hd6qfgz6btm1rd80000gn/T/pip-ephem-wheel-cache-zvfqv8yd/wheels/2d/74/2a/3f0e00273b80606a21c3dcb8689e2ca07c529a0802ea86bbd3
+?25h  Created wheel for blackmarblepy: filename=blackmarblepy-0.1.0-py3-none-any.whl size=18932 sha256=10119b412e82b6dd1e60a034e8abfffcc48f6a47e7bd1bcf091c0c1dc2847b60
+  Stored in directory: /private/var/folders/m1/8h14xfm56hd6qfgz6btm1rd80000gn/T/pip-ephem-wheel-cache-ku82p4zv/wheels/f1/75/0f/f52b2d3851627c922c5fe6761603a0378ce24e1d61cf883ae6
 Successfully built blackmarblepy
 Installing collected packages: blackmarblepy
 Successfully installed blackmarblepy-0.1.0
@@ -555,10 +563,10 @@ Successfully installed blackmarblepy-0.1.0
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading: VNP46A4.A2021001.h17v07.001.2022094115525.h5
-Downloading: VNP46A4.A2021001.h17v08.001.2022094115514.h5
-Downloading: VNP46A4.A2021001.h18v07.001.2022094115526.h5
-Downloading: VNP46A4.A2021001.h18v08.001.2022094115509.h5
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading 1/4: VNP46A4.A2021001.h17v07.001.2022094115525.h5
+Downloading 2/4: VNP46A4.A2021001.h17v08.001.2022094115514.h5
+Downloading 3/4: VNP46A4.A2021001.h18v07.001.2022094115526.h5
+Downloading 4/4: VNP46A4.A2021001.h18v08.001.2022094115509.h5
 </pre></div>
 </div>
 </div>
@@ -574,10 +582,10 @@ Downloading: VNP46A4.A2021001.h18v08.001.2022094115509.h5
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading: VNP46A3.A2021274.h17v07.001.2021321132719.h5
-Downloading: VNP46A3.A2021274.h17v08.001.2021321132826.h5
-Downloading: VNP46A3.A2021274.h18v07.001.2021321132715.h5
-Downloading: VNP46A3.A2021274.h18v08.001.2021321132727.h5
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading 1/4: VNP46A3.A2021274.h17v07.001.2021321132719.h5
+Downloading 2/4: VNP46A3.A2021274.h17v08.001.2021321132826.h5
+Downloading 3/4: VNP46A3.A2021274.h18v07.001.2021321132715.h5
+Downloading 4/4: VNP46A3.A2021274.h18v08.001.2021321132727.h5
 </pre></div>
 </div>
 </div>
