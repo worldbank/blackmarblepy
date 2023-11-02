@@ -1,0 +1,30 @@
+name: Publish Documentation on GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+          cache: "pip"
+      - name: Dependencies
+        run: |
+          if [ -f pyproject.toml ]; then pip install ".[docs]"; fi
+      - name: Build Sphinx Documentation
+        run: |
+          sphinx-build docs _build/html -b html
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        if: job.status == 'success'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_build/html
+          enable_jekyll: false

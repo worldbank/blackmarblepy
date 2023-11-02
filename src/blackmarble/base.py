@@ -14,4 +14,4 @@ and then choose `flask` as template.
 """
 
 # example constant variable
-NAME = "blackmarblepy"
+NAME = "blackmarble"
