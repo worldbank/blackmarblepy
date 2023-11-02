@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=61.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "blackmarble"
+dynamic = ["version"]
+description = "Georeferenced Rasters of Nighttime Lights from NASA Black Marble data"
+readme = { file = "README.md", content-type = "text/markdown" }
+license = { file = "LICENSE" }
+keywords = ["nighttime lights", "blackmarble", "world bank"]
+authors = [{ name = "World Bank", email = "github@worldbank.org" }]
+maintainers = [
+	{ name = "Robert Marty", email = "rmarty@worldbank.org" },
+	{ name = "Gabriel Stefanini Vicente", email = "gvicente@worldbank.org" },
+]
+classifiers = [
+	"Programming Language :: Python :: 3",
+	"Programming Language :: Python :: 3.7",
+	"Programming Language :: Python :: 3.8",
+	"Programming Language :: Python :: 3.9",
+	"Programming Language :: Python :: 3.10",
+	"Programming Language :: Python :: 3.11",
+	"Programming Language :: Python :: 3 :: Only",
+	"Development Status :: 3 - Alpha",
+	"Intended Audience :: Science/Research",
+	"Topic :: Scientific/Engineering",
+]
+requires-python = ">=3.7"
+dependencies = [
+	"geopandas",
+	"h5py",
+	"httpx",
+	"numpy",
+	"pandas >= 2, < 3",
+	"rasterio",
+	"rasterstats",
+	"requests",
+]
+[project.optional-dependencies]
+docs = ["sphinxcontrib-apidoc >= 0.4.0, <1"]
+
+[project.urls]
+"Homepage" = "https://github.com/worldbank/blackmarblepy"
+"Bug Reports" = "https://github.com/worldbank/blackmarblepy/issues"
+"Source" = "https://github.com/worldbank/lblackmarblepy"
+
+[tool.setuptools.dynamic]
+version = { file = "src/blackmarble/VERSION" }
