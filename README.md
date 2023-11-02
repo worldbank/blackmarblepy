@@ -1,7 +1,7 @@
 # blackmarblepy
 
-[![codecov](https://codecov.io/gh/ramarty/blackmarblepy/branch/main/graph/badge.svg?token=blackmarblepy_token_here)](https://codecov.io/gh/ramarty/blackmarblepy)
-[![CI](https://github.com/ramarty/blackmarblepy/actions/workflows/main.yml/badge.svg)](https://github.com/ramarty/blackmarblepy/actions/workflows/main.yml)
+[![codecov](https://codecov.io/gh/worldbank/blackmarblepy/branch/main/graph/badge.svg?token=blackmarblepy_token_here)](https://codecov.io/gh/worldbank/blackmarblepy)
+[![CI](https://github.com/worldbank/blackmarblepy/actions/workflows/main.yml/badge.svg)](https://github.com/worldbank/blackmarblepy/actions/workflows/main.yml)
 
 <p align="center">
 <img src="docs/ntl_usa.png" alt="Nighttime Lights Map" width="1000"/>
@@ -32,7 +32,7 @@ This package facilitates downloading nighttime lights [Black Marble](https://bla
 The package can be installed via pip.
 
 ```bash
-pip install git+https://github.com/ramarty/blackmarblepy.git
+pip install git+https://github.com/worldbank/blackmarblepy.git
 ```
 
 ```py
@@ -77,7 +77,7 @@ Both functions take the following arguments:
   * For `product_id` `"VNP46A3"`, a date or year-month (e.g., `"2021-10-01"`, where the day will be ignored, or `"2021-10"`).
   * For `product_id` `"VNP46A4"`, year or date  (e.g., `"2021-10-01"`, where the month and day will be ignored, or `2021`).
 
-* **bearer:** NASA bearer token. For instructions on how to create a token, see [here](https://github.com/ramarty/blackmarblepy#bearer-token-).
+* **bearer:** NASA bearer token. For instructions on how to create a token, see [here](https://github.com/worldbank/blackmarblepy#bearer-token-).
 
 ### Optional arguments <a name="args-optional">
 
@@ -200,4 +200,4 @@ plt.show()
 
 ## Additional Usage <a name="usage">
 
-To see additional examples of using the package, see [here](https://github.com/ramarty/blackmarblepy/blob/main/examples/blackmarbley_example.ipynb).
+To see additional examples of using the package, see [here](https://github.com/worldbank/blackmarblepy/blob/main/examples/blackmarbley_example.ipynb).
