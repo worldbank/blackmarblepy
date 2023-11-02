@@ -10,6 +10,7 @@ import tempfile
 import subprocess
 import glob
 import shutil
+import httpx
 from itertools import product
 import geopandas as gpd
 from rasterstats import zonal_stats
