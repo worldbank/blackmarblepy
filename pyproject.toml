@@ -38,7 +38,7 @@ dependencies = [
 	"requests",
 ]
 [project.optional-dependencies]
-docs = ["sphinxcontrib-apidoc >= 0.4.0, <1"]
+docs = ["jupyter-book >= 0.15.1", "sphinxcontrib-apidoc >= 0.4.0, <1"]
 
 [project.urls]
 "Homepage" = "https://github.com/worldbank/blackmarblepy"
