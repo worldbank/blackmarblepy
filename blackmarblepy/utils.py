@@ -318,16 +318,30 @@ def download_raster(file_name, temp_dir, variable, bearer, quality_flag_rm, quie
     day = file_name[13:16]
     product_id = file_name[0:7]
 
-    f = os.path.join(temp_dir, product_id, year, day, file_name)
+    #f = os.path.join(temp_dir, product_id, year, day, file_name)
+    f = os.path.join(temp_dir, file_name)
 
     # Download
     if quiet == False:
         print("Downloading " + str(tile_i) + "/" + str(n_tile) + ": " + file_name)
         
-    wget_command = f"/usr/local/bin/wget -e robots=off -m -np .html,.tmp -nH --cut-dirs=3 'https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/5000/{product_id}/{year}/{day}/{file_name}' --header 'Authorization: Bearer {bearer}' -P {temp_dir}/" 
+    #wget_command = f"/usr/local/bin/wget -e robots=off -m -np .html,.tmp -nH --cut-dirs=3 'https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/5000/{product_id}/{year}/{day}/{file_name}' --header 'Authorization: Bearer {bearer}' -P {temp_dir}/" 
     #print(wget_command)
     #subprocess.run(wget_command, shell=True)
-    subprocess.run(wget_command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    #subprocess.run(wget_command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    
+    url = f'https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/5000/{product_id}/{year}/{day}/{file_name}'
+    headers = {'Authorization': f'Bearer {bearer}'}
+    download_path = os.path.join(temp_dir, file_name)
+
+    with httpx.stream('GET', url, headers=headers) as response:
+        if response.status_code == 200:
+            with open(download_path, 'wb') as file:
+                for chunk in response.iter_bytes(chunk_size=8192):
+                    file.write(chunk)
+            #print(f"Downloaded {file_name} to {download_path}")
+        else:
+            print(f"Failed to download {file_name}. Status code: {response.status_code}")
     
     # Convert to raster
     file_name_tif = re.sub(".h5", ".tif", file_name)

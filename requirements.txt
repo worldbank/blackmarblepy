@@ -8,3 +8,5 @@ geopandas
 rasterstats
 h5py
 rasterio
+httpx
+os
