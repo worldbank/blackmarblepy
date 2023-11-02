@@ -1,113 +1,45 @@
-# How to develop on this project
+# CONTRIBUTING
 
-blackmarblepy welcomes contributions from the community.
+Thank you for considering contributing! We appreciate your interest in helping us improve our project. By contributing, you agree to abide by our [Code of Conduct](docs/CODE_OF_CONDUCT.md).
 
-**You need PYTHON3!**
+Please take a moment to review this document for important information on how to contribute effectively.
 
-This instructions are for linux base systems. (Linux, MacOS, BSD, etc.)
-## Setting up your own fork of this repo.
+## How Can I Contribute?
 
-- On github interface click on `Fork` button.
-- Clone your fork of this repo. `git clone git@github.com:YOUR_GIT_USERNAME/blackmarblepy.git`
-- Enter the directory `cd blackmarblepy`
-- Add upstream repo `git remote add upstream https://github.com/ramarty/blackmarblepy`
+There are several ways you can contribute to this project:
 
-## Setting up your own virtual environment
+- **Bug Reports:** If you encounter a bug or unexpected behavior, please open an issue on our GitHub issue tracker. Be sure to include as much detail as possible to help us identify and fix the problem.
 
-Run `make virtualenv` to create a virtual environment.
-then activate it with `source .venv/bin/activate`.
+- **Feature Requests**: If you have an idea for a new feature or enhancement, please open an issue on our GitHub issue tracker and label it as a "feature request." Describe the feature and its use case in detail.
 
-## Install the project in develop mode
+- **Pull Requests:** If you'd like to contribute code or documentation changes, we encourage you to submit a pull request (PR). Please follow the guidelines outlined in the [Contributing Code](CONTRIBUTING.md) section below.
 
-Run `make install` to install the project in develop mode.
+- **Documentation:** If you find any errors or have suggestions for improving our documentation, you can submit changes directly through a pull request.
 
-## Run the tests to ensure everything is working
+- **Community Engagement:** Help answer questions and engage with other users and contributors on our GitHub Discussions (if applicable).
 
-Run `make test` to run the tests.
+## Contributing Code
 
-## Create a new branch to work on your contribution
+If you're contributing code, please follow these guidelines:
 
-Run `git checkout -b my_contribution`
+1. **Fork the Repository**: Click the "Fork" button on the top-right corner of this repository on GitHub. This will create a copy of the project in your GitHub account.
 
-## Make your changes
+2. **Create a Branch:** Create a new branch for your feature or bug fix. Use a clear and descriptive name for your branch, like `feature/my-new-feature` or `bugfix/issue-123`.
 
-Edit the files using your preferred editor. (we recommend VIM or VSCode)
+3. **Make Changes:** Make your code changes and ensure they adhere to our coding standards.
 
-## Format the code
+4. **Test:** Ensure that your changes do not break existing functionality and add tests for new features or bug fixes.
 
-Run `make fmt` to format the code.
+5. **Commit and Push:** Commit your changes with a clear and concise commit message. Reference any related issues or pull requests in your commit message. Push your branch to your forked repository on GitHub.
 
-## Run the linter
+6. **Create a Pull Request:** Open a pull request against the main branch of this repository. Provide a clear description of your changes and reference any relevant issues. Your PR will be reviewed by maintainers.
 
-Run `make lint` to run the linter.
+7. **Review and Iterate:** Expect feedback and be prepared to make additional changes if necessary. We may request changes, and once everything looks good, your PR will be merged.
 
-## Test your changes
+## Code of Conduct
 
-Run `make test` to run the tests.
+Please note that we have a [Code of Conduct](docs/CODE_OF_CONDUCT) in place. We expect all contributors to adhere to it, both in interactions within this project and in interactions with other project members.
 
-Ensure code coverage report shows `100%` coverage, add tests to your PR.
+## Licensing
 
-## Build the docs locally
-
-Run `make docs` to build the docs.
-
-Ensure your new changes are documented.
-
-## Commit your changes
-
-This project uses [conventional git commit messages](https://www.conventionalcommits.org/en/v1.0.0/).
-
-Example: `fix(package): update setup.py arguments 🎉` (emojis are fine too)
-
-## Push your changes to your fork
-
-Run `git push origin my_contribution`
-
-## Submit a pull request
-
-On github interface, click on `Pull Request` button.
-
-Wait CI to run and one of the developers will review your PR.
-## Makefile utilities
-
-This project comes with a `Makefile` that contains a number of useful utility.
-
-```bash 
-❯ make
-Usage: make <target>
-
-Targets:
-help:             ## Show the help.
-install:          ## Install the project in dev mode.
-fmt:              ## Format code using black & isort.
-lint:             ## Run pep8, black, mypy linters.
-test: lint        ## Run tests and generate coverage report.
-watch:            ## Run tests on every change.
-clean:            ## Clean unused files.
-virtualenv:       ## Create a virtual environment.
-release:          ## Create a new tag for release.
-docs:             ## Build the documentation.
-switch-to-poetry: ## Switch to poetry package manager.
-init:             ## Initialize the project based on an application template.
-```
-
-## Making a new release
-
-This project uses [semantic versioning](https://semver.org/) and tags releases with `X.Y.Z`
-Every time a new tag is created and pushed to the remote repo, github actions will
-automatically create a new release on github and trigger a release on PyPI.
-
-For this to work you need to setup a secret called `PIPY_API_TOKEN` on the project settings>secrets, 
-this token can be generated on [pypi.org](https://pypi.org/account/).
-
-To trigger a new release all you need to do is.
-
-1. If you have changes to add to the repo
-    * Make your changes following the steps described above.
-    * Commit your changes following the [conventional git commit messages](https://www.conventionalcommits.org/en/v1.0.0/).
-2. Run the tests to ensure everything is working.
-4. Run `make release` to create a new tag and push it to the remote repo.
-
-the `make release` will ask you the version number to create the tag, ex: type `0.1.1` when you are asked.
-
-> **CAUTION**:  The make release will change local changelog files and commit all the unstaged changes you have.
+By contributing to this project, you agree that your contributions will be licensed under the project's [LICENSE](LICENSE).
