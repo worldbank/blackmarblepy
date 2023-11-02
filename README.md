@@ -4,7 +4,7 @@
 [![CI](https://github.com/ramarty/blackmarblepy/actions/workflows/main.yml/badge.svg)](https://github.com/ramarty/blackmarblepy/actions/workflows/main.yml)
 
 <p align="center">
-<img src="ntl_usa.png" alt="Nighttime Lights Map" width="1000"/>
+<img src="docs/ntl_usa.png" alt="Nighttime Lights Map" width="1000"/>
 </p>
 
 Create Georeferenced Rasters of Nighttime Lights from [NASA Black Marble data](https://blackmarble.gsfc.nasa.gov/).
@@ -166,7 +166,7 @@ plt.axis("off")
 ```
 
 <p align="center">
-<img src="raster_example.png" alt="Nighttime Lights Map" width="500"/>
+<img src="docs/raster_example.png" alt="Nighttime Lights Map" width="500"/>
 </p>
 
 ### Trends in Nighttime Lights <a name="quickstart-trends"></a>
@@ -195,7 +195,7 @@ plt.show()
 ```
 
 <p align="center">
-<img src="trends_example.png" alt="Nighttime Lights Map" width="1000"/>
+<img src="docs/trends_example.png" alt="Nighttime Lights Map" width="1000"/>
 </p>
 
 ## Additional Usage <a name="usage">
