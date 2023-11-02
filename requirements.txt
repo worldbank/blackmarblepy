@@ -1,0 +1,10 @@
+# Requirements
+
+pandas
+numpy
+requests
+datetime
+geopandas
+rasterstats
+h5py
+rasterio

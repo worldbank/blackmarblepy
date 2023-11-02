@@ -33,10 +33,10 @@ setup(
     name="blackmarblepy",
     version=read("blackmarblepy", "VERSION"),
     description="Black Marble Nighttime Lights",
-    url="https://github.com/ramarty/blackmarblepy/",
+    url="https://github.com/worldbank/blackmarblepy/",
     long_description=read("README.md"),
     long_description_content_type="text/markdown",
-    author="Rob Marty",
+    author="Gabriel Stefanini Vicente and Robert Marty",
     packages=find_packages(exclude=["tests", ".github"]),
     install_requires=read_requirements("requirements.txt"),
     entry_points={
