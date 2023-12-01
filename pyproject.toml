@@ -28,11 +28,12 @@ classifiers = [
 ]
 requires-python = ">=3.7"
 dependencies = [
-	"geopandas",
+	"backoff>=2,<3",
+	"geopandas<1",
 	"h5py",
 	"httpx",
 	"numpy",
-	"pandas >= 2, <3",
+	"pandas>=2,<3",
 	"rasterio",
 	"rasterstats",
 	"tqdm",
@@ -48,6 +49,5 @@ docs = ["jupyter-book >= 0.15.1", "sphinxcontrib-apidoc >= 0.4.0, <1"]
 [tool.setuptools.dynamic]
 version = { file = "src/blackmarble/VERSION" }
 
-[tool.setuptools.packages.find]
-namespaces = true
-where = ["src"]
+[tool.setuptools.package-data]
+"blackmarble.data" = ["blackmarbletiles.geojson"]
