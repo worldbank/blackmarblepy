@@ -9,4 +9,4 @@ parts:
   - caption: Examples
     chapters:
       - file: quickstart
-      - file: examples/blackmarbley_example.ipynb
+      - file: examples/blackmarblepy.ipynb
