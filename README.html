@@ -69,7 +69,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="next" title="blackmarble package" href="api/blackmarble.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="Nov 28, 2023"/>
+    <meta name="docbuild:last-update" content="Dec 01, 2023"/>
   </head>
   
   
@@ -168,8 +168,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="quickstart.html">blackmarblepy</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples/blackmarbley_example.html">Examples Using blackmarblepy Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/blackmarblepy.html">Examples using<code class="docutils literal notranslate"> <span class="pre">blackmarblepy</span></code></a></li>
 </ul>
 
     </div>
@@ -384,10 +383,7 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#features">Features</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#raster-of-nighttime-lights-a-name-quickstart-raster-a">Raster of Nighttime Lights <a name="quickstart-raster"></a></a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributing">Contributing</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#license">License</a></li>
 </ul>
@@ -418,55 +414,14 @@ document.write(`
 </section>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h2>
-<p>You can install BlackMarblePy using pip:</p>
+<p><strong>BlackMarblePy</strong> is available on <a class="reference external" href="https://pypi.org">PyPI</a>; you can install it using <code class="docutils literal notranslate"><span class="pre">pip</span></code>:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>blackmarblepy
 </pre></div>
 </div>
 </section>
 <section id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">#</a></h2>
-<p>Before downloading and extracting Black Marble data, we first load libraries, define the NASA bearer token, and define a region of interest.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">## Libraries</span>
-<span class="kn">from</span> <span class="nn">blackmarble.bm_raster</span> <span class="kn">import</span> <span class="n">bm_raster</span>
-<span class="kn">from</span> <span class="nn">blackmarble.bm_extract</span> <span class="kn">import</span> <span class="n">bm_extract</span>
-
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">gadm</span> <span class="kn">import</span> <span class="n">GADMDownloader</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-
-<span class="c1">## Bear token</span>
-<span class="n">bearer</span> <span class="o">==</span> <span class="s2">&quot;BEARER TOKEN HERE&quot;</span>
-
-<span class="c1">## Get Region of Interest - Ghana</span>
-<span class="n">downloader</span> <span class="o">=</span> <span class="n">GADMDownloader</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="s2">&quot;4.0&quot;</span><span class="p">)</span>
-
-<span class="n">country_name</span> <span class="o">=</span> <span class="s2">&quot;Ghana&quot;</span>
-<span class="n">ghana_adm1</span> <span class="o">=</span> <span class="n">downloader</span><span class="o">.</span><span class="n">get_shape_data_by_country_name</span><span class="p">(</span><span class="n">country_name</span><span class="o">=</span><span class="n">country_name</span><span class="p">,</span>
-                                                       <span class="n">ad_level</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-</pre></div>
-</div>
-<section id="raster-of-nighttime-lights-a-name-quickstart-raster-a">
-<h3>Raster of Nighttime Lights <a name="quickstart-raster"></a><a class="headerlink" href="#raster-of-nighttime-lights-a-name-quickstart-raster-a" title="Permalink to this heading">#</a></h3>
-<p>The below example shows making an annual raster of nighttime lights for Ghana.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">## Raster of nighttime lights</span>
-<span class="n">r</span> <span class="o">=</span> <span class="n">bm_raster</span><span class="p">(</span><span class="n">roi_sf</span> <span class="o">=</span> <span class="n">ghana_adm1</span><span class="p">,</span>
-              <span class="n">product_id</span> <span class="o">=</span> <span class="s2">&quot;VNP46A4&quot;</span><span class="p">,</span>
-              <span class="n">date</span> <span class="o">=</span> <span class="mi">2022</span><span class="p">,</span>
-              <span class="n">bearer</span> <span class="o">=</span> <span class="n">bearer</span><span class="p">)</span>
-
-<span class="c1">## Map raster</span>
-<span class="n">r_np</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">r_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">r_np</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">r_np</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;hot&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>For more detailed documentation and examples, please refer to the <a class="reference external" href="https://worldbank.github.io/blackmarblepy/quickstart.html">documentation</a>.</p>
-</section>
+<p>Before downloading and extracting Black Marble data, define the NASA bearer token, and define a region of interest. For more detailed documentation and examples, please refer to the <a class="reference external" href="https://worldbank.github.io/blackmarblepy">documentation</a>.</p>
 </section>
 <section id="contributing">
 <h2>Contributing<a class="headerlink" href="#contributing" title="Permalink to this heading">#</a></h2>
@@ -538,10 +493,7 @@ document.write(`
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#features">Features</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#raster-of-nighttime-lights-a-name-quickstart-raster-a">Raster of Nighttime Lights <a name="quickstart-raster"></a></a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contributing">Contributing</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#license">License</a></li>
 </ul>
@@ -570,7 +522,7 @@ By Development Data Group
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Nov 28, 2023.
+  Last updated on Dec 01, 2023.
   <br/>
 </p>
   </div>

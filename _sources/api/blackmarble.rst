@@ -28,14 +28,6 @@ blackmarble.bm\_raster module
    :undoc-members:
    :show-inheritance:
 
-blackmarble.cli module
-----------------------
-
-.. automodule:: blackmarble.cli
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 blackmarble.utils module
 ------------------------
 
