@@ -1,15 +1,13 @@
-import numpy as np
-import time
 import os
-import tempfile
 import shutil
-import rasterio
+import tempfile
+import time
 
-from .utils import (
-    define_variable,
-    define_date_name,
-    bm_raster_i,
-)
+import numpy as np
+import rasterio
+from rasterio.merge import merge
+
+from .utils import bm_raster_i, define_date_name, define_variable
 
 
 def bm_raster(
@@ -31,7 +29,8 @@ def bm_raster(
     Parameters
     ----------
 
-    roi_sf: Region of interest; geopandas dataframe (polygon). Must be in the [WGS 84 (epsg:4326)](https://epsg.io/4326) coordinate reference system.
+    roi_st : geopandas.DataFrame
+        Region of interest; geopandas dataframe (polygon). Must be in the [WGS 84 (epsg:4326)](https://epsg.io/4326) coordinate reference system.
 
     product_id: string. One of the following:
         * `"VNP46A1"`: Daily (raw)
@@ -52,13 +51,14 @@ def bm_raster(
         * For `product_id`s `"VNP46A3"` and `"VNP46A4"`, uses `NearNadir_Composite_Snow_Free`.
     For information on other variable choices, see [here](https://ladsweb.modaps.eosdis.nasa.gov/api/v2/content/archives/Document%20Archive/Science%20Data%20Product%20Documentation/VIIRS_Black_Marble_UG_v1.2_April_2021.pdf); for `VNP46A1`, see Table 3; for `VNP46A2` see Table 6; for `VNP46A3` and `VNP46A4`, see Table 9.
 
-    quality_flag_rm: Quality flag values to use to set values to `NA`. Each pixel has a quality flag value, where low quality values can be removed. Values are set to `NA` for each value in ther `quality_flag_rm` vector. (Default: `c(255)`).
+    quality_flag_rm: long
+        Quality flag values to use to set values to `NA`. Each pixel has a quality flag value, where low quality values can be removed. Values are set to `NA` for each value in ther `quality_flag_rm` vector. (Default: `c(255)`).
 
-    For `VNP46A1` and `VNP46A2` (daily data):
-    - `0`: High-quality, Persistent nighttime lights
-    - `1`: High-quality, Ephemeral nighttime Lights
-    - `2`: Poor-quality, Outlier, potential cloud contamination, or other issues
-    - `255`: No retrieval, Fill value (masked out on ingestion)
+        For `VNP46A1` and `VNP46A2` (daily data):
+        - `0`: High-quality, Persistent nighttime lights
+        - `1`: High-quality, Ephemeral nighttime Lights
+        - `2`: Poor-quality, Outlier, potential cloud contamination, or other issues
+        - `255`: No retrieval, Fill value (masked out on ingestion)
 
     For `VNP46A3` and `VNP46A4` (monthly and annual data):
     - `0`: Good-quality, The number of observations used for the composite is larger than 3
@@ -121,7 +121,9 @@ def bm_raster(
 
     # File --------------------------------------------------------------------------
     if output_location_type == "file":
-        for date_i in date:
+        from tqdm.auto import tqdm
+
+        for date_i in tqdm(date, leave=None):
             date_name_i = define_date_name(date_i, product_id)
 
             try:
@@ -219,7 +221,7 @@ def bm_raster(
 
             r_out = rasterio.open(os.path.join(temp_main_dir, tmp_raster_file_name))
 
-        except:
+        except Exception as e:
             # Delete temp files used to make raster
             shutil.rmtree(temp_dir, ignore_errors=True)
 

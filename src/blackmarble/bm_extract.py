@@ -1,14 +1,11 @@
-import pandas as pd
-import time
 import os
-import tempfile
 import shutil
+import tempfile
+import time
 
-from .utils import (
-    define_variable,
-    define_date_name,
-    bm_extract_i,
-)
+import pandas as pd
+
+from .utils import bm_extract_i, define_date_name, define_variable
 
 
 def bm_extract(
@@ -119,7 +116,9 @@ def bm_extract(
 
     # File --------------------------------------------------------------------------
     if output_location_type == "file":
-        for date_i in date:
+        from tqdm.auto import tqdm
+
+        for date_i in tqdm(date):
             try:
                 date_name_i = define_date_name(date_i, product_id)
 
@@ -154,7 +153,8 @@ def bm_extract(
                     if quiet == False:
                         print('"' + out_path + '" already exists; skipping.\n')
 
-            except:
+            except Exception as e:
+                print(e)
                 # Delete temp files used to make raster
                 shutil.rmtree(temp_dir, ignore_errors=True)
 

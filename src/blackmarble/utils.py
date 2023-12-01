@@ -1,22 +1,26 @@
-import pandas as pd
-import numpy as np
-import time
-import os
-import re
-import warnings
 import datetime
 import glob
+import os
+import re
 import shutil
-import httpx
+import time
+import warnings
+from importlib.resources import files
 from itertools import product
+
+import backoff
 import geopandas as gpd
-from rasterstats import zonal_stats
 import h5py
+import httpx
+import numpy as np
+import pandas as pd
 import rasterio
+from httpx import HTTPError
 from rasterio.mask import mask
 from rasterio.merge import merge
-from rasterio.merge import merge
 from rasterio.transform import from_origin
+from rasterstats import zonal_stats
+from tqdm.auto import tqdm
 
 
 def cross_df(data_dict):
@@ -137,14 +141,14 @@ def file_to_raster(f, variable, output_path, quality_flag_rm):
         tile_i = re.findall(r"h\d{2}v\d{2}", f)[0]
 
         bm_tiles_sf = gpd.read_file(
-            "https://raw.githubusercontent.com/ramarty/blackmarbler/main/data/blackmarbletiles.geojson"
+            files("blackmarble.data").joinpath("blackmarbletiles.geojson")
         )
         grid_i_sf = bm_tiles_sf[bm_tiles_sf["TileID"] == tile_i]
 
-        xMin = float(grid_i_sf.geometry.bounds.minx)
-        yMin = float(grid_i_sf.geometry.bounds.miny)
-        xMax = float(grid_i_sf.geometry.bounds.maxx)
-        yMax = float(grid_i_sf.geometry.bounds.maxy)
+        xMin = float(grid_i_sf.geometry.bounds.minx.iloc[0])
+        yMin = float(grid_i_sf.geometry.bounds.miny.iloc[0])
+        xMax = float(grid_i_sf.geometry.bounds.maxx.iloc[0])
+        yMax = float(grid_i_sf.geometry.bounds.maxy.iloc[0])
 
         out = h5_data["HDFEOS"]["GRIDS"]["VNP_Grid_DNB"]["Data Fields"][variable]
         qf = h5_data["HDFEOS"]["GRIDS"]["VNP_Grid_DNB"]["Data Fields"][
@@ -369,8 +373,20 @@ def create_dataset_name_df(product_id, all=True, years=None, months=None, days=N
     return files_df
 
 
+@backoff.on_exception(
+    backoff.expo,
+    HTTPError,
+)
 def download_raster(
-    file_name, temp_dir, variable, bearer, quality_flag_rm, quiet, tile_i, n_tile
+    file_name,
+    temp_dir,
+    variable,
+    bearer,
+    quality_flag_rm,
+    quiet,
+    tile_i,
+    n_tile,
+    progress=None,
 ):
     # Path
     year = file_name[9:13]
@@ -380,29 +396,40 @@ def download_raster(
     # f = os.path.join(temp_dir, product_id, year, day, file_name)
     f = os.path.join(temp_dir, file_name)
 
-    # Download
-    if quiet == False:
-        print("Downloading " + str(tile_i) + "/" + str(n_tile) + ": " + file_name)
-
-    # wget_command = f"/usr/local/bin/wget -e robots=off -m -np .html,.tmp -nH --cut-dirs=3 'https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/5000/{product_id}/{year}/{day}/{file_name}' --header 'Authorization: Bearer {bearer}' -P {temp_dir}/"
-    # print(wget_command)
-    # subprocess.run(wget_command, shell=True)
-    # subprocess.run(wget_command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-
     url = f"https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/5000/{product_id}/{year}/{day}/{file_name}"
     headers = {"Authorization": f"Bearer {bearer}"}
     download_path = os.path.join(temp_dir, file_name)
 
-    with httpx.stream("GET", url, headers=headers) as response:
-        if response.status_code == 200:
-            with open(download_path, "wb") as file:
-                for chunk in response.iter_bytes(chunk_size=8192):
-                    file.write(chunk)
-            # print(f"Downloaded {file_name} to {download_path}")
-        else:
-            print(
-                f"Failed to download {file_name}. Status code: {response.status_code}"
-            )
+    with httpx.stream(
+        "GET",
+        url,
+        headers=headers,
+    ) as response:
+        total = int(response.headers["Content-Length"])
+        with open(download_path, "wb") as download_file, tqdm(
+            total=total,
+            unit="B",
+            unit_scale=True,
+            leave=None,
+        ) as pbar:
+            # task = progress.add_task(
+            #    "[red]Downloading...[/red]",
+            #    total=total,
+            #    progress_type="download",
+            # )
+            pbar.set_description(f"Processing {file_name}...")
+            for chunk in response.iter_raw():
+                download_file.write(chunk)
+                # progress.update(
+                #    task,
+                #    advance=len(chunk),
+                #    description=f"[yellow]Downloading {file_name}...[/yellow]",
+                # )
+                pbar.update(len(chunk))
+        # progress.update(
+        #    task,
+        #    description=f"[green]Downloaded {file_name}[/green]",
+        # )
 
     # Convert to raster
     file_name_tif = re.sub(".h5", ".tif", file_name)
@@ -513,7 +540,7 @@ def bm_raster_i(
 
     # Black marble grid: TODO: Add to python repo
     bm_tiles_sf = gpd.read_file(
-        "https://raw.githubusercontent.com/ramarty/blackmarbler/main/data/blackmarbletiles.geojson"
+        files("blackmarble.data").joinpath("blackmarbletiles.geojson")
     )
 
     # Prep dates
@@ -566,9 +593,8 @@ def bm_raster_i(
 
     else:
         tile_i = 1
-        for file_name in bm_files_df["name"]:
+        for file_name in tqdm(bm_files_df["name"], leave=None):
             n_tile = bm_files_df.shape[0]
-
             # Saves files in {temp_dir}/tif_files_tmp, which above is cleared and created
             download_raster(
                 file_name,
@@ -580,7 +606,6 @@ def bm_raster_i(
                 tile_i,
                 n_tile,
             )
-
             tile_i = tile_i + 1
 
         #### Mosaic together

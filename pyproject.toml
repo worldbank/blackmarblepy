@@ -32,10 +32,10 @@ dependencies = [
 	"h5py",
 	"httpx",
 	"numpy",
-	"pandas >= 2, < 3",
+	"pandas >= 2, <3",
 	"rasterio",
 	"rasterstats",
-	"requests",
+	"tqdm",
 ]
 [project.optional-dependencies]
 docs = ["jupyter-book >= 0.15.1", "sphinxcontrib-apidoc >= 0.4.0, <1"]
@@ -47,3 +47,7 @@ docs = ["jupyter-book >= 0.15.1", "sphinxcontrib-apidoc >= 0.4.0, <1"]
 
 [tool.setuptools.dynamic]
 version = { file = "src/blackmarble/VERSION" }
+
+[tool.setuptools.packages.find]
+namespaces = true
+where = ["src"]
