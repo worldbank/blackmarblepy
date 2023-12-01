@@ -6,6 +6,7 @@ import time
 import pandas as pd
 from tqdm.auto import tqdm
 
+from . import logger
 from .utils import bm_extract_i, define_date_name, define_variable
 
 
@@ -148,18 +149,18 @@ def bm_extract(
                         poly_ntl_df.to_csv(out_path, index=False)
 
                     if quiet == False:
-                        print("File created: " + out_path)
+                        logger.info("File created: " + out_path)
                         pbar.set_description("Extracting complete!")
                 else:
                     if quiet == False:
-                        print('"' + out_path + '" already exists; skipping.\n')
+                        logger.info('"' + out_path + '" already exists; skipping.\n')
 
             except Exception as e:
                 # Delete temp files used to make raster
                 shutil.rmtree(temp_dir, ignore_errors=True)
 
                 if quiet == False:
-                    print(
+                    logger.info(
                         "Skipping "
                         + str(date_i)
                         + " due to error. Likely data is not available.\n"

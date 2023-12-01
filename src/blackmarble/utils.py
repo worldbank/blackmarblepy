@@ -6,7 +6,6 @@ import shutil
 import geopandas
 import warnings
 from importlib.resources import files
-from itertools import product
 
 import backoff
 import geopandas as gpd
@@ -21,6 +20,8 @@ from rasterio.merge import merge
 from rasterio.transform import from_origin
 from rasterstats import zonal_stats
 from tqdm.auto import tqdm
+
+from . import logger
 
 
 def file_to_raster(f, variable, output_path, quality_flag_rm):
@@ -311,7 +312,9 @@ def bm_extract_i(
         poly_ntl_df["date"] = date_i
 
     except:
-        print("Skipping " + str(date_i) + " due to error. Data may not be available.\n")
+        logger.info(
+            "Skipping " + str(date_i) + " due to error. Data may not be available.\n"
+        )
         poly_ntl_df = pd.DataFrame()
 
     return poly_ntl_df
@@ -354,7 +357,7 @@ def bm_raster_i(
 
     #### Download files and convert to rasters
     if (bm_files_df.shape[0] < grid_use_sf.shape[0]) and check_all_tiles_exist:
-        print(
+        logger.info(
             "Not all satellite imagery tiles for this location exist, so skipping. To ignore this error and process anyway, set check_all_tiles_exist = False"
         )
         raise ValueError(

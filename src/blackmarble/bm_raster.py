@@ -9,6 +9,7 @@ from rasterio.merge import merge
 
 from tqdm.auto import tqdm
 
+from . import logger
 from .utils import bm_raster_i, define_date_name, define_variable
 
 
@@ -144,11 +145,11 @@ def bm_raster(
                     shutil.move(raster_path_i, out_path)  # Move from tmp to main folder
 
                     if quiet == False:
-                        print("File created: " + out_path)
+                        logger.info("File created: " + out_path)
 
                 else:
                     if quiet == False:
-                        print('"' + out_path + '" already exists; skipping.\n')
+                        logger.info('"' + out_path + '" already exists; skipping.\n')
 
                 r_out = None
             except:
@@ -223,7 +224,7 @@ def bm_raster(
             shutil.rmtree(temp_dir, ignore_errors=True)
 
             if quiet == False:
-                print(
+                logger.info(
                     "Skipping "
                     + str(date_i)
                     + " due to error. Data may not be available.\n"
