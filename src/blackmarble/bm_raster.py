@@ -7,6 +7,8 @@ import numpy as np
 import rasterio
 from rasterio.merge import merge
 
+from tqdm.auto import tqdm
+
 from .utils import bm_raster_i, define_date_name, define_variable
 
 
@@ -113,17 +115,13 @@ def bm_raster(
     if file_dir is None:
         file_dir = os.getcwd()
 
-    # for date_i in date:
-    #
-    #    date_name_i = define_date_name(date_i, product_id)
-    #
-    #    try:
-
     # File --------------------------------------------------------------------------
     if output_location_type == "file":
-        from tqdm.auto import tqdm
+        # crate progress bar
+        pbar = tqdm(date, leave=None)
 
-        for date_i in tqdm(date, leave=None):
+        for date_i in pbar:
+            pbar.set_description("Downloading raster(s)...")
             date_name_i = define_date_name(date_i, product_id)
 
             try:
@@ -153,7 +151,6 @@ def bm_raster(
                         print('"' + out_path + '" already exists; skipping.\n')
 
                 r_out = None
-
             except:
                 r_out = None
 

@@ -4,6 +4,7 @@ import tempfile
 import time
 
 import pandas as pd
+from tqdm.auto import tqdm
 
 from .utils import bm_extract_i, define_date_name, define_variable
 
@@ -116,9 +117,9 @@ def bm_extract(
 
     # File --------------------------------------------------------------------------
     if output_location_type == "file":
-        from tqdm.auto import tqdm
-
-        for date_i in tqdm(date):
+        pbar = tqdm(date)
+        for date_i in pbar:
+            pbar.set_description(f"Extracting {date_i}...")
             try:
                 date_name_i = define_date_name(date_i, product_id)
 
@@ -148,13 +149,12 @@ def bm_extract(
 
                     if quiet == False:
                         print("File created: " + out_path)
-
+                        pbar.set_description("Extracting complete!")
                 else:
                     if quiet == False:
                         print('"' + out_path + '" already exists; skipping.\n')
 
             except Exception as e:
-                print(e)
                 # Delete temp files used to make raster
                 shutil.rmtree(temp_dir, ignore_errors=True)
 
@@ -164,7 +164,6 @@ def bm_extract(
                         + str(date_i)
                         + " due to error. Likely data is not available.\n"
                     )
-
         r_out = None
 
     # File --------------------------------------------------------------------------

@@ -3,7 +3,7 @@ import glob
 import os
 import re
 import shutil
-import time
+import geopandas
 import warnings
 from importlib.resources import files
 from itertools import product
@@ -21,101 +21,6 @@ from rasterio.merge import merge
 from rasterio.transform import from_origin
 from rasterstats import zonal_stats
 from tqdm.auto import tqdm
-
-
-def cross_df(data_dict):
-    keys = data_dict.keys()
-    values = data_dict.values()
-    crossed_values = list(product(*values))
-    df = pd.DataFrame(crossed_values, columns=keys)
-    return df
-
-
-def month_start_day_to_month(x):
-    """
-    Converts month start day to month.
-
-    Args:
-    x: Month start day.
-
-    Returns:
-    Month.
-    """
-
-    month = None
-
-    month_dict = {
-        "001": "01",
-        "032": "02",
-        "060": "03",
-        "061": "03",
-        "091": "04",
-        "092": "04",
-        "121": "05",
-        "122": "05",
-        "152": "06",
-        "153": "06",
-        "182": "07",
-        "183": "07",
-        "213": "08",
-        "214": "08",
-        "244": "09",
-        "245": "09",
-        "274": "10",
-        "275": "10",
-        "305": "11",
-        "306": "11",
-        "335": "12",
-        "336": "12",
-    }
-
-    month = month_dict.get(x)
-
-    return month
-
-
-def pad2(x):
-    """
-    Pads a number with zeros to make it 2 digits long.
-
-    Args:
-    x: Number.
-
-    Returns:
-    Padded number.
-    """
-
-    out = None
-
-    if len(str(x)) == 1:
-        out = "0" + str(x)
-    elif len(str(x)) == 2:
-        out = str(x)
-
-    return out
-
-
-def pad3(x):
-    """
-    Pads a number with zeros to make it 3 digits long.
-
-    Args:
-    x: Number.
-
-    Returns:
-    Padded number.
-    """
-
-    out = None
-
-    if len(str(x)) == 1:
-        out = "00" + str(x)
-    elif len(str(x)) == 2:
-        out = "0" + str(x)
-    elif len(str(x)) == 3:
-        out = str(x)
-
-    return out
 
 
 def file_to_raster(f, variable, output_path, quality_flag_rm):
@@ -247,130 +152,36 @@ def file_to_raster(f, variable, output_path, quality_flag_rm):
     return None
 
 
-def read_bm_csv(year, day, product_id):
-    url = f"https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/5000/{product_id}/{year}/{day}.csv"
+@backoff.on_exception(
+    backoff.expo,
+    HTTPError,
+)
+def retrieve_manifest(product_id: str, date: datetime.date) -> pd.DataFrame:
+    """NASA Black Marble
 
-    try:
-        df = pd.read_csv(url)
-        df["year"] = year
-        df["day"] = day
-        return df
-    except Exception as e:
-        # print(f"Error with year: {year}; day: {day}")
-        return pd.DataFrame()
+    Returns
+    -------
+    pandas.DataFrame
+        NASA Black Marble data manifest (i.e., downloads links)
+    """
 
-    time.sleep(0.1)
+    match product_id:
+        case "VNP46A3":
+            # if VNP46A3 then first day of the month
+            tm_yday = date.replace(day=1).timetuple().tm_yday
+        case "VNP46A4":
+            # if VNP46A4 then first day of the year
+            tm_yday = date.replace(month=1, day=1).timetuple().tm_yday
+        case _:
+            tm_yday = date.timetuple().tm_yday
 
-
-def create_dataset_name_df(product_id, all=True, years=None, months=None, days=None):
-    #### Prep inputs
-    if type(years) is not list:
-        years = [years]
-
-    if type(months) is not list:
-        months = [months]
-
-    if type(days) is not list:
-        days = [days]
-
-    #### Prep dates
-    if product_id in ["VNP46A1", "VNP46A2"]:
-        months = None
-    if product_id in ["VNP46A3"]:
-        days = None
-    if product_id in ["VNP46A4"]:
-        days = None
-        months = None
-
-    #### Determine end year
-    year_end = int(datetime.date.today().strftime("%Y"))
-
-    #### Make parameter dataframe
-    if product_id in ["VNP46A1", "VNP46A2"]:
-        param_df = cross_df(
-            {
-                "year": range(2012, year_end + 1),
-                "day": [pad3(item) for item in range(1, 366)],
-            }
-        )
-
-        # param_df = cross_df(range(2012, year_end + 1),
-        #           [pad3(item) for item in range(1, 366)])
-
-        # param_df.rename(columns={0: 'year'}, inplace=True)
-        # param_df.rename(columns={1: 'day'}, inplace=True)
-
-    elif product_id == "VNP46A3":
-        # param_df = cross_df(range(2012, year_end + 1),
-        #                    ["001", "032", "061", "092", "122", "153", "183", "214", "245", "275", "306", "336",
-        #                     "060", "091", "121", "152", "182", "213", "244", "274", "305", "335"])
-
-        # param_df.rename(columns={0: 'year'}, inplace=True)
-        # param_df.rename(columns={1: 'day'}, inplace=True)
-
-        param_df = cross_df(
-            {
-                "year": range(2012, year_end + 1),
-                "day": [
-                    "001",
-                    "032",
-                    "061",
-                    "092",
-                    "122",
-                    "153",
-                    "183",
-                    "214",
-                    "245",
-                    "275",
-                    "306",
-                    "336",
-                    "060",
-                    "091",
-                    "121",
-                    "152",
-                    "182",
-                    "213",
-                    "244",
-                    "274",
-                    "305",
-                    "335",
-                ],
-            }
-        )
-
-    elif product_id == "VNP46A4":
-        param_df = pd.DataFrame({"year": range(2012, year_end + 1), "day": "001"})
-
-    #### Add month if daily or monthly data
-    if product_id in ["VNP46A1", "VNP46A2", "VNP46A3"]:
-        param_df["month"] = [month_start_day_to_month(item) for item in param_df["day"]]
-
-    #### Subset time period
-    ## Year
-    if years is not None:
-        years = [int(item) for item in years]
-        param_df = param_df.loc[param_df["year"].isin(years)]
-
-    ## Month
-    if product_id in ["VNP46A3"]:  # ["VNP46A1", "VNP46A2", "VNP46A3"]
-        if months is not None:
-            months = [pad2(str(item)) for item in months]
-            param_df = param_df.loc[param_df["month"].isin(months)]
-
-    if days is not None:
-        days = [pad3(str(item)) for item in days]
-        param_df = param_df.loc[param_df["day"].isin(days)]
-
-    #### Create data
-    files_df = pd.concat(
-        [
-            read_bm_csv(row["year"], row["day"], product_id)
-            for _, row in param_df.iterrows()
-        ],
-        ignore_index=True,
+    manifest = pd.read_csv(
+        f"https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/5000/{product_id}/{date.year}/{tm_yday}.csv"
     )
+    manifest["year"] = date.year
+    manifest["day"] = tm_yday
 
-    return files_df
+    return manifest
 
 
 @backoff.on_exception(
@@ -388,7 +199,8 @@ def download_raster(
     n_tile,
     progress=None,
 ):
-    # Path
+    """Download NASA BLA"""
+
     year = file_name[9:13]
     day = file_name[13:16]
     product_id = file_name[0:7]
@@ -412,24 +224,10 @@ def download_raster(
             unit_scale=True,
             leave=None,
         ) as pbar:
-            # task = progress.add_task(
-            #    "[red]Downloading...[/red]",
-            #    total=total,
-            #    progress_type="download",
-            # )
             pbar.set_description(f"Processing {file_name}...")
             for chunk in response.iter_raw():
                 download_file.write(chunk)
-                # progress.update(
-                #    task,
-                #    advance=len(chunk),
-                #    description=f"[yellow]Downloading {file_name}...[/yellow]",
-                # )
                 pbar.update(len(chunk))
-        # progress.update(
-        #    task,
-        #    description=f"[green]Downloaded {file_name}[/green]",
-        # )
 
     # Convert to raster
     file_name_tif = re.sub(".h5", ".tif", file_name)
@@ -440,12 +238,6 @@ def download_raster(
         os.path.join(temp_dir, "tif_files_tmp", file_name_tif),
         quality_flag_rm,
     )
-
-    # shutil.rmtree(os.path.join(temp_dir, product_id), ignore_errors=True)
-
-    # os.remove(os.path.join(temp_dir, file_name)) # Delete .h5 file
-
-    return None
 
 
 def define_variable(variable, product_id):
@@ -526,9 +318,9 @@ def bm_extract_i(
 
 
 def bm_raster_i(
-    roi_sf,
-    product_id,
-    date,
+    roi_sf: geopandas.GeoDataFrame,
+    product_id: str,
+    date: str,
     bearer,
     variable,
     quality_flag_rm,
@@ -537,30 +329,12 @@ def bm_raster_i(
     temp_dir,
 ):
     #### Prep files to download
+    if not isinstance(date, datetime.date):
+        date = datetime.datetime.strptime(date, "%Y-%m-%d").date()
 
-    # Black marble grid: TODO: Add to python repo
+    bm_files_df = retrieve_manifest(product_id, date)
     bm_tiles_sf = gpd.read_file(
         files("blackmarble.data").joinpath("blackmarbletiles.geojson")
-    )
-
-    # Prep dates
-    if product_id == "VNP46A3":
-        if len(date) <= 7:
-            date = date + "-01"
-
-    if product_id == "VNP46A4":
-        if len(date) in [4, 10]:
-            date = date + "-01-01"
-
-    date = datetime.datetime.strptime(date, "%Y-%m-%d").date()
-
-    # Grab tile dataframe
-    year = date.year
-    month = date.month
-    day = date.timetuple().tm_yday
-
-    bm_files_df = create_dataset_name_df(
-        product_id=product_id, all=True, years=year, months=month, days=day
     )
 
     # Intersecting tiles
@@ -573,10 +347,6 @@ def bm_raster_i(
     tile_ids_rx = "|".join(grid_use_sf["TileID"])
     bm_files_df = bm_files_df[bm_files_df["name"].str.contains(tile_ids_rx)]
     bm_files_df = bm_files_df.reset_index()
-
-    # temp_dir = tempfile.gettempdir()
-
-    # shutil.rmtree(os.path.join(temp_dir, product_id), ignore_errors=True)
 
     #### Create directory for tif files
     shutil.rmtree(os.path.join(temp_dir, "tif_files_tmp"), ignore_errors=True)
@@ -593,7 +363,9 @@ def bm_raster_i(
 
     else:
         tile_i = 1
-        for file_name in tqdm(bm_files_df["name"], leave=None):
+
+        pbar = tqdm(bm_files_df["name"], leave=None)
+        for file_name in pbar:
             n_tile = bm_files_df.shape[0]
             # Saves files in {temp_dir}/tif_files_tmp, which above is cleared and created
             download_raster(
