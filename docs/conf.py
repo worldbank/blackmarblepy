@@ -22,6 +22,7 @@ extensions = [
     "sphinx_book_theme",
     "sphinxcontrib.bibtex",
     "sphinx_jupyterbook_latex",
+    "sphinx.ext.napoleon",
     "sphinxcontrib.apidoc",
 ]
 external_toc_exclude_missing = True

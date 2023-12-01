@@ -1,41 +1,16 @@
-import pandas as pd
-import numpy as np
-import requests
-import time
 import os
-import re
-import warnings
-import datetime
-import tempfile
-import subprocess
-import glob
 import shutil
-import httpx
-from itertools import product
-import geopandas as gpd
-from rasterstats import zonal_stats
-import h5py
-import rasterio
-from rasterio.mask import mask
-from rasterio.merge import merge
-from rasterio.plot import show
-from rasterio.merge import merge
-from rasterio.transform import from_origin
+import tempfile
+import time
 
-from .utils import (
-    cross_df,
-    month_start_day_to_month,
-    pad2,
-    pad3,
-    file_to_raster,
-    read_bm_csv,
-    create_dataset_name_df,
-    download_raster,
-    define_variable,
-    define_date_name,
-    bm_extract_i,
-    bm_raster_i,
-)
+import numpy as np
+import rasterio
+from rasterio.merge import merge
+
+from tqdm.auto import tqdm
+
+from . import logger
+from .utils import bm_raster_i, define_date_name, define_variable
 
 
 def bm_raster(
@@ -57,7 +32,8 @@ def bm_raster(
     Parameters
     ----------
 
-    roi_sf: Region of interest; geopandas dataframe (polygon). Must be in the [WGS 84 (epsg:4326)](https://epsg.io/4326) coordinate reference system.
+    roi_st : geopandas.DataFrame
+        Region of interest; geopandas dataframe (polygon). Must be in the [WGS 84 (epsg:4326)](https://epsg.io/4326) coordinate reference system.
 
     product_id: string. One of the following:
         * `"VNP46A1"`: Daily (raw)
@@ -78,13 +54,14 @@ def bm_raster(
         * For `product_id`s `"VNP46A3"` and `"VNP46A4"`, uses `NearNadir_Composite_Snow_Free`.
     For information on other variable choices, see [here](https://ladsweb.modaps.eosdis.nasa.gov/api/v2/content/archives/Document%20Archive/Science%20Data%20Product%20Documentation/VIIRS_Black_Marble_UG_v1.2_April_2021.pdf); for `VNP46A1`, see Table 3; for `VNP46A2` see Table 6; for `VNP46A3` and `VNP46A4`, see Table 9.
 
-    quality_flag_rm: Quality flag values to use to set values to `NA`. Each pixel has a quality flag value, where low quality values can be removed. Values are set to `NA` for each value in ther `quality_flag_rm` vector. (Default: `c(255)`).
+    quality_flag_rm: long
+        Quality flag values to use to set values to `NA`. Each pixel has a quality flag value, where low quality values can be removed. Values are set to `NA` for each value in ther `quality_flag_rm` vector. (Default: `c(255)`).
 
-    For `VNP46A1` and `VNP46A2` (daily data):
-    - `0`: High-quality, Persistent nighttime lights
-    - `1`: High-quality, Ephemeral nighttime Lights
-    - `2`: Poor-quality, Outlier, potential cloud contamination, or other issues
-    - `255`: No retrieval, Fill value (masked out on ingestion)
+        For `VNP46A1` and `VNP46A2` (daily data):
+        - `0`: High-quality, Persistent nighttime lights
+        - `1`: High-quality, Ephemeral nighttime Lights
+        - `2`: Poor-quality, Outlier, potential cloud contamination, or other issues
+        - `255`: No retrieval, Fill value (masked out on ingestion)
 
     For `VNP46A3` and `VNP46A4` (monthly and annual data):
     - `0`: Good-quality, The number of observations used for the composite is larger than 3
@@ -139,15 +116,13 @@ def bm_raster(
     if file_dir is None:
         file_dir = os.getcwd()
 
-    # for date_i in date:
-    #
-    #    date_name_i = define_date_name(date_i, product_id)
-    #
-    #    try:
-
     # File --------------------------------------------------------------------------
     if output_location_type == "file":
-        for date_i in date:
+        # crate progress bar
+        pbar = tqdm(date, leave=None)
+
+        for date_i in pbar:
+            pbar.set_description("Downloading raster(s)...")
             date_name_i = define_date_name(date_i, product_id)
 
             try:
@@ -170,14 +145,13 @@ def bm_raster(
                     shutil.move(raster_path_i, out_path)  # Move from tmp to main folder
 
                     if quiet == False:
-                        print("File created: " + out_path)
+                        logger.info("File created: " + out_path)
 
                 else:
                     if quiet == False:
-                        print('"' + out_path + '" already exists; skipping.\n')
+                        logger.info('"' + out_path + '" already exists; skipping.\n')
 
                 r_out = None
-
             except:
                 r_out = None
 
@@ -245,12 +219,12 @@ def bm_raster(
 
             r_out = rasterio.open(os.path.join(temp_main_dir, tmp_raster_file_name))
 
-        except:
+        except Exception as e:
             # Delete temp files used to make raster
             shutil.rmtree(temp_dir, ignore_errors=True)
 
             if quiet == False:
-                print(
+                logger.info(
                     "Skipping "
                     + str(date_i)
                     + " due to error. Data may not be available.\n"

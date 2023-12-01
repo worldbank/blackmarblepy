@@ -36,4 +36,5 @@ sphinx:
     html_last_updated_fmt: "%b %d, %Y"
     apidoc_module_dir: "../src"
     extra_extensions:
+      - "sphinx.ext.napoleon"
       - "sphinxcontrib.apidoc"

@@ -1,41 +1,13 @@
-import pandas as pd
-import numpy as np
-import requests
-import time
 import os
-import re
-import warnings
-import datetime
-import tempfile
-import subprocess
-import glob
 import shutil
-import httpx
-from itertools import product
-import geopandas as gpd
-from rasterstats import zonal_stats
-import h5py
-import rasterio
-from rasterio.mask import mask
-from rasterio.merge import merge
-from rasterio.plot import show
-from rasterio.merge import merge
-from rasterio.transform import from_origin
+import tempfile
+import time
 
-from .utils import (
-    cross_df,
-    month_start_day_to_month,
-    pad2,
-    pad3,
-    file_to_raster,
-    read_bm_csv,
-    create_dataset_name_df,
-    download_raster,
-    define_variable,
-    define_date_name,
-    bm_extract_i,
-    bm_raster_i,
-)
+import pandas as pd
+from tqdm.auto import tqdm
+
+from . import logger
+from .utils import bm_extract_i, define_date_name, define_variable
 
 
 def bm_extract(
@@ -146,7 +118,9 @@ def bm_extract(
 
     # File --------------------------------------------------------------------------
     if output_location_type == "file":
-        for date_i in date:
+        pbar = tqdm(date)
+        for date_i in pbar:
+            pbar.set_description(f"Extracting {date_i}...")
             try:
                 date_name_i = define_date_name(date_i, product_id)
 
@@ -175,23 +149,22 @@ def bm_extract(
                         poly_ntl_df.to_csv(out_path, index=False)
 
                     if quiet == False:
-                        print("File created: " + out_path)
-
+                        logger.info("File created: " + out_path)
+                        pbar.set_description("Extracting complete!")
                 else:
                     if quiet == False:
-                        print('"' + out_path + '" already exists; skipping.\n')
+                        logger.info('"' + out_path + '" already exists; skipping.\n')
 
-            except:
+            except Exception as e:
                 # Delete temp files used to make raster
                 shutil.rmtree(temp_dir, ignore_errors=True)
 
                 if quiet == False:
-                    print(
+                    logger.info(
                         "Skipping "
                         + str(date_i)
                         + " due to error. Likely data is not available.\n"
                     )
-
         r_out = None
 
     # File --------------------------------------------------------------------------
