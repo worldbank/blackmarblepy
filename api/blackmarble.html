@@ -70,7 +70,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="prev" title="BlackMarblePy" href="../README.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="Dec 01, 2023"/>
+    <meta name="docbuild:last-update" content="Dec 06, 2023"/>
   </head>
   
   
@@ -169,7 +169,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../examples/blackmarblepy.html">Examples using<code class="docutils literal notranslate"> <span class="pre">blackmarblepy</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/blackmarblepy.html">Examples using <code class="docutils literal notranslate"><span class="pre">blackmarblepy</span></code></a></li>
 </ul>
 
     </div>
@@ -383,10 +383,10 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blackmarble-base-module">blackmarble.base module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-blackmarble.bm_extract">blackmarble.bm_extract module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-blackmarble.bm_raster">blackmarble.bm_raster module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-blackmarble.utils">blackmarble.utils module</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blackmarble-bm-extract-module">blackmarble.bm_extract module</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blackmarble-bm-raster-module">blackmarble.bm_raster module</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blackmarble-download-module">blackmarble.download module</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blackmarble-types-module">blackmarble.types module</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-blackmarble">Module contents</a></li>
 </ul>
             </nav>
@@ -404,184 +404,17 @@ document.write(`
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">#</a></h2>
 </section>
-<section id="blackmarble-base-module">
-<h2>blackmarble.base module<a class="headerlink" href="#blackmarble-base-module" title="Permalink to this heading">#</a></h2>
+<section id="blackmarble-bm-extract-module">
+<h2>blackmarble.bm_extract module<a class="headerlink" href="#blackmarble-bm-extract-module" title="Permalink to this heading">#</a></h2>
 </section>
-<section id="module-blackmarble.bm_extract">
-<span id="blackmarble-bm-extract-module"></span><h2>blackmarble.bm_extract module<a class="headerlink" href="#module-blackmarble.bm_extract" title="Permalink to this heading">#</a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="blackmarble.bm_extract.bm_extract">
-<span class="sig-prename descclassname"><span class="pre">blackmarble.bm_extract.</span></span><span class="sig-name descname"><span class="pre">bm_extract</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">roi_sf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">product_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bearer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aggregation_fun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quality_flag_rm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[255]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_all_tiles_exist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_location_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'memory'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_skip_if_exists</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#blackmarble.bm_extract.bm_extract" title="Permalink to this definition">#</a></dt>
-<dd><p>Extract and aggregate nighttime lights from [NASA Black Marble data](<a class="reference external" href="https://blackmarble.gsfc.nasa.gov/">https://blackmarble.gsfc.nasa.gov/</a>).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>roi_sf</strong> (<em>Region of interest; geopandas dataframe</em><em> (</em><em>polygon</em><em>)</em><em>. Must be in the</em><em> [</em><em>WGS 84</em><em> (</em><em>epsg:4326</em><em>)</em><em>]</em><em>(</em><em>https://epsg.io/4326</em><em>) </em><em>coordinate reference system.</em>) – </p></li>
-<li><p><strong>product_id</strong> (<em>string. One of the following:</em>) – <ul>
-<li><p><cite>“VNP46A1”</cite>: Daily (raw)</p></li>
-<li><p><cite>”VNP46A2”</cite>: Daily (corrected)</p></li>
-<li><p><cite>”VNP46A3”</cite>: Monthly</p></li>
-<li><p><cite>”VNP46A4”</cite>: Annual</p></li>
-</ul>
-</p></li>
-<li><p><strong>date</strong> (<em>Date of raster data. Entering one date will produce a raster. Entering multiple dates will produce a raster stack.</em>) – <ul>
-<li><p>For <cite>product_id`s `”VNP46A1”</cite> and <cite>“VNP46A2”</cite>, a date (eg, <cite>“2021-10-03”</cite>).</p></li>
-<li><p>For <cite>product_id</cite> <cite>“VNP46A3”</cite>, a date or year-month (e.g., <cite>“2021-10-01”</cite>, where the day will be ignored, or <cite>“2021-10”</cite>).</p></li>
-<li><p>For <cite>product_id</cite> <cite>“VNP46A4”</cite>, year or date  (e.g., <cite>“2021-10-01”</cite>, where the month and day will be ignored, or <cite>2021</cite>).</p></li>
-</ul>
-</p></li>
-<li><p><strong>bearer</strong> (NASA bearer token. For instructions on how to create a token, see [here](<a class="github reference external" href="https://github.com/ramarty/blackmarbler#bearer-token">ramarty/blackmarbler</a>-).) – </p></li>
-<li><p><strong>aggregation_fun</strong> (Function used to aggregate nighttime lights data to polygons; this values is passed to the <cite>stats</cite> argument in the <cite>zonal_stats</cite> function from [rasterstats](<a class="reference external" href="https://pythonhosted.org/rasterstats/">https://pythonhosted.org/rasterstats/</a>) (Default: <cite>mean</cite>).) – </p></li>
-<li><p><strong>variable</strong> (Variable to used to create raster (default: <cite>NULL</cite>). If <cite>NULL</cite>, uses the following default variables:) – <ul>
-<li><p>For <cite>product_id</cite> <cite>:VNP46A1”</cite>, uses <cite>DNB_At_Sensor_Radiance_500m</cite>.</p></li>
-<li><p>For <cite>product_id</cite> <cite>“VNP46A2”</cite>, uses <cite>Gap_Filled_DNB_BRDF-Corrected_NTL</cite>.</p></li>
-<li><p>For <cite>product_id`s `”VNP46A3”</cite> and <cite>“VNP46A4”</cite>, uses <cite>NearNadir_Composite_Snow_Free</cite>.</p></li>
-</ul>
-</p></li>
-<li><p><strong>choices</strong> (<em>For information on other variable</em>) – </p></li>
-<li><p><strong>[</strong><strong>here</strong><strong>]</strong><strong>(</strong><strong>https</strong> (<em>see</em>) – </p></li>
-<li><p><strong>quality_flag_rm</strong> (Quality flag values to use to set values to <cite>NA</cite>. Each pixel has a quality flag value, where low quality values can be removed. Values are set to <cite>NA</cite> for each value in ther <cite>quality_flag_rm</cite> vector. (Default: <cite>c(255)</cite>).) – </p></li>
-<li><p><strong>data</strong><strong>)</strong> (<em>For VNP46A3 and VNP46A4</em><em> (</em><em>monthly and annual</em>) – </p></li>
-<li><p><strong>0</strong> (<em>-</em>) – </p></li>
-<li><p><strong>1</strong> (<em>-</em>) – </p></li>
-<li><p><strong>2</strong> (<em>-</em>) – </p></li>
-<li><p><strong>255</strong> (<em>-</em>) – </p></li>
-<li><p><strong>data</strong><strong>)</strong> – </p></li>
-<li><p><strong>0</strong> – </p></li>
-<li><p><strong>1</strong> – </p></li>
-<li><p><strong>2</strong> – </p></li>
-<li><p><strong>255</strong> – </p></li>
-<li><p><strong>check_all_tiles_exist</strong> (Check whether all Black Marble nighttime light tiles exist for the region of interest. Sometimes not all tiles are available, so the full region of interest may not be covered. If <cite>TRUE</cite>, skips cases where not all tiles are available. (Default: <cite>TRUE</cite>).) – </p></li>
-<li><p><strong>output_location_type</strong> (Where to produce output; either <cite>r_memory</cite> or <cite>file</cite>. If <cite>r_memory</cite>, functions returns a raster in R. If <cite>file</cite>, function exports a <cite>.tif</cite> file and returns <cite>NULL</cite>.) – </p></li>
-<li><p><strong>file</strong> (<em>For output_location_type =</em>) – <p>file_dir: The directory where data should be exported (default: <cite>NULL</cite>, so the working directory will be used)</p>
-<p>file_prefix: Prefix to add to the file to be saved. The file will be saved as the following: <cite>[file_prefix][product_id]_t[date].tif</cite></p>
-<p>file_skip_if_exists: Whether the function should first check wither the file already exists, and to skip downloading or extracting data if the data for that date if the file already exists (default: <cite>TRUE</cite>).</p>
-</p></li>
-<li><p><strong>quiet</strong> (Suppress output that show downloading progress and other messages. (Default: <cite>FALSE</cite>).) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><em>None (if output_location_type = “file”)</em> – A geotif file is saved to the “file_dir” directory. Nothing is returned from the function.</p></li>
-<li><p><em>Raster (if output_location_type = “tempfile”)</em></p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
+<section id="blackmarble-bm-raster-module">
+<h2>blackmarble.bm_raster module<a class="headerlink" href="#blackmarble-bm-raster-module" title="Permalink to this heading">#</a></h2>
 </section>
-<section id="module-blackmarble.bm_raster">
-<span id="blackmarble-bm-raster-module"></span><h2>blackmarble.bm_raster module<a class="headerlink" href="#module-blackmarble.bm_raster" title="Permalink to this heading">#</a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="blackmarble.bm_raster.bm_raster">
-<span class="sig-prename descclassname"><span class="pre">blackmarble.bm_raster.</span></span><span class="sig-name descname"><span class="pre">bm_raster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">roi_sf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">product_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bearer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quality_flag_rm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[255]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_all_tiles_exist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_location_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tempfile'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_skip_if_exists</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#blackmarble.bm_raster.bm_raster" title="Permalink to this definition">#</a></dt>
-<dd><p>Make a raster of nighttime lights from [NASA Black Marble data](<a class="reference external" href="https://blackmarble.gsfc.nasa.gov/">https://blackmarble.gsfc.nasa.gov/</a>).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>roi_st</strong> (<em>geopandas.DataFrame</em>) – Region of interest; geopandas dataframe (polygon). Must be in the [WGS 84 (epsg:4326)](https://epsg.io/4326) coordinate reference system.</p></li>
-<li><p><strong>product_id</strong> (<em>string. One of the following:</em>) – <ul>
-<li><p><cite>“VNP46A1”</cite>: Daily (raw)</p></li>
-<li><p><cite>”VNP46A2”</cite>: Daily (corrected)</p></li>
-<li><p><cite>”VNP46A3”</cite>: Monthly</p></li>
-<li><p><cite>”VNP46A4”</cite>: Annual</p></li>
-</ul>
-</p></li>
-<li><p><strong>date</strong> (<em>Date of raster data. Entering one date will produce a raster. Entering multiple dates will produce a raster stack.</em>) – <ul>
-<li><p>For <cite>product_id`s `”VNP46A1”</cite> and <cite>“VNP46A2”</cite>, a date (eg, <cite>“2021-10-03”</cite>).</p></li>
-<li><p>For <cite>product_id</cite> <cite>“VNP46A3”</cite>, a date or year-month (e.g., <cite>“2021-10-01”</cite>, where the day will be ignored, or <cite>“2021-10”</cite>).</p></li>
-<li><p>For <cite>product_id</cite> <cite>“VNP46A4”</cite>, year or date  (e.g., <cite>“2021-10-01”</cite>, where the month and day will be ignored, or <cite>2021</cite>).</p></li>
-</ul>
-</p></li>
-<li><p><strong>bearer</strong> (NASA bearer token. For instructions on how to create a token, see [here](<a class="github reference external" href="https://github.com/ramarty/blackmarbler#bearer-token">ramarty/blackmarbler</a>-).) – </p></li>
-<li><p><strong>variable</strong> (Variable to used to create raster (default: <cite>NULL</cite>). If <cite>NULL</cite>, uses the following default variables:) – <ul>
-<li><p>For <cite>product_id</cite> <cite>:VNP46A1”</cite>, uses <cite>DNB_At_Sensor_Radiance_500m</cite>.</p></li>
-<li><p>For <cite>product_id</cite> <cite>“VNP46A2”</cite>, uses <cite>Gap_Filled_DNB_BRDF-Corrected_NTL</cite>.</p></li>
-<li><p>For <cite>product_id`s `”VNP46A3”</cite> and <cite>“VNP46A4”</cite>, uses <cite>NearNadir_Composite_Snow_Free</cite>.</p></li>
-</ul>
-</p></li>
-<li><p><strong>choices</strong> (<em>For information on other variable</em>) – </p></li>
-<li><p><strong>[</strong><strong>here</strong><strong>]</strong><strong>(</strong><strong>https</strong> (<em>see</em>) – </p></li>
-<li><p><strong>quality_flag_rm</strong> (<em>long</em>) – <p>Quality flag values to use to set values to <cite>NA</cite>. Each pixel has a quality flag value, where low quality values can be removed. Values are set to <cite>NA</cite> for each value in ther <cite>quality_flag_rm</cite> vector. (Default: <cite>c(255)</cite>).</p>
-<p>For <cite>VNP46A1</cite> and <cite>VNP46A2</cite> (daily data):
-- <cite>0</cite>: High-quality, Persistent nighttime lights
-- <cite>1</cite>: High-quality, Ephemeral nighttime Lights
-- <cite>2</cite>: Poor-quality, Outlier, potential cloud contamination, or other issues
-- <cite>255</cite>: No retrieval, Fill value (masked out on ingestion)</p>
-</p></li>
-<li><p><strong>data</strong><strong>)</strong> (<em>For VNP46A3 and VNP46A4</em><em> (</em><em>monthly and annual</em>) – </p></li>
-<li><p><strong>0</strong> (<em>-</em>) – </p></li>
-<li><p><strong>1</strong> (<em>-</em>) – </p></li>
-<li><p><strong>2</strong> (<em>-</em>) – </p></li>
-<li><p><strong>255</strong> (<em>-</em>) – </p></li>
-<li><p><strong>check_all_tiles_exist</strong> (Check whether all Black Marble nighttime light tiles exist for the region of interest. Sometimes not all tiles are available, so the full region of interest may not be covered. If <cite>TRUE</cite>, skips cases where not all tiles are available. (Default: <cite>TRUE</cite>).) – </p></li>
-<li><p><strong>output_location_type</strong> (Where to produce output; either <cite>r_memory</cite> or <cite>file</cite>. If <cite>r_memory</cite>, functions returns a raster in R. If <cite>file</cite>, function exports a <cite>.tif</cite> file and returns <cite>NULL</cite>.) – </p></li>
-<li><p><strong>file</strong> (<em>For output_location_type =</em>) – <p>file_dir: The directory where data should be exported (default: <cite>NULL</cite>, so the working directory will be used)</p>
-<p>file_prefix: Prefix to add to the file to be saved. The file will be saved as the following: <cite>[file_prefix][product_id]_t[date].tif</cite></p>
-<p>file_skip_if_exists: Whether the function should first check wither the file already exists, and to skip downloading or extracting data if the data for that date if the file already exists (default: <cite>TRUE</cite>).</p>
-</p></li>
-<li><p><strong>quiet</strong> (Suppress output that show downloading progress and other messages. (Default: <cite>FALSE</cite>).) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><em>None (if output_location_type = “file”)</em> – A geotif file is saved to the “file_dir” directory. Nothing is returned from the function.</p></li>
-<li><p><em>Raster (if output_location_type = “tempfile”)</em></p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
+<section id="blackmarble-download-module">
+<h2>blackmarble.download module<a class="headerlink" href="#blackmarble-download-module" title="Permalink to this heading">#</a></h2>
 </section>
-<section id="module-blackmarble.utils">
-<span id="blackmarble-utils-module"></span><h2>blackmarble.utils module<a class="headerlink" href="#module-blackmarble.utils" title="Permalink to this heading">#</a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="blackmarble.utils.bm_extract_i">
-<span class="sig-prename descclassname"><span class="pre">blackmarble.utils.</span></span><span class="sig-name descname"><span class="pre">bm_extract_i</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">roi_sf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">product_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bearer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quality_flag_rm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aggregation_fun</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_all_tiles_exist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temp_dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#blackmarble.utils.bm_extract_i" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="blackmarble.utils.bm_raster_i">
-<span class="sig-prename descclassname"><span class="pre">blackmarble.utils.</span></span><span class="sig-name descname"><span class="pre">bm_raster_i</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">roi_sf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GeoDataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">product_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bearer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quality_flag_rm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_all_tiles_exist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temp_dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#blackmarble.utils.bm_raster_i" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="blackmarble.utils.define_date_name">
-<span class="sig-prename descclassname"><span class="pre">blackmarble.utils.</span></span><span class="sig-name descname"><span class="pre">define_date_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date_i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">product_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#blackmarble.utils.define_date_name" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="blackmarble.utils.define_variable">
-<span class="sig-prename descclassname"><span class="pre">blackmarble.utils.</span></span><span class="sig-name descname"><span class="pre">define_variable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">product_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#blackmarble.utils.define_variable" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="blackmarble.utils.download_raster">
-<span class="sig-prename descclassname"><span class="pre">blackmarble.utils.</span></span><span class="sig-name descname"><span class="pre">download_raster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temp_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bearer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quality_flag_rm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tile_i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_tile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#blackmarble.utils.download_raster" title="Permalink to this definition">#</a></dt>
-<dd><p>Download NASA BLA</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="blackmarble.utils.file_to_raster">
-<span class="sig-prename descclassname"><span class="pre">blackmarble.utils.</span></span><span class="sig-name descname"><span class="pre">file_to_raster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quality_flag_rm</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#blackmarble.utils.file_to_raster" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="blackmarble.utils.retrieve_manifest">
-<span class="sig-prename descclassname"><span class="pre">blackmarble.utils.</span></span><span class="sig-name descname"><span class="pre">retrieve_manifest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">product_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">date</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#blackmarble.utils.retrieve_manifest" title="Permalink to this definition">#</a></dt>
-<dd><p>NASA Black Marble</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>NASA Black Marble data manifest (i.e., downloads links)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>pandas.DataFrame</p>
-</dd>
-</dl>
-</dd></dl>
-
+<section id="blackmarble-types-module">
+<h2>blackmarble.types module<a class="headerlink" href="#blackmarble-types-module" title="Permalink to this heading">#</a></h2>
 </section>
 <section id="module-blackmarble">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-blackmarble" title="Permalink to this heading">#</a></h2>
@@ -652,10 +485,10 @@ document.write(`
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blackmarble-base-module">blackmarble.base module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-blackmarble.bm_extract">blackmarble.bm_extract module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-blackmarble.bm_raster">blackmarble.bm_raster module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-blackmarble.utils">blackmarble.utils module</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blackmarble-bm-extract-module">blackmarble.bm_extract module</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blackmarble-bm-raster-module">blackmarble.bm_raster module</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blackmarble-download-module">blackmarble.download module</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blackmarble-types-module">blackmarble.types module</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-blackmarble">Module contents</a></li>
 </ul>
   </nav></div>
@@ -683,7 +516,7 @@ By Development Data Group
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Dec 01, 2023.
+  Last updated on Dec 06, 2023.
   <br/>
 </p>
   </div>

@@ -4,14 +4,6 @@ blackmarble package
 Submodules
 ----------
 
-blackmarble.base module
------------------------
-
-.. automodule:: blackmarble.base
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 blackmarble.bm\_extract module
 ------------------------------
 
@@ -28,10 +20,18 @@ blackmarble.bm\_raster module
    :undoc-members:
    :show-inheritance:
 
-blackmarble.utils module
+blackmarble.download module
+---------------------------
+
+.. automodule:: blackmarble.download
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+blackmarble.types module
 ------------------------
 
-.. automodule:: blackmarble.utils
+.. automodule:: blackmarble.types
    :members:
    :undoc-members:
    :show-inheritance:
