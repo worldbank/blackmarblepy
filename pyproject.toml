@@ -30,11 +30,13 @@ dependencies = [
 	"geopandas<1",
 	"h5py",
 	"httpx",
+	"ipywidgets<9",
 	"numpy",
 	"pandas>=2,<3",
 	"rasterio",
 	"rasterstats",
 	"tqdm",
+	"xarray",
 ]
 [project.optional-dependencies]
 docs = ["jupyter-book >= 0.15.1", "sphinxcontrib-apidoc >= 0.4.0, <1"]
