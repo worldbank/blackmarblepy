@@ -383,10 +383,10 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blackmarble-bm-extract-module">blackmarble.bm_extract module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blackmarble-bm-raster-module">blackmarble.bm_raster module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blackmarble-download-module">blackmarble.download module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blackmarble-types-module">blackmarble.types module</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-blackmarble.download">blackmarble.download module</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-blackmarble.extract">blackmarble.extract module</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-blackmarble.raster">blackmarble.raster module</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-blackmarble.types">blackmarble.types module</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-blackmarble">Module contents</a></li>
 </ul>
             </nav>
@@ -404,17 +404,294 @@ document.write(`
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">#</a></h2>
 </section>
-<section id="blackmarble-bm-extract-module">
-<h2>blackmarble.bm_extract module<a class="headerlink" href="#blackmarble-bm-extract-module" title="Permalink to this heading">#</a></h2>
+<section id="module-blackmarble.download">
+<span id="blackmarble-download-module"></span><h2>blackmarble.download module<a class="headerlink" href="#module-blackmarble.download" title="Permalink to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="blackmarble.download.BlackMarbleDownloader">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">blackmarble.download.</span></span><span class="sig-name descname"><span class="pre">BlackMarbleDownloader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bearer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#blackmarble.download.BlackMarbleDownloader" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<p>A downloader to retrieve <a class="reference external" href="https://blackmarble.gsfc.nasa.gov">NASA Black Marble</a> data.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="blackmarble.download.BlackMarbleDownloader.bearer">
+<span class="sig-name descname"><span class="pre">bearer</span></span><a class="headerlink" href="#blackmarble.download.BlackMarbleDownloader.bearer" title="Permalink to this definition">#</a></dt>
+<dd><p>NASA EarthData bearer token</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="blackmarble.download.BlackMarbleDownloader.directory">
+<span class="sig-name descname"><span class="pre">directory</span></span><a class="headerlink" href="#blackmarble.download.BlackMarbleDownloader.directory" title="Permalink to this definition">#</a></dt>
+<dd><p>Local directory to which download</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="blackmarble.download.BlackMarbleDownloader.TILES">
+<span class="sig-name descname"><span class="pre">TILES</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">GeoDataFrame</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">TileID</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">geometry</span> <span class="pre">0</span>&#160;&#160;&#160; <span class="pre">h00v00</span>&#160; <span class="pre">POLYGON</span> <span class="pre">((-180.00000</span> <span class="pre">90.00012,</span> <span class="pre">-170.00000</span> <span class="pre">90.0...</span> <span class="pre">1</span>&#160;&#160;&#160; <span class="pre">h00v01</span>&#160; <span class="pre">POLYGON</span> <span class="pre">((-180.00000</span> <span class="pre">80.00012,</span> <span class="pre">-170.00000</span> <span class="pre">80.0...</span> <span class="pre">2</span>&#160;&#160;&#160; <span class="pre">h00v02</span>&#160; <span class="pre">POLYGON</span> <span class="pre">((-180.00000</span> <span class="pre">70.00012,</span> <span class="pre">-170.00000</span> <span class="pre">70.0...</span> <span class="pre">3</span>&#160;&#160;&#160; <span class="pre">h00v03</span>&#160; <span class="pre">POLYGON</span> <span class="pre">((-180.00000</span> <span class="pre">60.00012,</span> <span class="pre">-170.00000</span> <span class="pre">60.0...</span> <span class="pre">4</span>&#160;&#160;&#160; <span class="pre">h00v04</span>&#160; <span class="pre">POLYGON</span> <span class="pre">((-180.00000</span> <span class="pre">50.00012,</span> <span class="pre">-170.00000</span> <span class="pre">50.0...</span> <span class="pre">..</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">...</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">...</span> <span class="pre">643</span>&#160; <span class="pre">h35v13</span>&#160; <span class="pre">POLYGON</span> <span class="pre">((170.00012</span> <span class="pre">-40.00000,</span> <span class="pre">180.00012</span> <span class="pre">-40.0...</span> <span class="pre">644</span>&#160; <span class="pre">h35v14</span>&#160; <span class="pre">POLYGON</span> <span class="pre">((170.00012</span> <span class="pre">-50.00000,</span> <span class="pre">180.00012</span> <span class="pre">-50.0...</span> <span class="pre">645</span>&#160; <span class="pre">h35v15</span>&#160; <span class="pre">POLYGON</span> <span class="pre">((170.00012</span> <span class="pre">-60.00000,</span> <span class="pre">180.00012</span> <span class="pre">-60.0...</span> <span class="pre">646</span>&#160; <span class="pre">h35v16</span>&#160; <span class="pre">POLYGON</span> <span class="pre">((170.00012</span> <span class="pre">-70.00000,</span> <span class="pre">180.00012</span> <span class="pre">-70.0...</span> <span class="pre">647</span>&#160; <span class="pre">h35v17</span>&#160; <span class="pre">POLYGON</span> <span class="pre">((170.00012</span> <span class="pre">-80.00000,</span> <span class="pre">180.00012</span> <span class="pre">-80.0...</span>&#160; <span class="pre">[648</span> <span class="pre">rows</span> <span class="pre">x</span> <span class="pre">2</span> <span class="pre">columns]</span></em><a class="headerlink" href="#blackmarble.download.BlackMarbleDownloader.TILES" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="blackmarble.download.BlackMarbleDownloader.URL">
+<span class="sig-name descname"><span class="pre">URL</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/5000'</span></em><a class="headerlink" href="#blackmarble.download.BlackMarbleDownloader.URL" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">bearer</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#id0" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">directory</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Path</span></em><a class="headerlink" href="#id1" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="blackmarble.download.BlackMarbleDownloader.download">
+<span class="sig-name descname"><span class="pre">download</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gdf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GeoDataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">product_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#blackmarble.types.ProductId" title="blackmarble.types.ProductId"><span class="pre">ProductId</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">date</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">date</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_if_exists</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#blackmarble.download.BlackMarbleDownloader.download" title="Permalink to this definition">#</a></dt>
+<dd><p>Download (in parallel) from NASA Black Marble archive</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gdf</strong> (<em>geopandas.GeoDataFrame</em>) – Region of Interest</p></li>
+<li><p><strong>product</strong> (<a class="reference internal" href="#blackmarble.types.ProductId" title="blackmarble.types.ProductId"><em>ProductId</em></a>) – Nasa Black Marble Product Id (e.g, VNP46A1)</p></li>
+<li><p><strong>skip_if_exists</strong> (<em>bool</em><em>, </em><em>default=True</em>) – Whether to skip downloading or extracting data if the data file for that date already exists</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="blackmarble.download.BlackMarbleDownloader.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#blackmarble.download.BlackMarbleDownloader.model_config" title="Permalink to this definition">#</a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="blackmarble.download.BlackMarbleDownloader.model_fields">
+<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">FieldInfo</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'bearer':</span> <span class="pre">FieldInfo(annotation=str,</span> <span class="pre">required=True),</span> <span class="pre">'directory':</span> <span class="pre">FieldInfo(annotation=Path,</span> <span class="pre">required=True)}</span></em><a class="headerlink" href="#blackmarble.download.BlackMarbleDownloader.model_fields" title="Permalink to this definition">#</a></dt>
+<dd><p>Metadata about the fields defined on the model,
+mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</p>
+<p>This replaces <cite>Model.__fields__</cite> from Pydantic V1.</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="blackmarble-bm-raster-module">
-<h2>blackmarble.bm_raster module<a class="headerlink" href="#blackmarble-bm-raster-module" title="Permalink to this heading">#</a></h2>
+<section id="module-blackmarble.extract">
+<span id="blackmarble-extract-module"></span><h2>blackmarble.extract module<a class="headerlink" href="#module-blackmarble.extract" title="Permalink to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="blackmarble.extract.bm_extract">
+<span class="sig-prename descclassname"><span class="pre">blackmarble.extract.</span></span><span class="sig-name descname"><span class="pre">bm_extract</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">roi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GeoDataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">product_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#blackmarble.types.ProductId" title="blackmarble.types.ProductId"><span class="pre">ProductId</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">date</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">date</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bearer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aggfun</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">['mean']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quality_flag_rm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[255]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_all_tiles_exist</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_skip_if_exists</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#blackmarble.extract.bm_extract" title="Permalink to this definition">#</a></dt>
+<dd><p>Extract and aggregate nighttime lights zonal statistics from <a class="reference external" href="https://blackmarble.gsfc.nasa.gov">NASA Black Marble</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>roi</strong> (<em>geopandas.GeoDataFrame</em>) – Region of interest</p></li>
+<li><p><strong>product_id</strong> (<em>Product</em>) – <p>NASA Black Marble product suite (VNP46) identifier. The available products are shown in following list:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">VNP46A1</span></code>: Daily (raw)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VNP46A2</span></code>: Daily (corrected)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VNP46A3</span></code>: Monthly</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VNP46A4</span></code>: Annual</p></li>
+</ul>
+</p></li>
+<li><p><strong>date_range</strong> (<em>datetime.date</em><em> | </em><em>List</em><em>[</em><em>datetime.date</em><em>]</em>) – Date range (single date or list of dates) for which to retrieve NASA Black Marble data.</p></li>
+<li><p><strong>bearer</strong> (<em>str</em>) – NASA Earthdata Bearer token. Please refer to the <a class="reference external" href="https://worldbank.github.io/blackmarblepy/examples/blackmarblepy.html#nasa-earthdata-bearer-token">documentation</a>.</p></li>
+<li><p><strong>aggfunc</strong> (<em>str</em><em> | </em><em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>default=</em><em>[</em><em>&quot;mean&quot;</em><em>]</em>) – Which statistics to calculate for each zone. All possible choices are listed in <a class="reference external" href="https://pythonhosted.org/rasterstats/rasterstats.html?highlight=zonal_stats#rasterstats.gen">rasterstats.utils.VALID_STATS</a>.</p></li>
+<li><p><strong>variable</strong> (<em>str</em><em>, </em><em>default = None</em>) – <p>Variable to create GeoTIFF raster. Further information, pleae see the <a class="reference external" href="https://ladsweb.modaps.eosdis.nasa.gov/api/v2/content/archives/Document%20Archive/Science%20Data%20Product%20Documentation/VIIRS_Black_Marble_UG_v1.2_April_2021.pdf">NASA Black Marble User Guide</a> for <cite>VNP46A1</cite>, see Table 3; for <cite>VNP46A2</cite> see Table 6; for <cite>VNP46A3</cite> and <cite>VNP46A4</cite>, see Table 9. By default, it uses the following default variables:</p>
+<ul>
+<li><p>For <code class="docutils literal notranslate"><span class="pre">VNP46A1</span></code>, uses <code class="docutils literal notranslate"><span class="pre">DNB_At_Sensor_Radiance_500m</span></code></p></li>
+<li><p>For <code class="docutils literal notranslate"><span class="pre">VNP46A2</span></code>, uses <code class="docutils literal notranslate"><span class="pre">Gap_Filled_DNB_BRDF-Corrected_NTL</span></code></p></li>
+<li><p>For <code class="docutils literal notranslate"><span class="pre">VNP46A3</span></code>, uses <code class="docutils literal notranslate"><span class="pre">NearNadir_Composite_Snow_Free</span></code>.</p></li>
+<li><p>For <code class="docutils literal notranslate"><span class="pre">VNP46A4</span></code>, uses <code class="docutils literal notranslate"><span class="pre">NearNadir_Composite_Snow_Free</span></code>.</p></li>
+</ul>
+</p></li>
+<li><p><strong>quality_flag</strong> (<em>List</em><em>[</em><em>int</em><em>]</em><em>, </em><em>default =</em><em> [</em><em>255</em><em>]</em>) – <p>Quality flag values to use to set values to <code class="docutils literal notranslate"><span class="pre">NA</span></code>. Each pixel has a quality flag value, where low quality values can be removed. Values are set to <code class="docutils literal notranslate"><span class="pre">NA</span></code> for each value in ther <code class="docutils literal notranslate"><span class="pre">quality_flag_rm</span></code> vector.</p>
+<p>For <code class="docutils literal notranslate"><span class="pre">VNP46A1</span></code> and <code class="docutils literal notranslate"><span class="pre">VNP46A2</span></code> (daily data):</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">0</span></code>: High-quality, Persistent nighttime lights</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">1</span></code>: High-quality, Ephemeral nighttime Lights</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">2</span></code>: Poor-quality, Outlier, potential cloud contamination, or other issues</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">255</span></code>: No retrieval, Fill value (masked out on ingestion)</p></li>
+</ul>
+<p>For <code class="docutils literal notranslate"><span class="pre">VNP46A3</span></code> and <code class="docutils literal notranslate"><span class="pre">VNP46A4</span></code> (monthly and annual data):</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">0</span></code>: Good-quality, The number of observations used for the composite is larger than 3</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">1</span></code>: Poor-quality, The number of observations used for the composite is less than or equal to 3</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">2</span></code>: Gap filled NTL based on historical data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">255</span></code>: Fill value</p></li>
+</ul>
+</p></li>
+<li><p><strong>check_all_tiles_exist</strong> (<em>bool</em><em>, </em><em>default=True</em>) – Check whether all Black Marble nighttime light tiles exist for the region of interest. Sometimes not all tiles are available, so the full region of interest may not be covered. By default (True), it skips cases where not all tiles are available.</p></li>
+<li><p><strong>file_directory</strong> (<em>pathlib.Path</em><em>, </em><em>optional</em>) – Where to produce output. By default, the output will be procuded onto a temporary directory.</p></li>
+<li><p><strong>file_directory_prefix</strong> (<em>str</em><em>, </em><em>optional</em>) – Prefix</p></li>
+<li><p><strong>file_skip_if_exists</strong> (<em>bool</em><em>, </em><em>default=True</em>) – <p>Whether to skip downloading or extracting data if the data file for that date already exists.</p>
+<p>bearer</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Zonal statitics dataframe</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
-<section id="blackmarble-download-module">
-<h2>blackmarble.download module<a class="headerlink" href="#blackmarble-download-module" title="Permalink to this heading">#</a></h2>
+<section id="module-blackmarble.raster">
+<span id="blackmarble-raster-module"></span><h2>blackmarble.raster module<a class="headerlink" href="#module-blackmarble.raster" title="Permalink to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="blackmarble.raster.bm_raster">
+<span class="sig-prename descclassname"><span class="pre">blackmarble.raster.</span></span><span class="sig-name descname"><span class="pre">bm_raster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gdf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GeoDataFrame</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">product_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#blackmarble.types.ProductId" title="blackmarble.types.ProductId"><span class="pre">ProductId</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">date</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">date</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bearer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quality_flag_rm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[255]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_all_tiles_exist</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_skip_if_exists</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#blackmarble.raster.bm_raster" title="Permalink to this definition">#</a></dt>
+<dd><p>Create a stack of nighttime lights rasters by retrieiving from <a class="reference external" href="https://blackmarble.gsfc.nasa.gov">NASA Black Marble</a> data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>roi</strong> (<em>geopandas.GeoDataFrame</em>) – Region of interest</p></li>
+<li><p><strong>product_id</strong> (<em>Product</em>) – <p>NASA Black Marble product suite (VNP46) identifier. The available products are shown in following list:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">VNP46A1</span></code>: Daily (raw)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VNP46A2</span></code>: Daily (corrected)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VNP46A3</span></code>: Monthly</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">VNP46A4</span></code>: Annual</p></li>
+</ul>
+</p></li>
+<li><p><strong>date_range</strong> (<em>datetime.date</em><em> | </em><em>List</em><em>[</em><em>datetime.date</em><em>]</em>) – Date range (single date or list of dates) for which to retrieve NASA Black Marble data.</p></li>
+<li><p><strong>bearer</strong> (<em>str</em>) – <p>NASA Earthdata Bearer token. Please refer to the <a class="reference external" href="https://worldbank.github.io/blackmarblepy/examples/blackmarblepy.html#nasa-earthdata-bearer-token">documentation</a>.</p>
+</p></li>
+<li><p><strong>variable</strong> (<em>str</em><em>, </em><em>default = None</em>) – <p>Variable to create GeoTIFF raster. Further information, pleae see the <a class="reference external" href="https://ladsweb.modaps.eosdis.nasa.gov/api/v2/content/archives/Document%20Archive/Science%20Data%20Product%20Documentation/VIIRS_Black_Marble_UG_v1.2_April_2021.pdf">NASA Black Marble User Guide</a> for <cite>VNP46A1</cite>, see Table 3; for <cite>VNP46A2</cite> see Table 6; for <cite>VNP46A3</cite> and <cite>VNP46A4</cite>, see Table 9. By default, it uses the following default variables:</p>
+<ul>
+<li><p>For <code class="docutils literal notranslate"><span class="pre">VNP46A1</span></code>, uses <code class="docutils literal notranslate"><span class="pre">DNB_At_Sensor_Radiance_500m</span></code></p></li>
+<li><p>For <code class="docutils literal notranslate"><span class="pre">VNP46A2</span></code>, uses <code class="docutils literal notranslate"><span class="pre">Gap_Filled_DNB_BRDF-Corrected_NTL</span></code></p></li>
+<li><p>For <code class="docutils literal notranslate"><span class="pre">VNP46A3</span></code>, uses <code class="docutils literal notranslate"><span class="pre">NearNadir_Composite_Snow_Free</span></code>.</p></li>
+<li><p>For <code class="docutils literal notranslate"><span class="pre">VNP46A4</span></code>, uses <code class="docutils literal notranslate"><span class="pre">NearNadir_Composite_Snow_Free</span></code>.</p></li>
+</ul>
+</p></li>
+<li><p><strong>quality_flag</strong> (<em>List</em><em>[</em><em>int</em><em>]</em><em>, </em><em>default =</em><em> [</em><em>255</em><em>]</em>) – <p>Quality flag values to use to set values to <code class="docutils literal notranslate"><span class="pre">NA</span></code>. Each pixel has a quality flag value, where low quality values can be removed. Values are set to <code class="docutils literal notranslate"><span class="pre">NA</span></code> for each value in ther <code class="docutils literal notranslate"><span class="pre">quality_flag_rm</span></code> vector.</p>
+<p>For <code class="docutils literal notranslate"><span class="pre">VNP46A1</span></code> and <code class="docutils literal notranslate"><span class="pre">VNP46A2</span></code> (daily data):</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">0</span></code>: High-quality, Persistent nighttime lights</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">1</span></code>: High-quality, Ephemeral nighttime Lights</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">2</span></code>: Poor-quality, Outlier, potential cloud contamination, or other issues</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">255</span></code>: No retrieval, Fill value (masked out on ingestion)</p></li>
+</ul>
+<p>For <code class="docutils literal notranslate"><span class="pre">VNP46A3</span></code> and <code class="docutils literal notranslate"><span class="pre">VNP46A4</span></code> (monthly and annual data):</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">0</span></code>: Good-quality, The number of observations used for the composite is larger than 3</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">1</span></code>: Poor-quality, The number of observations used for the composite is less than or equal to 3</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">2</span></code>: Gap filled NTL based on historical data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">255</span></code>: Fill value</p></li>
+</ul>
+</p></li>
+<li><p><strong>check_all_tiles_exist</strong> (<em>bool</em><em>, </em><em>default=True</em>) – Check whether all Black Marble nighttime light tiles exist for the region of interest. Sometimes not all tiles are available, so the full region of interest may not be covered. By default (True), it skips cases where not all tiles are available.</p></li>
+<li><p><strong>file_directory</strong> (<em>pathlib.Path</em><em>, </em><em>optional</em>) – Where to produce output. By default, the output will be procuded onto a temporary directory.</p></li>
+<li><p><strong>file_directory_prefix</strong> (<em>str</em><em>, </em><em>optional</em>) – Prefix</p></li>
+<li><p><strong>file_skip_if_exists</strong> (<em>bool</em><em>, </em><em>default=True</em>) – Whether to skip downloading or extracting data if the data file for that date already exists.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A Xarray dataset contaning a stack of nighttime lights rasters</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>xarray.Dataset</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="blackmarble.raster.h5_to_geotiff">
+<span class="sig-prename descclassname"><span class="pre">blackmarble.raster.</span></span><span class="sig-name descname"><span class="pre">h5_to_geotiff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quality_flag_rm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[255]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#blackmarble.raster.h5_to_geotiff" title="Permalink to this definition">#</a></dt>
+<dd><p>Convert HDF5 file to GeoTIFF for a selected (or default) variable from NASA Black Marble data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>output_path</strong> – Path to which GeoTIFF</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Path</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
-<section id="blackmarble-types-module">
-<h2>blackmarble.types module<a class="headerlink" href="#blackmarble-types-module" title="Permalink to this heading">#</a></h2>
+<section id="module-blackmarble.types">
+<span id="blackmarble-types-module"></span><h2>blackmarble.types module<a class="headerlink" href="#module-blackmarble.types" title="Permalink to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="blackmarble.types.DateRange">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">blackmarble.types.</span></span><span class="sig-name descname"><span class="pre">DateRange</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">date</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#blackmarble.types.DateRange" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="blackmarble.types.DateRange.check_date_range">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_date_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#blackmarble.types.DateRange.check_date_range" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="blackmarble.types.DateRange.end_date">
+<span class="sig-name descname"><span class="pre">end_date</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">date</span></em><a class="headerlink" href="#blackmarble.types.DateRange.end_date" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="blackmarble.types.DateRange.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#blackmarble.types.DateRange.model_config" title="Permalink to this definition">#</a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="blackmarble.types.DateRange.model_fields">
+<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">FieldInfo</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'end_date':</span> <span class="pre">FieldInfo(annotation=date,</span> <span class="pre">required=True),</span> <span class="pre">'start_date':</span> <span class="pre">FieldInfo(annotation=date,</span> <span class="pre">required=True)}</span></em><a class="headerlink" href="#blackmarble.types.DateRange.model_fields" title="Permalink to this definition">#</a></dt>
+<dd><p>Metadata about the fields defined on the model,
+mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</p>
+<p>This replaces <cite>Model.__fields__</cite> from Pydantic V1.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="blackmarble.types.DateRange.parse_dates">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_dates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#blackmarble.types.DateRange.parse_dates" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="blackmarble.types.DateRange.start_date">
+<span class="sig-name descname"><span class="pre">start_date</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">date</span></em><a class="headerlink" href="#blackmarble.types.DateRange.start_date" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="blackmarble.types.ProductId">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">blackmarble.types.</span></span><span class="sig-name descname"><span class="pre">ProductId</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#blackmarble.types.ProductId" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>NASA Black Marble product suite (VNP46)</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="blackmarble.types.ProductId.VNP46A1">
+<span class="sig-name descname"><span class="pre">VNP46A1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'VNP46A1'</span></em><a class="headerlink" href="#blackmarble.types.ProductId.VNP46A1" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="blackmarble.types.ProductId.VNP46A2">
+<span class="sig-name descname"><span class="pre">VNP46A2</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'VNP46A2'</span></em><a class="headerlink" href="#blackmarble.types.ProductId.VNP46A2" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="blackmarble.types.ProductId.VNP46A3">
+<span class="sig-name descname"><span class="pre">VNP46A3</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'VNP46A3'</span></em><a class="headerlink" href="#blackmarble.types.ProductId.VNP46A3" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="blackmarble.types.ProductId.VNP46A4">
+<span class="sig-name descname"><span class="pre">VNP46A4</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'VNP46A4'</span></em><a class="headerlink" href="#blackmarble.types.ProductId.VNP46A4" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-blackmarble">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-blackmarble" title="Permalink to this heading">#</a></h2>
@@ -485,10 +762,10 @@ document.write(`
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blackmarble-bm-extract-module">blackmarble.bm_extract module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blackmarble-bm-raster-module">blackmarble.bm_raster module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blackmarble-download-module">blackmarble.download module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blackmarble-types-module">blackmarble.types module</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-blackmarble.download">blackmarble.download module</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-blackmarble.extract">blackmarble.extract module</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-blackmarble.raster">blackmarble.raster module</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-blackmarble.types">blackmarble.types module</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-blackmarble">Module contents</a></li>
 </ul>
   </nav></div>
