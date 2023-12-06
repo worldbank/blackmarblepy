@@ -11,7 +11,7 @@ from .utils import bm_extract_i, define_date_name, define_variable
 
 
 def bm_extract(
-    roi_sf,
+    roi,
     product_id,
     date,
     bearer,
@@ -30,7 +30,7 @@ def bm_extract(
     Parameters
     ----------
 
-    roi_sf: Region of interest; geopandas dataframe (polygon). Must be in the [WGS 84 (epsg:4326)](https://epsg.io/4326) coordinate reference system.
+    roi: Region of interest; geopandas dataframe (polygon). Must be in the [WGS 84 (epsg:4326)](https://epsg.io/4326) coordinate reference system.
 
     product_id: string. One of the following:
         * `"VNP46A1"`: Daily (raw)
@@ -130,7 +130,7 @@ def bm_extract(
                 # Only make .tif if raster doesn't already exist
                 if (not file_skip_if_exists) | (not os.path.exists(out_path)):
                     poly_ntl_df = bm_extract_i(
-                        roi_sf,
+                        roi,
                         product_id,
                         date_i,
                         bearer,
@@ -171,7 +171,7 @@ def bm_extract(
     if output_location_type == "memory":
         poly_ntl_df_list = [
             bm_extract_i(
-                roi_sf,
+                roi,
                 product_id,
                 date_i,
                 bearer,

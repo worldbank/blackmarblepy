@@ -14,7 +14,7 @@ from .utils import bm_raster_i, define_date_name, define_variable
 
 
 def bm_raster(
-    roi_sf,
+    roi,
     product_id,
     date,
     bearer,
@@ -32,7 +32,7 @@ def bm_raster(
     Parameters
     ----------
 
-    roi_st : geopandas.DataFrame
+    roi : geopandas.DataFrame
         Region of interest; geopandas dataframe (polygon). Must be in the [WGS 84 (epsg:4326)](https://epsg.io/4326) coordinate reference system.
 
     product_id: string. One of the following:
@@ -132,7 +132,7 @@ def bm_raster(
                 # Only make .tif if raster doesn't already exist
                 if (not file_skip_if_exists) | (not os.path.exists(out_path)):
                     raster_path_i = bm_raster_i(
-                        roi_sf,
+                        roi,
                         product_id,
                         date_i,
                         bearer,
@@ -164,7 +164,7 @@ def bm_raster(
                 date_name_i = define_date_name(date_i, product_id)
 
                 raster_path_i = bm_raster_i(
-                    roi_sf,
+                    roi,
                     product_id,
                     date_i,
                     bearer,

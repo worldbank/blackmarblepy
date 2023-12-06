@@ -65,7 +65,7 @@ def file_to_raster(f, variable, output_path, quality_flag_rm):
         qf = qf[:]
 
         if len(quality_flag_rm) > 0:
-            if variable in ["DNB_BRDF-Corrected_NTL", "Gap_Filled_DNB_BRDF-Corrected_NTL"]:
+            if variable in ["DNB_BRDF-Corrected_NTL", "Gap_Filled_DNB_BRDF-Corrected_NTL", "Latest_High_Quality_Retrieval"]:
                 for val in quality_flag_rm:
                     out = np.where(qf == val, np.nan, out)
 
@@ -267,7 +267,7 @@ def define_date_name(date_i, product_id):
 
 
 def bm_extract_i(
-    roi_sf,
+    roi,
     product_id,
     date_i,
     bearer,
@@ -281,7 +281,7 @@ def bm_extract_i(
     try:
         #### Extract data
         raster_path_i = bm_raster_i(
-            roi_sf,
+            roi,
             product_id,
             date_i,
             bearer,
@@ -297,7 +297,7 @@ def bm_extract_i(
 
         # nodata=src.nodata
         ntl_data = zonal_stats(
-            roi_sf,
+            roi,
             raster_data,
             affine=src.transform,
             nodata=np.nan,
@@ -308,7 +308,7 @@ def bm_extract_i(
         ntl_data_df = pd.DataFrame(ntl_data)
         ntl_data_df = ntl_data_df.add_prefix("ntl_")
 
-        roi_df = pd.DataFrame(roi_sf.drop("geometry", axis=1))
+        roi_df = pd.DataFrame(roi.drop("geometry", axis=1))
         poly_ntl_df = pd.concat([roi_df, ntl_data_df], axis=1)
         poly_ntl_df["date"] = date_i
 
@@ -322,7 +322,7 @@ def bm_extract_i(
 
 
 def bm_raster_i(
-    roi_sf: geopandas.GeoDataFrame,
+    roi: geopandas.GeoDataFrame,
     product_id: str,
     date: str,
     bearer,
@@ -345,7 +345,7 @@ def bm_raster_i(
     bm_tiles_sf = bm_tiles_sf[~bm_tiles_sf["TileID"].str.contains("h00")]
     bm_tiles_sf = bm_tiles_sf[~bm_tiles_sf["TileID"].str.contains("v00")]
 
-    grid_use_sf = gpd.overlay(bm_tiles_sf, roi_sf.dissolve(), how="intersection")
+    grid_use_sf = gpd.overlay(bm_tiles_sf, roi.dissolve(), how="intersection")
 
     # Make raster
     tile_ids_rx = "|".join(grid_use_sf["TileID"])
@@ -426,9 +426,9 @@ def bm_raster_i(
         #### Mask
         if True:
             dataset = rasterio.open(out_fp)
-            mask_geometry = roi_sf.dissolve().geometry.values[
+            mask_geometry = roi.dissolve().geometry.values[
                 0
-            ]  # roi_sf.geometry.values[0]
+            ]  # roi.geometry.values[0]
 
             masked_image, mask_transform = mask(
                 dataset,
