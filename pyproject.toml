@@ -27,14 +27,21 @@ classifiers = [
 requires-python = ">=3.7"
 dependencies = [
 	"backoff>=2,<3",
+	"dask[dataframe]",
 	"geopandas<1",
 	"h5py",
 	"httpx",
+	"ipywidgets<9",
 	"numpy",
 	"pandas>=2,<3",
+	"pqdm",
+	"pydantic>2,<3",
 	"rasterio",
 	"rasterstats",
+	"rioxarray",
 	"tqdm",
+	"xarray",
+	"aiohttp",
 ]
 [project.optional-dependencies]
 docs = ["jupyter-book >= 0.15.1", "sphinxcontrib-apidoc >= 0.4.0, <1"]
