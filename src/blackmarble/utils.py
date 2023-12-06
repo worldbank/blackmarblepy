@@ -101,7 +101,7 @@ def file_to_raster(f, variable, output_path, quality_flag_rm):
 
             if qf_name in h5_names:
                 qf = h5_data["HDFEOS"]["GRIDS"]["VIIRS_Grid_DNB_2d"]["Data Fields"][
-                    variable + "_Quality"
+                    qf_name
                 ]
                 qf = qf[:]
 
