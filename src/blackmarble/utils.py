@@ -65,8 +65,9 @@ def file_to_raster(f, variable, output_path, quality_flag_rm):
         qf = qf[:]
 
         if len(quality_flag_rm) > 0:
-            for val in quality_flag_rm:
-                out = np.where(qf == val, np.nan, out)
+            if variable in ["DNB_BRDF-Corrected_NTL", "Gap_Filled_DNB_BRDF-Corrected_NTL"]:
+                for val in quality_flag_rm:
+                    out = np.where(qf == val, np.nan, out)
 
     # Monthly / Annual --------------------------------------------------
     else:
