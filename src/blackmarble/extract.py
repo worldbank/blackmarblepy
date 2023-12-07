@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 from rasterstats import zonal_stats
 
-from .raster import bm_raster, transform
+from .raster import VARIABLE_DEFAULT, bm_raster, transform
 from .types import Product
 
 
@@ -89,8 +89,11 @@ def bm_extract(
     Returns
     -------
     pandas.DataFrame
-        Zonal statitics dataframe
+        NASA Black Marble zonal statitics dataframe
     """
+    if variable is None:
+        variable = VARIABLE_DEFAULT.get(Product(product_id))
+
     ds = bm_raster(
         roi,
         product_id,
