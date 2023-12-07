@@ -9,3 +9,4 @@ parts:
   - caption: Examples
     chapters:
       - file: examples/blackmarblepy.ipynb
+      - file: examples/quality-assessment.ipynb

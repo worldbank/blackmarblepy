@@ -14,7 +14,7 @@ from pqdm.threads import pqdm
 from pydantic import BaseModel
 from tqdm.auto import tqdm
 
-from .types import ProductId
+from .types import Product
 
 
 @dataclass
@@ -43,14 +43,14 @@ class BlackMarbleDownloader(BaseModel):
 
     def _retrieve_manifest(
         self,
-        product_id: ProductId,
+        product_id: Product,
         date_range: datetime.date | List[datetime.date],
     ) -> pd.DataFrame:
         """Retrieve NASA Black Marble data manifest. i.d., download links.
 
         Parameters
         ----------
-        product_id: ProductId
+        product_id: Product
             NASA Black Marble product suite (VNP46) identifier
 
         date_range: datetime.date | List[datetime.date]
@@ -64,14 +64,14 @@ class BlackMarbleDownloader(BaseModel):
         if isinstance(date_range, datetime.date):
             date_range = [date_range]
         if isinstance(product_id, str):
-            product_id = ProductId(product_id)
+            product_id = Product(product_id)
 
         urlpaths = set()
         for date in date_range:
             match product_id:
-                case ProductId.VNP46A3:  # if VNP46A3 then first day of the month
+                case Product.VNP46A3:  # if VNP46A3 then first day of the month
                     tm_yday = date.replace(day=1).timetuple().tm_yday
-                case ProductId.VNP46A4:  # if VNP46A4 then first day of the year
+                case Product.VNP46A4:  # if VNP46A4 then first day of the year
                     tm_yday = date.replace(month=1, day=1).timetuple().tm_yday
                 case _:
                     tm_yday = date.timetuple().tm_yday
@@ -150,7 +150,7 @@ class BlackMarbleDownloader(BaseModel):
     def download(
         self,
         gdf: geopandas.GeoDataFrame,
-        product_id: ProductId,
+        product_id: Product,
         date_range: datetime.date | List[datetime.date],
         skip_if_exists: bool = True,
     ):
@@ -161,7 +161,7 @@ class BlackMarbleDownloader(BaseModel):
         gdf: geopandas.GeoDataFrame
             Region of Interest
 
-        product: ProductId
+        product: Product
             Nasa Black Marble Product Id (e.g, VNP46A1)
 
         skip_if_exists: bool, default=True
@@ -170,7 +170,6 @@ class BlackMarbleDownloader(BaseModel):
         gdf = geopandas.overlay(
             gdf.to_crs("EPSG:4326").dissolve(), self.TILES, how="intersection"
         )
-
         bm_files_df = self._retrieve_manifest(product_id, date_range)
         bm_files_df = bm_files_df[
             bm_files_df["name"].str.contains("|".join(gdf["TileID"]))
