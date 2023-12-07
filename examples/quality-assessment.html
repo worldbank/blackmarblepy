@@ -1,0 +1,1275 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Assessing Quality of Nighttime Lights Data</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'examples/quality-assessment';</script>
+    <link rel="canonical" href="https://worldbank.github.io/blackmarblepy/examples/quality-assessment.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Examples using blackmarblepy" href="blackmarblepy.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="Dec 07, 2023"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../README.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt=" - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt=" - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../api/blackmarble.html">blackmarble package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CONTRIBUTING.html">CONTRIBUTING</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="blackmarblepy.html">Examples using <code class="docutils literal notranslate"><span class="pre">blackmarblepy</span></code></a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Assessing Quality of Nighttime Lights Data</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/worldbank/blackmarblepy" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/worldbank/blackmarblepy/edit/main/examples/quality-assessment.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/worldbank/blackmarblepy/issues/new?title=Issue%20on%20page%20%2Fexamples/quality-assessment.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/examples/quality-assessment.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Assessing Quality of Nighttime Lights Data</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview-a-name-overview-a">Overview <a name="overview"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup-a-name-setup-a">Setup <a name="setup"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#daily-data-a-name-daily-a">Daily Data <a name="daily"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nighttime-lights-a-name-daily-ntl-a">Nighttime Lights <a name="daily-ntl"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quality-a-name-daily-quality-a">Quality <a name="daily-quality"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nighttime-lights-for-good-quality-observations-a-name-daily-goodq-a">Nighttime lights for good quality observations <a name="daily-goodq"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nighttime-lights-for-good-quality-observations-without-gap-filling-a-name-daily-nogap-a">Nighttime lights for good quality observations, without gap filling <a name="daily-nogap"></a></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#monthly-annual-data-a-name-ma-a">Monthly/Annual Data <a name="ma"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nighttime-lights-a-name-ma-ntl-a">Nighttime Lights <a name="ma-ntl"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#number-of-observations-a-name-ma-numobs-a">Number of Observations <a name="ma-numobs"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quality-a-name-ma-quality-a">Quality <a name="ma-quality"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nighttime-lights-for-good-quality-observations-a-name-ma-ntl-gq-a">Nighttime lights for good quality observations <a name="ma-ntl_gq"></a></a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="assessing-quality-of-nighttime-lights-data">
+<h1>Assessing Quality of Nighttime Lights Data<a class="headerlink" href="#assessing-quality-of-nighttime-lights-data" title="Permalink to this heading">#</a></h1>
+<section id="overview-a-name-overview-a">
+<h2>Overview <a name="overview"></a><a class="headerlink" href="#overview-a-name-overview-a" title="Permalink to this heading">#</a></h2>
+<p>The quality of nighttime lights data can be impacted by a number of factors, particularly cloud cover. To facilitate analysis using high quality data, Black Marble (1) marks the quality of each pixel and (2) in some cases of poor quality pixels, Black Marble will use data from a previous date to fill the value—using a temporally-gap filled NTL value. Below we illustrate how to examine the quality of nighttime lights data.</p>
+</section>
+<section id="setup-a-name-setup-a">
+<h2>Setup <a name="setup"></a><a class="headerlink" href="#setup-a-name-setup-a" title="Permalink to this heading">#</a></h2>
+<p>We first load packages and obtain a polygon for a region of interest; for this example, we use Switzerland.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">import</span> <span class="nn">colorcet</span> <span class="k">as</span> <span class="nn">cc</span>
+<span class="kn">import</span> <span class="nn">contextily</span> <span class="k">as</span> <span class="nn">cx</span>
+<span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">mcolors</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">rasterio</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">from</span> <span class="nn">gadm</span> <span class="kn">import</span> <span class="n">GADMDownloader</span>
+<span class="kn">from</span> <span class="nn">rasterstats</span> <span class="kn">import</span> <span class="n">zonal_stats</span>
+
+<span class="kn">from</span> <span class="nn">blackmarble.extract</span> <span class="kn">import</span> <span class="n">bm_extract</span>
+<span class="kn">from</span> <span class="nn">blackmarble.raster</span> <span class="kn">import</span> <span class="n">bm_raster</span><span class="p">,</span> <span class="n">transform</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bearer</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;BLACKMARBLE_TOKEN&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gdf</span> <span class="o">=</span> <span class="n">GADMDownloader</span><span class="p">(</span><span class="n">version</span><span class="o">=</span><span class="s2">&quot;4.0&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get_shape_data_by_country_name</span><span class="p">(</span>
+    <span class="n">country_name</span><span class="o">=</span><span class="s2">&quot;Switzerland&quot;</span><span class="p">,</span> <span class="n">ad_level</span><span class="o">=</span><span class="mi">0</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="daily-data-a-name-daily-a">
+<h2>Daily Data <a name="daily"></a><a class="headerlink" href="#daily-data-a-name-daily-a" title="Permalink to this heading">#</a></h2>
+<p>Below shows an example examining quality for daily data (<code class="docutils literal notranslate"><span class="pre">VNP46A2</span></code>).</p>
+<section id="nighttime-lights-a-name-daily-ntl-a">
+<h3>Nighttime Lights <a name="daily-ntl"></a><a class="headerlink" href="#nighttime-lights-a-name-daily-ntl-a" title="Permalink to this heading">#</a></h3>
+<p>We download data for January 1st, 2023. When the <code class="docutils literal notranslate"><span class="pre">variable</span></code> parameter is not specified, <code class="docutils literal notranslate"><span class="pre">bm_raster</span></code> creates a raster using the <code class="docutils literal notranslate"><span class="pre">Gap_Filled_DNB_BRDF-Corrected_NTL</span></code> variable for daily data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ntl_r</span> <span class="o">=</span> <span class="n">bm_raster</span><span class="p">(</span>
+    <span class="n">gdf</span><span class="p">,</span>
+    <span class="n">product_id</span><span class="o">=</span><span class="s2">&quot;VNP46A2&quot;</span><span class="p">,</span>
+    <span class="n">date_range</span><span class="o">=</span><span class="s2">&quot;2023-01-01&quot;</span><span class="p">,</span>
+    <span class="n">bearer</span><span class="o">=</span><span class="n">bearer</span><span class="p">,</span>
+    <span class="n">variable</span><span class="o">=</span><span class="s2">&quot;Gap_Filled_DNB_BRDF-Corrected_NTL&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "64310cd2702b4508b90daf2c8ebaf248", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "7b065045eec640158e37ec1f21025d58", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "c8dff07c0b5c48d08d1eaf6ed55422f9", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "b761fcba6fb94c7ba49b2224e3f5988f", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+<span class="n">ntl_r</span><span class="p">[</span><span class="s2">&quot;Gap_Filled_DNB_BRDF-Corrected_NTL&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="s2">&quot;2023-01-01&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="n">robust</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;cividis&quot;</span>
+<span class="p">)</span>
+<span class="n">cx</span><span class="o">.</span><span class="n">add_basemap</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="n">gdf</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">to_string</span><span class="p">(),</span> <span class="n">source</span><span class="o">=</span><span class="n">cx</span><span class="o">.</span><span class="n">providers</span><span class="o">.</span><span class="n">CartoDB</span><span class="o">.</span><span class="n">Positron</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/4565c488c9992fe9b55522184f10474ccf4697bc1aa4a8e0167e8e665ea6f8b0.png" src="../_images/4565c488c9992fe9b55522184f10474ccf4697bc1aa4a8e0167e8e665ea6f8b0.png" />
+</div>
+</div>
+<p>We notice that a number of observations are missing, that are poor quality and are not gap-filled. To understand the extent of missing date, we can use the following code to determine (1) the total number of pixels that cover Switzerland, (2) the total number of non-<code class="docutils literal notranslate"><span class="pre">NA</span></code> nighttime light pixels, and (3) the proportion of non-<code class="docutils literal notranslate"><span class="pre">NA</span></code> pixels.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ntl_np</span> <span class="o">=</span> <span class="n">ntl_r</span><span class="p">[</span><span class="s2">&quot;Gap_Filled_DNB_BRDF-Corrected_NTL&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="s2">&quot;2023-01-01&quot;</span><span class="p">)</span>
+
+<span class="n">n_pixel</span> <span class="o">=</span> <span class="n">zonal_stats</span><span class="p">(</span>
+    <span class="n">gdf</span><span class="p">,</span>
+    <span class="n">ntl_np</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+    <span class="n">affine</span><span class="o">=</span><span class="n">transform</span><span class="p">(</span><span class="n">ntl_np</span><span class="p">),</span>
+    <span class="n">nodata</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+    <span class="n">masked</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">stats</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">,</span> <span class="s2">&quot;nan&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## Number of pixels</span>
+<span class="n">n_pixel</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;count&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">n_pixel</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;nan&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>280801.0
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## Number of non nan pixels</span>
+<span class="n">n_pixel</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;count&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>120617
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## Proportion of non nan pixels</span>
+<span class="n">n_pixel</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;count&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_pixel</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;count&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">n_pixel</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;nan&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.4295461910748181
+</pre></div>
+</div>
+</div>
+</div>
+<p>By default, <code class="docutils literal notranslate"><span class="pre">bm_extract</span></code> computes the mean; we can easily also compute the number of pixels and number of nan pixels.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">date_range</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span>
+    <span class="s2">&quot;2023-01-01&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;2023-01-10&quot;</span><span class="p">,</span>
+    <span class="n">freq</span><span class="o">=</span><span class="s2">&quot;D&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">ntl_df</span> <span class="o">=</span> <span class="n">bm_extract</span><span class="p">(</span>
+    <span class="n">roi</span><span class="o">=</span><span class="n">gdf</span><span class="p">,</span>
+    <span class="n">product_id</span><span class="o">=</span><span class="s2">&quot;VNP46A2&quot;</span><span class="p">,</span>
+    <span class="n">date_range</span><span class="o">=</span><span class="n">date_range</span><span class="p">,</span>
+    <span class="n">bearer</span><span class="o">=</span><span class="n">bearer</span><span class="p">,</span>
+    <span class="n">variable</span><span class="o">=</span><span class="s2">&quot;Gap_Filled_DNB_BRDF-Corrected_NTL&quot;</span><span class="p">,</span>
+    <span class="n">aggfunc</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="p">,</span> <span class="s2">&quot;nan&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "9b5622d17aa5430596b0c73db1a4e074", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "aa3ad96827ec46c7a16bc05fcd969c77", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "8b59a7cce13e450ba27bb05ee9fda10c", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "c29753638a564d6c9b5783da2d56ac0f", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ntl_df</span><span class="p">[</span><span class="s2">&quot;prop_non_na_pixels&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ntl_df</span><span class="p">[</span><span class="s2">&quot;ntl_count&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span>
+    <span class="n">ntl_df</span><span class="p">[</span><span class="s2">&quot;ntl_count&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">ntl_df</span><span class="p">[</span><span class="s2">&quot;ntl_nan&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_output_scroll docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ntl_df</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>COUNTRY</th>
+      <th>ID_0</th>
+      <th>geometry</th>
+      <th>ntl_mean</th>
+      <th>ntl_count</th>
+      <th>ntl_nan</th>
+      <th>date</th>
+      <th>prop_non_na_pixels</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Switzerland</td>
+      <td>CHE</td>
+      <td>MULTIPOLYGON (((7.04510 45.95732, 7.04454 45.9...</td>
+      <td>15.122785</td>
+      <td>120617</td>
+      <td>160184.0</td>
+      <td>2023-01-01</td>
+      <td>0.429546</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>Switzerland</td>
+      <td>CHE</td>
+      <td>MULTIPOLYGON (((7.04510 45.95732, 7.04454 45.9...</td>
+      <td>13.535337</td>
+      <td>133232</td>
+      <td>147569.0</td>
+      <td>2023-01-02</td>
+      <td>0.474471</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>Switzerland</td>
+      <td>CHE</td>
+      <td>MULTIPOLYGON (((7.04510 45.95732, 7.04454 45.9...</td>
+      <td>6.982172</td>
+      <td>9760</td>
+      <td>271041.0</td>
+      <td>2023-01-03</td>
+      <td>0.034758</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>Switzerland</td>
+      <td>CHE</td>
+      <td>MULTIPOLYGON (((7.04510 45.95732, 7.04454 45.9...</td>
+      <td>11.336155</td>
+      <td>125576</td>
+      <td>155225.0</td>
+      <td>2023-01-04</td>
+      <td>0.447206</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>Switzerland</td>
+      <td>CHE</td>
+      <td>MULTIPOLYGON (((7.04510 45.95732, 7.04454 45.9...</td>
+      <td>3.693041</td>
+      <td>7242</td>
+      <td>273559.0</td>
+      <td>2023-01-05</td>
+      <td>0.025791</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>Switzerland</td>
+      <td>CHE</td>
+      <td>MULTIPOLYGON (((7.04510 45.95732, 7.04454 45.9...</td>
+      <td>12.002285</td>
+      <td>124726</td>
+      <td>156075.0</td>
+      <td>2023-01-06</td>
+      <td>0.444179</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>Switzerland</td>
+      <td>CHE</td>
+      <td>MULTIPOLYGON (((7.04510 45.95732, 7.04454 45.9...</td>
+      <td>10.214094</td>
+      <td>88508</td>
+      <td>192293.0</td>
+      <td>2023-01-07</td>
+      <td>0.315198</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>Switzerland</td>
+      <td>CHE</td>
+      <td>MULTIPOLYGON (((7.04510 45.95732, 7.04454 45.9...</td>
+      <td>11.595038</td>
+      <td>120073</td>
+      <td>160728.0</td>
+      <td>2023-01-08</td>
+      <td>0.427609</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>Switzerland</td>
+      <td>CHE</td>
+      <td>MULTIPOLYGON (((7.04510 45.95732, 7.04454 45.9...</td>
+      <td>16.461794</td>
+      <td>25559</td>
+      <td>255242.0</td>
+      <td>2023-01-09</td>
+      <td>0.091022</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>Switzerland</td>
+      <td>CHE</td>
+      <td>MULTIPOLYGON (((7.04510 45.95732, 7.04454 45.9...</td>
+      <td>16.802839</td>
+      <td>40926</td>
+      <td>239875.0</td>
+      <td>2023-01-10</td>
+      <td>0.145747</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>The below figure shows trends in average nighttime lights (left) and the proportion of the country with a value for nighttime lights (right). For some days, low number of pixels corresponds to low nighttime lights (eg, January 3 and 5th); however, for other days, low number of pixels corresponds to higher nighttime lights (eg, January 9 and 10). On January 3 and 5, missing pixels could have been over typically high-lit areas (eg, cities)—while on January 9 and 10, missing pixels could have been over typically lower-lit areas.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span>
+    <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="p">)</span>  <span class="c1"># 1 row, 2 columns for side-by-side plots</span>
+
+<span class="c1"># Left plot (date vs ntl_mean)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ntl_df</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">],</span> <span class="n">ntl_df</span><span class="p">[</span><span class="s2">&quot;ntl_mean&quot;</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;ntl_mean&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Date&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;ntl_mean&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+
+<span class="c1"># Right plot (date vs prop_na)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="n">ntl_df</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">],</span>
+    <span class="n">ntl_df</span><span class="p">[</span><span class="s2">&quot;prop_non_na_pixels&quot;</span><span class="p">],</span>
+    <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span>
+    <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;orange&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;prop_non_na_pixels&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Date&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;prop_non_na_pixels&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+
+<span class="c1"># Adjust layout for better spacing</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+<span class="c1"># Display the plots</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/8ef509503ff5eb70831ba6fd1d7f28b707574e8a8def529f8d310c4dfad2b6d6.png" src="../_images/8ef509503ff5eb70831ba6fd1d7f28b707574e8a8def529f8d310c4dfad2b6d6.png" />
+</div>
+</div>
+</section>
+<section id="quality-a-name-daily-quality-a">
+<h3>Quality <a name="daily-quality"></a><a class="headerlink" href="#quality-a-name-daily-quality-a" title="Permalink to this heading">#</a></h3>
+<p>For daily data, the quality values are:</p>
+<ul class="simple">
+<li><p>0: High-quality, Persistent nighttime lights</p></li>
+<li><p>1: High-quality, Ephemeral nighttime Lights</p></li>
+<li><p>2: Poor-quality, Outlier, potential cloud contamination, or other issues</p></li>
+<li><p>255: No retrieval, Fill value (masked out on ingestion)</p></li>
+</ul>
+<p>We can map quality by using the <code class="docutils literal notranslate"><span class="pre">Mandatory_Quality_Flag</span></code> variable.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">quality_r</span> <span class="o">=</span> <span class="n">bm_raster</span><span class="p">(</span>
+    <span class="n">gdf</span><span class="p">,</span>
+    <span class="n">product_id</span><span class="o">=</span><span class="s2">&quot;VNP46A2&quot;</span><span class="p">,</span>
+    <span class="n">date_range</span><span class="o">=</span><span class="s2">&quot;2023-01-01&quot;</span><span class="p">,</span>
+    <span class="n">bearer</span><span class="o">=</span><span class="n">bearer</span><span class="p">,</span>
+    <span class="n">variable</span><span class="o">=</span><span class="s2">&quot;Mandatory_Quality_Flag&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "328adb68dd9b4e21982cf07d75368106", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "393cb77d6e214114a8501ac7e9114fbe", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "638fe78648fa4fe4aa9c331d1ddb1024", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "85255bbdc76c49db8024f1ae31f1dade", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+<span class="c1"># Create a discrete colormap</span>
+<span class="n">cmap</span> <span class="o">=</span> <span class="n">mcolors</span><span class="o">.</span><span class="n">ListedColormap</span><span class="p">([</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="s2">&quot;yellow&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">])</span>
+<span class="c1"># Plot</span>
+<span class="n">quality_r</span><span class="p">[</span><span class="s2">&quot;Mandatory_Quality_Flag&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="s2">&quot;2023-01-01&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+<span class="n">cx</span><span class="o">.</span><span class="n">add_basemap</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="n">gdf</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">to_string</span><span class="p">(),</span> <span class="n">source</span><span class="o">=</span><span class="n">cx</span><span class="o">.</span><span class="n">providers</span><span class="o">.</span><span class="n">CartoDB</span><span class="o">.</span><span class="n">Positron</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/92227f0ee3f89441f83d7839c3e8a0c115687145fe9f38134bbeed15d3af38d7.png" src="../_images/92227f0ee3f89441f83d7839c3e8a0c115687145fe9f38134bbeed15d3af38d7.png" />
+</div>
+</div>
+</section>
+<section id="nighttime-lights-for-good-quality-observations-a-name-daily-goodq-a">
+<h3>Nighttime lights for good quality observations <a name="daily-goodq"></a><a class="headerlink" href="#nighttime-lights-for-good-quality-observations-a-name-daily-goodq-a" title="Permalink to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">quality_flag_rm</span></code> parameter determines which pixels are set to <code class="docutils literal notranslate"><span class="pre">NA</span></code> based on the quality indicator. By default, only pixels with a value of <code class="docutils literal notranslate"><span class="pre">255</span></code> are filtered out. However, if we only want data for good quality pixels, we can adjust the <code class="docutils literal notranslate"><span class="pre">quality_flag_rm</span></code> parameter.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ntl_good_qual_r</span> <span class="o">=</span> <span class="n">bm_raster</span><span class="p">(</span>
+    <span class="n">gdf</span><span class="p">,</span>
+    <span class="n">product_id</span><span class="o">=</span><span class="s2">&quot;VNP46A2&quot;</span><span class="p">,</span>
+    <span class="n">date_range</span><span class="o">=</span><span class="s2">&quot;2023-01-01&quot;</span><span class="p">,</span>
+    <span class="n">bearer</span><span class="o">=</span><span class="n">bearer</span><span class="p">,</span>
+    <span class="n">variable</span><span class="o">=</span><span class="s2">&quot;Gap_Filled_DNB_BRDF-Corrected_NTL&quot;</span><span class="p">,</span>
+    <span class="n">quality_flag_rm</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "f3ba91a231e04096acaf0f2e7f7f82d1", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "682a465e6b404d3aa185600fac1e4731", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "418722b83b6c4883b5eee2fcd4c76557", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "6fb7cc89c39e45868fb577af8ba1d81b", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+<span class="c1"># Plot</span>
+<span class="n">ntl_good_qual_r</span><span class="p">[</span><span class="s2">&quot;Gap_Filled_DNB_BRDF-Corrected_NTL&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="s2">&quot;2023-01-01&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cc</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">bmy</span><span class="p">,</span> <span class="n">robust</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="n">cx</span><span class="o">.</span><span class="n">add_basemap</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="n">gdf</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">to_string</span><span class="p">(),</span> <span class="n">source</span><span class="o">=</span><span class="n">cx</span><span class="o">.</span><span class="n">providers</span><span class="o">.</span><span class="n">CartoDB</span><span class="o">.</span><span class="n">Positron</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/1c2857bb31e09e6f4049de76732e2a7c521d436cc05bf59217ae0592918f30d2.png" src="../_images/1c2857bb31e09e6f4049de76732e2a7c521d436cc05bf59217ae0592918f30d2.png" />
+</div>
+</div>
+</section>
+<section id="nighttime-lights-for-good-quality-observations-without-gap-filling-a-name-daily-nogap-a">
+<h3>Nighttime lights for good quality observations, without gap filling <a name="daily-nogap"></a><a class="headerlink" href="#nighttime-lights-for-good-quality-observations-without-gap-filling-a-name-daily-nogap-a" title="Permalink to this heading">#</a></h3>
+<p>By default, the <code class="docutils literal notranslate"><span class="pre">bm_raster</span></code> function uses the <code class="docutils literal notranslate"><span class="pre">Gap_Filled_DNB_BRDF-Corrected_NTL</span></code> variable for daily data. Gap filling indicates that some poor quality pixels use data from a previous date; the <code class="docutils literal notranslate"><span class="pre">Latest_High_Quality_Retrieval</span></code> indicates the date the nighttime lights value came from.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ntl_tmp_gap_r</span> <span class="o">=</span> <span class="n">bm_raster</span><span class="p">(</span>
+    <span class="n">gdf</span><span class="p">,</span>
+    <span class="n">product_id</span><span class="o">=</span><span class="s2">&quot;VNP46A2&quot;</span><span class="p">,</span>
+    <span class="n">date_range</span><span class="o">=</span><span class="s2">&quot;2023-01-01&quot;</span><span class="p">,</span>
+    <span class="n">bearer</span><span class="o">=</span><span class="n">bearer</span><span class="p">,</span>
+    <span class="n">variable</span><span class="o">=</span><span class="s2">&quot;Latest_High_Quality_Retrieval&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "7dd9100db3cd46f28f24411bc564f573", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "6903dade0cd84a92a8c4f51ca2495d2a", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "70112188e51e4de5a409e6a07de56ca0", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "45e595d49b7e43ecb283a2a6502ccd35", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r_np</span> <span class="o">=</span> <span class="n">ntl_tmp_gap_r</span><span class="p">[</span><span class="s2">&quot;Latest_High_Quality_Retrieval&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="s2">&quot;2023-01-01&quot;</span><span class="p">)</span>
+<span class="n">r_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">r_np</span> <span class="o">==</span> <span class="mi">255</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">r_np</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">r_np</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cc</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">fire</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Temporal</span><span class="se">\n</span><span class="s2">Gap</span><span class="se">\n</span><span class="s2">(Days)&quot;</span>
+<span class="p">)</span>  <span class="c1"># Add a colorbar with ticks for discrete values</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/c7f6a8819419c9bf51475a32ee34c12503fc89d463f1cd43f111b2e3a0aeaad5.png" src="../_images/c7f6a8819419c9bf51475a32ee34c12503fc89d463f1cd43f111b2e3a0aeaad5.png" />
+</div>
+</div>
+<p>Instead of using <code class="docutils literal notranslate"><span class="pre">Gap_Filled_DNB_BRDF-Corrected_NTL</span></code>, we could ignore gap filled observations—using the <code class="docutils literal notranslate"><span class="pre">DNB_BRDF-Corrected_NTL</span></code> variable. Here, we also remove poor quality pixels.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ntl_r</span> <span class="o">=</span> <span class="n">bm_raster</span><span class="p">(</span>
+    <span class="n">gdf</span><span class="p">,</span>
+    <span class="n">product_id</span><span class="o">=</span><span class="s2">&quot;VNP46A2&quot;</span><span class="p">,</span>
+    <span class="n">date_range</span><span class="o">=</span><span class="s2">&quot;2023-01-01&quot;</span><span class="p">,</span>
+    <span class="n">bearer</span><span class="o">=</span><span class="n">bearer</span><span class="p">,</span>
+    <span class="n">variable</span><span class="o">=</span><span class="s2">&quot;DNB_BRDF-Corrected_NTL&quot;</span><span class="p">,</span>
+    <span class="n">quality_flag_rm</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "646dc935d67d4507ab872b0dc6e59193", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "65a64b37ed8e47f4abce3199b2cc5b8f", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "c05a918b12ec4fc9a37860d908f6126d", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "7ff85b95612b495d961eb1d1b4bbe4c3", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+<span class="c1"># Plot</span>
+<span class="n">ntl_r</span><span class="p">[</span><span class="s2">&quot;DNB_BRDF-Corrected_NTL&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="s2">&quot;2023-01-01&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cc</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">bmy</span><span class="p">,</span> <span class="n">robust</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="n">cx</span><span class="o">.</span><span class="n">add_basemap</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="n">gdf</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">to_string</span><span class="p">(),</span> <span class="n">source</span><span class="o">=</span><span class="n">cx</span><span class="o">.</span><span class="n">providers</span><span class="o">.</span><span class="n">CartoDB</span><span class="o">.</span><span class="n">Positron</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/26f0e75c63edf7622d78846f2312cc8acf36423a72c4b731cbb86ef7c149ebc6.png" src="../_images/26f0e75c63edf7622d78846f2312cc8acf36423a72c4b731cbb86ef7c149ebc6.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="monthly-annual-data-a-name-ma-a">
+<h2>Monthly/Annual Data <a name="ma"></a><a class="headerlink" href="#monthly-annual-data-a-name-ma-a" title="Permalink to this heading">#</a></h2>
+<p>Below shows an example examining quality for monthly data (<code class="docutils literal notranslate"><span class="pre">VNP46A3</span></code>). The same approach can be used for annual data (<code class="docutils literal notranslate"><span class="pre">VNP46A4</span></code>); the variables are the same for both monthly and annual data.</p>
+<section id="nighttime-lights-a-name-ma-ntl-a">
+<h3>Nighttime Lights <a name="ma-ntl"></a><a class="headerlink" href="#nighttime-lights-a-name-ma-ntl-a" title="Permalink to this heading">#</a></h3>
+<p>We download data for January 2023. When the <code class="docutils literal notranslate"><span class="pre">variable</span></code> parameter is not specified, <code class="docutils literal notranslate"><span class="pre">bm_raster</span></code> creates a raster using the <code class="docutils literal notranslate"><span class="pre">NearNadir_Composite_Snow_Free</span></code> variable for monthly and annual data—which is nighttime lights, removing effects from snow cover.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ntl_r</span> <span class="o">=</span> <span class="n">bm_raster</span><span class="p">(</span>
+    <span class="n">gdf</span><span class="p">,</span>
+    <span class="n">product_id</span><span class="o">=</span><span class="s2">&quot;VNP46A3&quot;</span><span class="p">,</span>
+    <span class="n">date_range</span><span class="o">=</span><span class="s2">&quot;2023-01-01&quot;</span><span class="p">,</span>
+    <span class="n">bearer</span><span class="o">=</span><span class="n">bearer</span><span class="p">,</span>
+    <span class="n">variable</span><span class="o">=</span><span class="s2">&quot;NearNadir_Composite_Snow_Free&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "fb7276c28bca43b7bacf8dd3a02e6162", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "d538865a66744ea8a4d1068bdfb6a389", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "4276c4a1d1774fd8847a015c0cd2f564", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "4a1b47471f39403eadb37f644db84cdd", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+<span class="n">ntl_r</span><span class="p">[</span><span class="s2">&quot;NearNadir_Composite_Snow_Free&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="s2">&quot;2023-01-01&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="n">robust</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;cividis&quot;</span>
+<span class="p">)</span>
+<span class="n">cx</span><span class="o">.</span><span class="n">add_basemap</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="n">gdf</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">to_string</span><span class="p">(),</span> <span class="n">source</span><span class="o">=</span><span class="n">cx</span><span class="o">.</span><span class="n">providers</span><span class="o">.</span><span class="n">CartoDB</span><span class="o">.</span><span class="n">Positron</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/a9d96e1befa0eb393e507f807308bd4e3b0c71a1d7346d54f48ad9d59d9c2794.png" src="../_images/a9d96e1befa0eb393e507f807308bd4e3b0c71a1d7346d54f48ad9d59d9c2794.png" />
+</div>
+</div>
+</section>
+<section id="number-of-observations-a-name-ma-numobs-a">
+<h3>Number of Observations <a name="ma-numobs"></a><a class="headerlink" href="#number-of-observations-a-name-ma-numobs-a" title="Permalink to this heading">#</a></h3>
+<p>Black Marble removes poor quality observations, such as pixels covered by clouds. To determine the number of observations used to generate nighttime light values for each pixel, we add <code class="docutils literal notranslate"><span class="pre">_Num</span></code> to the variable name.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cf_r</span> <span class="o">=</span> <span class="n">bm_raster</span><span class="p">(</span>
+    <span class="n">gdf</span><span class="p">,</span>
+    <span class="n">product_id</span><span class="o">=</span><span class="s2">&quot;VNP46A3&quot;</span><span class="p">,</span>
+    <span class="n">date_range</span><span class="o">=</span><span class="s2">&quot;2023-01-01&quot;</span><span class="p">,</span>
+    <span class="n">bearer</span><span class="o">=</span><span class="n">bearer</span><span class="p">,</span>
+    <span class="n">variable</span><span class="o">=</span><span class="s2">&quot;NearNadir_Composite_Snow_Free_Num&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "8a432adad915463b82abe076646b974a", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "d28e781c005e482fb255c10161e1106a", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "364bba868c964aebb34d5ec40a4e92d7", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "1a202bb429464d178a86f05513f2232a", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+<span class="n">cf_r</span><span class="p">[</span><span class="s2">&quot;NearNadir_Composite_Snow_Free_Num&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="s2">&quot;2023-01-01&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="n">robust</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cc</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">bmy</span>
+<span class="p">)</span>
+<span class="n">cx</span><span class="o">.</span><span class="n">add_basemap</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="n">gdf</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">to_string</span><span class="p">(),</span> <span class="n">source</span><span class="o">=</span><span class="n">cx</span><span class="o">.</span><span class="n">providers</span><span class="o">.</span><span class="n">CartoDB</span><span class="o">.</span><span class="n">Positron</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/29eb0e3ad35a3f478d3a83f12c2cb3ad3b08918939db672677d5c93700bcbef8.png" src="../_images/29eb0e3ad35a3f478d3a83f12c2cb3ad3b08918939db672677d5c93700bcbef8.png" />
+</div>
+</div>
+</section>
+<section id="quality-a-name-ma-quality-a">
+<h3>Quality <a name="ma-quality"></a><a class="headerlink" href="#quality-a-name-ma-quality-a" title="Permalink to this heading">#</a></h3>
+<p>For monthly and annual data, the quality values are:</p>
+<ul class="simple">
+<li><p>0: Good-quality, The number of observations used for the composite is larger than 3</p></li>
+<li><p>1: Poor-quality, The number of observations used for the composite is less than or equal to 3</p></li>
+<li><p>2: Gap filled NTL based on historical data</p></li>
+<li><p>255: Fill value</p></li>
+</ul>
+<p>We can map quality by adding <code class="docutils literal notranslate"><span class="pre">_Quality</span></code> to the variable name.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">quality_r</span> <span class="o">=</span> <span class="n">bm_raster</span><span class="p">(</span>
+    <span class="n">gdf</span><span class="p">,</span>
+    <span class="n">product_id</span><span class="o">=</span><span class="s2">&quot;VNP46A3&quot;</span><span class="p">,</span>
+    <span class="n">date_range</span><span class="o">=</span><span class="s2">&quot;2023-01-01&quot;</span><span class="p">,</span>
+    <span class="n">bearer</span><span class="o">=</span><span class="n">bearer</span><span class="p">,</span>
+    <span class="n">variable</span><span class="o">=</span><span class="s2">&quot;NearNadir_Composite_Snow_Free_Quality&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "7b1f2ba18f394726a646453426434156", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "6de970ba378645edb71b7bfc694686f2", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "0e9fbcc7ceb444cfbbb6cbb908f6718e", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "c2775542b4db4d95bc9abb7acebf2d5c", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+<span class="c1"># Create a discrete colormap</span>
+<span class="n">cmap</span> <span class="o">=</span> <span class="n">mcolors</span><span class="o">.</span><span class="n">ListedColormap</span><span class="p">([</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="s2">&quot;yellow&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">])</span>
+<span class="c1"># Plot</span>
+<span class="n">quality_r</span><span class="p">[</span><span class="s2">&quot;NearNadir_Composite_Snow_Free_Quality&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="s2">&quot;2023-01-01&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span>
+<span class="p">)</span>
+<span class="n">cx</span><span class="o">.</span><span class="n">add_basemap</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="n">gdf</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">to_string</span><span class="p">(),</span> <span class="n">source</span><span class="o">=</span><span class="n">cx</span><span class="o">.</span><span class="n">providers</span><span class="o">.</span><span class="n">CartoDB</span><span class="o">.</span><span class="n">Positron</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/82f230acef027920133d35b3b6b2a3cd8215b685e3141da52d94d5c635858462.png" src="../_images/82f230acef027920133d35b3b6b2a3cd8215b685e3141da52d94d5c635858462.png" />
+</div>
+</div>
+</section>
+<section id="nighttime-lights-for-good-quality-observations-a-name-ma-ntl-gq-a">
+<h3>Nighttime lights for good quality observations <a name="ma-ntl_gq"></a><a class="headerlink" href="#nighttime-lights-for-good-quality-observations-a-name-ma-ntl-gq-a" title="Permalink to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">quality_flag_rm</span></code> parameter determines which pixels are set to <code class="docutils literal notranslate"><span class="pre">NA</span></code> based on the quality indicator. By default, only pixels with a value of <code class="docutils literal notranslate"><span class="pre">255</span></code> are filtered out. However, if we also want to remove poor quality pixels, we can adjust the <code class="docutils literal notranslate"><span class="pre">quality_flag_rm</span></code> parameter.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ntl_good_qual_r</span> <span class="o">=</span> <span class="n">bm_raster</span><span class="p">(</span>
+    <span class="n">gdf</span><span class="p">,</span>
+    <span class="n">product_id</span><span class="o">=</span><span class="s2">&quot;VNP46A3&quot;</span><span class="p">,</span>
+    <span class="n">date_range</span><span class="o">=</span><span class="s2">&quot;2023-01-01&quot;</span><span class="p">,</span>
+    <span class="n">bearer</span><span class="o">=</span><span class="n">bearer</span><span class="p">,</span>
+    <span class="n">variable</span><span class="o">=</span><span class="s2">&quot;NearNadir_Composite_Snow_Free&quot;</span><span class="p">,</span>
+    <span class="n">quality_flag_rm</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "3b391a3d1f154ca4833ac1b46970c1ea", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "4e3f9088a655406d83974b57112d3f5c", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "74fde914426542c599af76d0ac50efd7", "version_major": 2, "version_minor": 0}</script><script type="application/vnd.jupyter.widget-view+json">{"model_id": "edc619b6aed749459d7b185a3573af31", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+<span class="c1"># Plot</span>
+<span class="n">ntl_r</span><span class="p">[</span><span class="s2">&quot;NearNadir_Composite_Snow_Free&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="s2">&quot;2023-01-01&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cc</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">bmy</span><span class="p">,</span> <span class="n">robust</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="n">cx</span><span class="o">.</span><span class="n">add_basemap</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="n">gdf</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">to_string</span><span class="p">(),</span> <span class="n">source</span><span class="o">=</span><span class="n">cx</span><span class="o">.</span><span class="n">providers</span><span class="o">.</span><span class="n">CartoDB</span><span class="o">.</span><span class="n">Positron</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/2d899f605890e12a763efe719c0a9c80b9e2198b1a67ac4e92fab7416723055b.png" src="../_images/2d899f605890e12a763efe719c0a9c80b9e2198b1a67ac4e92fab7416723055b.png" />
+</div>
+</div>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./examples"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="blackmarblepy.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Examples using <code class="docutils literal notranslate"><span class="pre">blackmarblepy</span></code></p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview-a-name-overview-a">Overview <a name="overview"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup-a-name-setup-a">Setup <a name="setup"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#daily-data-a-name-daily-a">Daily Data <a name="daily"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nighttime-lights-a-name-daily-ntl-a">Nighttime Lights <a name="daily-ntl"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quality-a-name-daily-quality-a">Quality <a name="daily-quality"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nighttime-lights-for-good-quality-observations-a-name-daily-goodq-a">Nighttime lights for good quality observations <a name="daily-goodq"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nighttime-lights-for-good-quality-observations-without-gap-filling-a-name-daily-nogap-a">Nighttime lights for good quality observations, without gap filling <a name="daily-nogap"></a></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#monthly-annual-data-a-name-ma-a">Monthly/Annual Data <a name="ma"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nighttime-lights-a-name-ma-ntl-a">Nighttime Lights <a name="ma-ntl"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#number-of-observations-a-name-ma-numobs-a">Number of Observations <a name="ma-numobs"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quality-a-name-ma-quality-a">Quality <a name="ma-quality"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nighttime-lights-for-good-quality-observations-a-name-ma-ntl-gq-a">Nighttime lights for good quality observations <a name="ma-ntl_gq"></a></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Development Data Group
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  Last updated on Dec 07, 2023.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

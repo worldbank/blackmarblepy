@@ -23,7 +23,7 @@ pip install blackmarblepy
 
 ## Usage
 
-Before downloading and extracting Black Marble data, define the NASA bearer token, and define a region of interest. For more detailed documentation and examples, please refer to the [documentation](https://worldbank.github.io/blackmarblepy).
+Before downloading and extracting Black Marble data, define the NASA bearer token, and define a region of interest. For more detailed documentation and examples, please refer to the [documentation](https://worldbank.github.io/blackmarblepy/examples/blackmarblepy.html).
 
 ## Contributing
 
