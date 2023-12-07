@@ -4,10 +4,10 @@
 # re-generate this one.
 ###############################################################################
 apidoc_module_dir = "../src"
-author = "Development Data Group"
+author = "World Bank Development Data Group"
 bibtex_bibfiles = ["bibliography.bib"]
 comments_config = {"hypothesis": False, "utterances": False}
-copyright = "2022"
+copyright = "2023"
 exclude_patterns = ["**.ipynb_checkpoints", ".DS_Store", "Thumbs.db", "_build"]
 extensions = [
     "sphinx_togglebutton",
@@ -29,7 +29,7 @@ external_toc_exclude_missing = True
 external_toc_path = "_toc.yml"
 extra_extensions = ["sphinxcontrib.apidoc"]
 html_baseurl = "https://worldbank.github.io/blackmarblepy"
-html_favicon = ""
+html_favicon = "images/favicon.ico"
 html_last_updated_fmt = "%b %d, %Y"
 html_logo = "images/logo.png"
 html_show_copyright = False
