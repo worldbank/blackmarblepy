@@ -44,7 +44,13 @@ dependencies = [
 	"aiohttp",
 ]
 [project.optional-dependencies]
-docs = ["jupyter-book >= 0.15.1", "sphinxcontrib-apidoc >= 0.4.0, <1"]
+docs = [
+	"docutils==0.17.1",                  # https://jupyterbook.org/en/stable/content/citations.html?highlight=docutils#citations-and-bibliographies
+	"jupyter-book >= 0.15.1",
+	"sphinxcontrib-apidoc >= 0.4.0, <1",
+	"docutils==0.17.1",
+]
+
 
 [project.urls]
 "Homepage" = "https://github.com/worldbank/blackmarblepy"
