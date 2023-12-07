@@ -18,62 +18,75 @@ from shapely.geometry import mapping
 from tqdm.auto import tqdm
 
 from .download import BlackMarbleDownloader
-from .types import ProductId
+from .types import Product
+
+
+VARIABLE_DEFAULT = {
+    Product.VNP46A1: "DNB_At_Sensor_Radiance_500m",
+    Product.VNP46A2: "Gap_Filled_DNB_BRDF-Corrected_NTL",
+    Product.VNP46A3: "NearNadir_Composite_Snow_Free",
+    Product.VNP46A4: "NearNadir_Composite_Snow_Free",
+}
 
 
 def h5_to_geotiff(
     f: Path,
     /,
-    output_directory: Path = None,
-    output_prefix: str = None,
     variable: str = None,
     quality_flag_rm=[255],
+    output_directory: Path = None,
+    output_prefix: str = None,
 ):
     """
     Convert HDF5 file to GeoTIFF for a selected (or default) variable from NASA Black Marble data
 
     Parameters
     ----------
+    f: Path
+        H5DF filename
 
+    variable: str, default = None
+        Variable to create GeoTIFF raster. Further information, pleae see the `NASA Black Marble User Guide <https://ladsweb.modaps.eosdis.nasa.gov/api/v2/content/archives/Document%20Archive/Science%20Data%20Product%20Documentation/VIIRS_Black_Marble_UG_v1.2_April_2021.pdf>`_ for `VNP46A1`, see Table 3; for `VNP46A2` see Table 6; for `VNP46A3` and `VNP46A4`, see Table 9. By default, it uses the following default variables:
+
+        - For ``VNP46A1``, uses ``DNB_At_Sensor_Radiance_500m``
+        - For ``VNP46A2``, uses ``Gap_Filled_DNB_BRDF-Corrected_NTL``
+        - For ``VNP46A3``, uses ``NearNadir_Composite_Snow_Free``.
+        - For ``VNP46A4``, uses ``NearNadir_Composite_Snow_Free``.
 
     Returns
     ------
     output_path: Path
         Path to which GeoTIFF
     """
-    variable_default = {
-        ProductId.VNP46A1: "DNB_At_Sensor_Radiance_500m",
-        ProductId.VNP46A2: "Gap_Filled_DNB_BRDF-Corrected_NTL",
-        ProductId.VNP46A3: "NearNadir_Composite_Snow_Free",
-        ProductId.VNP46A4: "NearNadir_Composite_Snow_Free",
-    }
     output_path = Path(output_directory, f.stem).with_suffix(".tif")
-    product_id = ProductId(f.stem.split(".")[0])
-    variable = variable_default.get(product_id)
+    product_id = Product(f.stem.split(".")[0])
+
+    if variable is None:
+        variable = VARIABLE_DEFAULT.get(product_id)
 
     with h5py.File(f, "r") as h5_data:
         attrs = h5_data.attrs
 
-        if product_id in [ProductId.VNP46A1, ProductId.VNP46A2]:
+        if product_id in [Product.VNP46A1, Product.VNP46A2]:
             dataset = h5_data["HDFEOS"]["GRIDS"]["VNP_Grid_DNB"]["Data Fields"][
                 variable
             ]
-            qf = h5_data["HDFEOS"]["GRIDS"]["VNP_Grid_DNB"]["Data Fields"][
-                "Mandatory_Quality_Flag"
-            ]
+
             left, bottom, right, top = (
                 attrs.get("WestBoundingCoord"),
                 attrs.get("SouthBoundingCoord"),
                 attrs.get("EastBoundingCoord"),
                 attrs.get("NorthBoundingCoord"),
             )
+
+            qf = h5_data["HDFEOS"]["GRIDS"]["VNP_Grid_DNB"]["Data Fields"][
+                "Mandatory_Quality_Flag"
+            ]
         else:
             dataset = h5_data["HDFEOS"]["GRIDS"]["VIIRS_Grid_DNB_2d"]["Data Fields"][
                 variable
             ]
-            h5_names = list(
-                h5_data["HDFEOS"]["GRIDS"]["VIIRS_Grid_DNB_2d"]["Data Fields"].keys()
-            )
+
             lat = h5_data["HDFEOS"]["GRIDS"]["VIIRS_Grid_DNB_2d"]["Data Fields"]["lat"]
             lon = h5_data["HDFEOS"]["GRIDS"]["VIIRS_Grid_DNB_2d"]["Data Fields"]["lon"]
             left, bottom, right, top = min(lon), min(lat), max(lon), max(lat)
@@ -83,13 +96,19 @@ def h5_to_geotiff(
                 variable_short = re.sub("_Num", "", variable_short)
                 variable_short = re.sub("_Std", "", variable_short)
 
-                qf_name = variable_short + "_Quality"
-
-                if qf_name in h5_names:
+                h5_names = list(
+                    h5_data["HDFEOS"]["GRIDS"]["VIIRS_Grid_DNB_2d"][
+                        "Data Fields"
+                    ].keys()
+                )
+                if (qf_name := f"{variable_short}_Quality") in h5_names:
                     qf = h5_data["HDFEOS"]["GRIDS"]["VIIRS_Grid_DNB_2d"]["Data Fields"][
-                        variable + "_Quality"
+                        qf_name
                     ]
-
+                if variable in h5_names:
+                    qf = h5_data["HDFEOS"]["GRIDS"]["VIIRS_Grid_DNB_2d"]["Data Fields"][
+                        variable
+                    ]
         # Extract data and attributes
         data = dataset[:]
         qf = qf[:]
@@ -123,6 +142,24 @@ def h5_to_geotiff(
         return output_path
 
 
+def transform(da: xr.DataArray):
+    """Return Affice transformation"""
+    left, bottom, right, top = (
+        da["x"].min(),
+        da["y"].min(),
+        da["x"].max(),
+        da["y"].max(),
+    )
+    height, width = da.shape
+
+    return from_origin(
+        left,
+        top,
+        (right - left) / width,
+        (top - bottom) / height,
+    )
+
+
 def _pivot_paths_by_date(paths: List[Path]):
     """Return dictionary of paths by date
 
@@ -143,8 +180,7 @@ def _pivot_paths_by_date(paths: List[Path]):
 @validate_call(config=ConfigDict(arbitrary_types_allowed=True))
 def bm_raster(
     gdf: geopandas.GeoDataFrame,
-    /,
-    product_id: ProductId,
+    product_id: Product,
     date_range: datetime.date | List[datetime.date],
     bearer: str,
     variable: Optional[str] = None,
@@ -223,10 +259,13 @@ def bm_raster(
     if not isinstance(date_range, list):
         date_range = [date_range]
 
+    if variable is None:
+        variable = VARIABLE_DEFAULT.get(product_id)
+
     match product_id:
-        case ProductId.VNP46A3:
+        case Product.VNP46A3:
             date_range = sorted(set([d.replace(day=1) for d in date_range]))
-        case ProductId.VNP46A4:
+        case Product.VNP46A4:
             date_range = sorted(set([d.replace(day=1, month=1) for d in date_range]))
 
     # Download and construct Dataset
@@ -240,7 +279,16 @@ def bm_raster(
             filenames = _pivot_paths_by_date(pathnames).get(date)
 
             # Open each GeoTIFF file as a DataArray and store in a list
-            da = [rioxarray.open_rasterio(h5_to_geotiff(f, d)) for f in filenames]
+            da = [
+                rioxarray.open_rasterio(
+                    h5_to_geotiff(
+                        f,
+                        variable=variable,
+                        output_directory=d,
+                    )
+                )
+                for f in filenames
+            ]
             ds = merge_arrays(da)
             ds = ds.rio.clip(gdf.geometry.apply(mapping), gdf.crs, drop=True)
             ds["time"] = pd.to_datetime(date)
@@ -250,14 +298,16 @@ def bm_raster(
         # Stack the individual dates along "time" dimension
         ds = (
             xr.concat(dx, dim="time", combine_attrs="drop_conflicts")
-            .to_dataset(name="radiance", promote_attrs=True)
+            .to_dataset(name=variable, promote_attrs=True)
             .sortby("time")
             .drop(["band", "spatial_ref"])
-            .assign_attrs(
-                units="Watts per square meter per steradian (W/m²/sr)",
-                description="Radiance",
-            )
         )
-        ds.radiance.attrs["units"] = "W/m²/sr"
+        if variable in VARIABLE_DEFAULT.values():
+            ds.assign_attrs(
+                short_name="Radiance",
+                long_name=variable,
+                units="Watts per square meter per steradian (W/m²/sr)",
+            )
+            ds[variable].attrs = {"units": "W/m²/sr"}
 
         return ds

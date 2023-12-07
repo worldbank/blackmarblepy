@@ -4,7 +4,7 @@ from enum import Enum
 from pydantic import BaseModel, validator
 
 
-class ProductId(Enum):
+class Product(Enum):
     """NASA Black Marble product suite (VNP46)"""
 
     VNP46A1 = "VNP46A1"

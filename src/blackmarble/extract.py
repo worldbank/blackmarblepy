@@ -5,19 +5,18 @@ from typing import List, Optional
 import geopandas
 import numpy as np
 import pandas as pd
-from rasterio.transform import from_origin
 from rasterstats import zonal_stats
 
-from .raster import bm_raster
-from .types import ProductId
+from .raster import bm_raster, transform
+from .types import Product
 
 
 def bm_extract(
     roi: geopandas.GeoDataFrame,
-    product_id: ProductId,
+    product_id: Product,
     date_range: datetime.date | List[datetime.date],
     bearer: str,
-    aggfun: str | List[str] = ["mean"],
+    aggfunc: str | List[str] = ["mean"],
     variable: Optional[str] = None,
     quality_flag_rm: List[int] = [255],
     check_all_tiles_exist: bool = True,
@@ -107,28 +106,14 @@ def bm_extract(
 
     results = []
     for t in ds["time"]:
-        data = ds.radiance.sel(time=t)
-
-        left, bottom, right, top = (
-            ds["x"].min(),
-            ds["y"].min(),
-            ds["x"].max(),
-            ds["y"].max(),
-        )
-        height, width = data.shape
-        transform = from_origin(
-            left,
-            top,
-            (right - left) / width,
-            (top - bottom) / height,
-        )
+        da = ds[variable].sel(time=t)
 
         zs = zonal_stats(
             roi,
-            data.values,
+            da.values,
             nodata=np.nan,
-            affine=transform,
-            stats=aggfun,
+            affine=transform(da),
+            stats=aggfunc,
         )
         zs = pd.DataFrame(zs).add_prefix("ntl_")
         zs = pd.concat([roi, zs], axis=1)
