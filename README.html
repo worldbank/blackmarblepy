@@ -7,7 +7,7 @@
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
     <title>BlackMarblePy</title>
   
@@ -64,6 +64,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'README';</script>
     <link rel="canonical" href="https://worldbank.github.io/blackmarblepy/README.html" />
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="blackmarble package" href="api/blackmarble.html" />
@@ -168,7 +169,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="examples/blackmarblepy.html">Examples using <code class="docutils literal notranslate"><span class="pre">blackmarblepy</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/blackmarblepy.html">Examples using <code class="docutils literal notranslate"><span class="pre">BlackMarblePy</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/quality-assessment.html">Assessing Quality of Nighttime Lights Data</a></li>
 </ul>
 
@@ -400,29 +401,61 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="blackmarblepy">
 <h1>BlackMarblePy<a class="headerlink" href="#blackmarblepy" title="Permalink to this heading">#</a></h1>
-<p><a class="reference external" href="https://badge.fury.io/py/blackmarblepy"><img alt="Python" src="https://img.shields.io/pypi/pyversions/blackmarblepy.svg" /></a>
-<a class="reference external" href="https://badge.fury.io/py/blackmarblepy"><img alt="PyPI version" src="https://badge.fury.io/py/blackmarblepy.svg" /></a>
-<a class="reference external" href="https://github.com/worldbank/blackmarblepy/actions/workflows/gh-pages.yml"><img alt="docs" src="https://github.com/worldbank/blackmarblepy/actions/workflows/gh-pages.yml/badge.svg" /></a></p>
-<p><strong>BlackMarblePy</strong> is a Python package for working with Black Marble data. <a class="reference external" href="https://blackmarble.gsfc.nasa.gov">Black Marble</a> is a <a class="reference external" href="https://earthobservatory.nasa.gov">NASA Earth Observatory</a> project that provides global nighttime lights data. The package automates the process of downloading all relevant tiles from the <a class="reference external" href="https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/5000/VNP46A3/">NASA LAADS archive</a> to cover a region of interest, converting the raw files (in H5 format) to georeferenced rasters, and mosaicing rasters together when needed.</p>
+<p><a class="reference external" href="https://badge.fury.io/py/blackmarblepy"><img alt="PyPI version" src="https://badge.fury.io/py/blackmarblepy.svg" /></a>
+<a class="reference external" href="https://github.com/worldbank/blackmarblepy/actions/workflows/gh-pages.yml"><img alt="docs" src="https://github.com/worldbank/blackmarblepy/actions/workflows/gh-pages.yml/badge.svg" /></a>
+<a class="reference external" href="https://github.com/worldbank/blackmarblepy"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/worldbank/blackmarblepy" /></a>
+<a class="reference external" href="https://github.com/worldbank/blackmarblepy/graphs/commit-activity"><img alt="activity" src="https://img.shields.io/github/commit-activity/m/worldbank/blackmarblepy" /></a>
+<a class="reference external" href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" /></a></p>
+<p><strong>BlackMarblePy</strong> provides a simple and efficient way to retrieve and extract nighttime lights data from NASA’s Black Marble project. <a class="reference external" href="https://blackmarble.gsfc.nasa.gov">Black Marble</a> is a <a class="reference external" href="https://earthobservatory.nasa.gov">NASA Earth Observatory</a> project that provides a product suite of daily, monthly and yearly global nighttime lights. This package automates the process of downloading all relevant tiles from the <a class="reference external" href="https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/5000/VNP46A3/">NASA LAADS archive</a> to cover a region of interest, converting the raw files (in HDF5 format), to georeferenced rasters, and mosaicing rasters together when needed.</p>
 <section id="features">
 <h2>Features<a class="headerlink" href="#features" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
-<li><p>Download Black Marble data for specific time periods and regions.</p></li>
-<li><p>Visualize nighttime lights using customizable color palettes.</p></li>
-<li><p>Calculate basic statistics from Black Marble images.</p></li>
-<li><p>Perform time-series analysis on nighttime lights data.</p></li>
+<li><p>Download daily, monthly, and yearly nighttime lights data  for user-specified region of interest and time range.</p></li>
+<li><p>Parallel downloading for faster data retrieval and automatic retry mechanism for handling network errors.</p></li>
+<li><p>Access NASA Black Marble as a Xarray Dataset</p>
+<ul>
+<li><p>Integrated data visualization with customization options</p>
+<ul>
+<li><p>Choose between various plot types, including bar charts, line graphs, and heatmaps.</p></li>
+<li><p>Customize plot appearance with color palettes, axes labels, titles, and legends.</p></li>
+<li><p>Save visualizations as high-resolution images for presentations or reports.</p></li>
+</ul>
+</li>
+<li><p>Perform time series analysis on nighttime lights data.</p>
+<ul>
+<li><p>Calculate zonal statistics like mean and sum.</p></li>
+<li><p>Plot time series of nighttime lights data.</p></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </section>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h2>
-<p><strong>BlackMarblePy</strong> is available on <a class="reference external" href="https://pypi.org">PyPI</a>; you can install it using <code class="docutils literal notranslate"><span class="pre">pip</span></code>:</p>
+<p><strong>BlackMarblePy</strong> is available on <a class="reference external" href="https://pypi.org">PyPI</a> as <a class="reference external" href="https://pypi.org/project/blackmarblepy">blackmarblepy</a> and can installed using <code class="docutils literal notranslate"><span class="pre">pip</span></code>:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>blackmarblepy
 </pre></div>
 </div>
 </section>
 <section id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">#</a></h2>
-<p>Before downloading and extracting Black Marble data, define the NASA bearer token, and define a region of interest. For more detailed documentation and examples, please refer to the <a class="reference external" href="https://worldbank.github.io/blackmarblepy/examples/blackmarblepy.html">documentation</a>.</p>
+<p>Before downloading and extracting Black Marble data, define the <a class="reference external" href="https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/5000/VNP46A3/">NASA LAADS archive</a> <code class="docutils literal notranslate"><span class="pre">bearer</span></code> token, and define a region of interest (i.e., <code class="docutils literal notranslate"><span class="pre">gdf</span></code> as a <a class="reference external" href="https://geopandas.org/en/stable/docs/reference/api/geopandas.GeoDataFrame.html"><code class="docutils literal notranslate"><span class="pre">geopandas.GeoDataFrame</span></code></a>).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">blackmarble.raster</span> <span class="kn">import</span> <span class="n">bm_raster</span>
+
+<span class="c1"># Raster stack of daily data</span>
+<span class="n">date_range</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="s2">&quot;2022-01-01&quot;</span><span class="p">,</span> <span class="s2">&quot;2022-03-31&quot;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s2">&quot;D&quot;</span><span class="p">)</span>
+
+<span class="c1"># Retrieve VNP46A2 for date range into a Xarray Dataset</span>
+<span class="n">daily</span> <span class="o">=</span> <span class="n">bm_raster</span><span class="p">(</span>
+    <span class="n">gdf</span><span class="p">,</span>
+    <span class="n">product_id</span><span class="o">=</span><span class="s2">&quot;VNP46A2&quot;</span><span class="p">,</span>
+    <span class="n">date_range</span><span class="o">=</span><span class="n">date_range</span><span class="p">,</span>
+    <span class="n">bearer</span><span class="o">=</span><span class="n">bearer</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>For more detailed information and examples, please refer to the <a class="reference external" href="https://worldbank.github.io/blackmarblepy/examples/blackmarblepy.html">documentation</a>.</p>
 </section>
 <section id="contributing">
 <h2>Contributing<a class="headerlink" href="#contributing" title="Permalink to this heading">#</a></h2>
@@ -511,7 +544,7 @@ document.write(`
   <div class="footer-item">
     
 <p class="component-author">
-By Development Data Group
+By World Bank Development Data Group
 </p>
 
   </div>
