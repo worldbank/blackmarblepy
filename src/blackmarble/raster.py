@@ -58,7 +58,7 @@ def h5_to_geotiff(
     output_path: Path
         Path to which GeoTIFF
     """
-    output_path = Path(output_directory, f.stem).with_suffix(".tif")
+    output_path = Path(output_directory, f"{output_prefix}{f.stem}").with_suffix(".tif")
     product_id = Product(f.stem.split(".")[0])
 
     if variable is None:
@@ -242,7 +242,7 @@ def bm_raster(
     file_directory: pathlib.Path, optional
         Where to produce output. By default, the output will be procuded onto a temporary directory.
 
-    file_directory_prefix: str, optional
+    file_prefix: str, optional
         Prefix
 
     file_skip_if_exists: bool, default=True
@@ -275,7 +275,6 @@ def bm_raster(
 
         dx = []
         for date in tqdm(date_range, desc="COLLATING RESULTS | Processing..."):
-            # _pivot_paths_by_date(pathnames), desc="COLLATING RESULTS | Processing..."
             filenames = _pivot_paths_by_date(pathnames).get(date)
 
             # Open each GeoTIFF file as a DataArray and store in a list
@@ -284,6 +283,8 @@ def bm_raster(
                     h5_to_geotiff(
                         f,
                         variable=variable,
+                        quality_flag_rm=quality_flag_rm,
+                        output_prefix=file_prefix,
                         output_directory=d,
                     )
                 )
