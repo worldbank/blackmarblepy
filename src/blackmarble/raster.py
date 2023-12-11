@@ -20,7 +20,6 @@ from tqdm.auto import tqdm
 from .download import BlackMarbleDownloader
 from .types import Product
 
-
 VARIABLE_DEFAULT = {
     Product.VNP46A1: "DNB_At_Sensor_Radiance_500m",
     Product.VNP46A2: "Gap_Filled_DNB_BRDF-Corrected_NTL",
@@ -56,9 +55,9 @@ def h5_to_geotiff(
     Returns
     ------
     output_path: Path
-        Path to which GeoTIFF
+        Path to which export GeoTIFF file
     """
-    output_path = Path(output_directory, f"{output_prefix}{f.stem}").with_suffix(".tif")
+    output_path = Path(output_directory, f.name).with_suffix(".tif")
     product_id = Product(f.stem.split(".")[0])
 
     if variable is None:
@@ -277,24 +276,29 @@ def bm_raster(
         for date in tqdm(date_range, desc="COLLATING RESULTS | Processing..."):
             filenames = _pivot_paths_by_date(pathnames).get(date)
 
-            # Open each GeoTIFF file as a DataArray and store in a list
-            da = [
-                rioxarray.open_rasterio(
-                    h5_to_geotiff(
-                        f,
-                        variable=variable,
-                        quality_flag_rm=quality_flag_rm,
-                        output_prefix=file_prefix,
-                        output_directory=d,
+            try:
+                # Open each GeoTIFF file as a DataArray and store in a list
+                da = [
+                    rioxarray.open_rasterio(
+                        h5_to_geotiff(
+                            f,
+                            variable=variable,
+                            quality_flag_rm=quality_flag_rm,
+                            output_prefix=file_prefix,
+                            output_directory=d,
+                        ),
                     )
-                )
-                for f in filenames
-            ]
-            ds = merge_arrays(da)
-            ds = ds.rio.clip(gdf.geometry.apply(mapping), gdf.crs, drop=True)
-            ds["time"] = pd.to_datetime(date)
+                    for f in filenames
+                ]
+                ds = merge_arrays(da)
+                ds = ds.rio.clip(gdf.geometry.apply(mapping), gdf.crs, drop=True)
+                ds["time"] = pd.to_datetime(date)
 
-            dx.append(ds.squeeze())
+                dx.append(ds.squeeze())
+            except TypeError:
+                continue
+
+        dx = filter(lambda item: item is not None, dx)
 
         # Stack the individual dates along "time" dimension
         ds = (

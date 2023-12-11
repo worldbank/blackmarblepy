@@ -1,20 +1,42 @@
+import asyncio
 import datetime
+import json
 from dataclasses import dataclass
 from importlib.resources import files
 from pathlib import Path
 from typing import ClassVar, List
 
 import backoff
-import dask.dataframe as dd
 import geopandas
 import httpx
+import nest_asyncio
 import pandas as pd
 from httpx import HTTPError
 from pqdm.threads import pqdm
 from pydantic import BaseModel
 from tqdm.auto import tqdm
-
 from .types import Product
+
+
+def chunks(ls, n):
+    """Yield successive n-sized chunks from list."""
+    for i in range(0, len(ls), n):
+        yield ls[i : i + n]
+
+
+@backoff.on_exception(
+    backoff.expo,
+    HTTPError,
+)
+async def get_url(client, url, params):
+    """
+
+    Returns
+    -------
+    httpx.Response
+        HTTP response
+    """
+    return await client.get(url, params=params)
 
 
 @dataclass
@@ -36,13 +58,15 @@ class BlackMarbleDownloader(BaseModel):
     TILES: ClassVar[geopandas.GeoDataFrame] = geopandas.read_file(
         files("blackmarble.data").joinpath("blackmarbletiles.geojson")
     )
-    URL: ClassVar[str] = "https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/5000"
+    URL: ClassVar[str] = "https://ladsweb.modaps.eosdis.nasa.gov"
 
     def __init__(self, bearer: str, directory: Path):
+        nest_asyncio.apply()
         super().__init__(bearer=bearer, directory=directory)
 
-    def _retrieve_manifest(
+    async def get_manifest(
         self,
+        gdf: geopandas.GeoDataFrame,
         product_id: Product,
         date_range: datetime.date | List[datetime.date],
     ) -> pd.DataFrame:
@@ -66,20 +90,42 @@ class BlackMarbleDownloader(BaseModel):
         if isinstance(product_id, str):
             product_id = Product(product_id)
 
-        urlpaths = set()
-        for date in date_range:
-            match product_id:
-                case Product.VNP46A3:  # if VNP46A3 then first day of the month
-                    tm_yday = date.replace(day=1).timetuple().tm_yday
-                case Product.VNP46A4:  # if VNP46A4 then first day of the year
-                    tm_yday = date.replace(month=1, day=1).timetuple().tm_yday
-                case _:
-                    tm_yday = date.timetuple().tm_yday
+        # Create bounding box
+        gdf = pd.concat([gdf, gdf.bounds], axis="columns").round(2)
+        gdf["bbox"] = gdf.round(2).apply(
+            lambda row: f"x{row.minx}y{row.miny},x{row.maxx}y{row.maxy}", axis=1
+        )
 
-            urlpath = f"{self.URL}/{product_id.value}/{date.year}/{tm_yday}.csv"
-            urlpaths.add(urlpath)
+        async with httpx.AsyncClient(verify=False) as client:
+            tasks = []
+            for chunk in chunks(date_range, 250):
+                for _, row in gdf.iterrows():
+                    url = f"{self.URL}/api/v1/files"
+                    params = {
+                        "product": product_id.value,
+                        "collection": "5000",
+                        "dateRanges": f"{min(chunk)}..{max(chunk)}",
+                        "areaOfInterest": row["bbox"],
+                    }
+                    tasks.append(asyncio.ensure_future(get_url(client, url, params)))
 
-        return dd.read_csv(list(urlpaths)).compute()
+            responses = [
+                await f
+                for f in tqdm(
+                    asyncio.as_completed(tasks),
+                    total=len(tasks),
+                    desc="GETTING MANIFEST...",
+                )
+            ]
+
+            rs = []
+            for r in responses:
+                try:
+                    rs.append(pd.DataFrame(r.json()).T)
+                except json.decoder.JSONDecodeError:
+                    continue
+
+            return pd.concat(rs)
 
     @backoff.on_exception(
         backoff.expo,
@@ -101,19 +147,14 @@ class BlackMarbleDownloader(BaseModel):
         filename: pathlib.Path
             Filename of downloaded data file
         """
-        year = name[9:13]
-        day = name[13:16]
-        product_id = name[0:7]
+        url = f"{self.URL}{name}"
+        name = name.split("/")[-1]
 
-        url = f"{self.URL}/{product_id}/{year}/{day}/{name}"
-        headers = {"Authorization": f"Bearer {self.bearer}"}
-        filename = Path(self.directory, name)
-
-        with open(filename, "wb+") as f:
+        with open(filename := Path(self.directory, name), "wb+") as f:
             with httpx.stream(
                 "GET",
                 url,
-                headers=headers,
+                headers={"Authorization": f"Bearer {self.bearer}"},
             ) as response:
                 total = int(response.headers["Content-Length"])
                 with tqdm(
@@ -129,29 +170,11 @@ class BlackMarbleDownloader(BaseModel):
 
                 return filename
 
-    def _download(self, names: List[str], n_jobs: int = 16):
-        """Download (in parallel) from NASA Black Marble archive
-
-        Parameters
-        ----------
-        names: List[str]
-            List of names for which to download from the NASA Black Marble archive
-        """
-        args = [(name,) for name in names]
-
-        return pqdm(
-            args,
-            self._download_file,
-            n_jobs=n_jobs,
-            argument_type="args",
-            desc="Downloading...",
-        )
-
     def download(
         self,
         gdf: geopandas.GeoDataFrame,
         product_id: Product,
-        date_range: datetime.date | List[datetime.date],
+        date_range: List[datetime.date],
         skip_if_exists: bool = True,
     ):
         """Download (in parallel) from NASA Black Marble archive
@@ -164,16 +187,27 @@ class BlackMarbleDownloader(BaseModel):
         product: Product
             Nasa Black Marble Product Id (e.g, VNP46A1)
 
+        date_range: List[datetime.date]
+            Date range for which to download NASA Black Marble data.
+
         skip_if_exists: bool, default=True
-            Whether to skip downloading or extracting data if the data file for that date already exists
+            Whether to skip downloading data if file already exists
         """
         gdf = geopandas.overlay(
             gdf.to_crs("EPSG:4326").dissolve(), self.TILES, how="intersection"
         )
-        bm_files_df = self._retrieve_manifest(product_id, date_range)
+
+        bm_files_df = asyncio.run(self.get_manifest(gdf, product_id, date_range))
         bm_files_df = bm_files_df[
             bm_files_df["name"].str.contains("|".join(gdf["TileID"]))
         ]
-        names = bm_files_df["name"].tolist()
+        names = bm_files_df["fileURL"].tolist()
 
-        return self._download(names)
+        args = [(name,) for name in names]
+        return pqdm(
+            args,
+            self._download_file,
+            n_jobs=16,
+            argument_type="args",
+            desc="Downloading...",
+        )
