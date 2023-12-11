@@ -24,10 +24,9 @@ classifiers = [
 	"Intended Audience :: Science/Research",
 	"Topic :: Scientific/Engineering",
 ]
-requires-python = ">=3.7"
+requires-python = ">=3.10"
 dependencies = [
 	"backoff>=2,<3",
-	"dask[dataframe]",
 	"geopandas<1",
 	"h5py",
 	"httpx",

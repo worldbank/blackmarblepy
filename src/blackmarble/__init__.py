@@ -1,7 +1,5 @@
-from pathlib import Path
 import logging
-
-# from .base import BlackMarbleDownloader  # noqa: F401
+from pathlib import Path
 
 __version__ = (Path(__file__).parent / "VERSION").read_text().strip()
 
@@ -12,4 +10,4 @@ logging.basicConfig(
 
 logger: logging.Logger = logging.getLogger(__name__)
 
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.WARN)
