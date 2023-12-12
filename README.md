@@ -60,6 +60,39 @@ For more detailed information and examples, please refer to the [documentation](
 
 Contributions are welcome! If you'd like to contribute, please follow our [contribution guidelines](CONTRIBUTING.md).
 
+### Contributors
+
+<a href="https://orcid.org/0000-0001-6530-3780">
+Gabriel Stefanini Vicente
+<img alt="ORCID logo" src="https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png" width="16" height="16" />
+</a>
+<br>
+<a href="https://orcid.org/0000-0002-3164-3813">
+Robert Marty
+<img alt="ORCID logo" src="https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png" width="16" height="16" />
+</a>
+
+## Citation
+
+When using **BlackMarblePy**, your support is much appreciated! Please consider using the following citation or download [bibliography.bib](bibliography.bib):
+
+```bibtex
+@misc{blackmarblepy,
+  title = {{BlackMarblePy: Georeferenced Rasters and Statistics of Nighttime Lights from NASA Black Marble}},
+  author = {Gabriel {Stefanini Vicente} and Robert Marty},
+  year = {2023},
+  note = {{BlackMarblePy} v0.2.1},
+  url = {https://worldbank.github.io/blackmarblepy},
+}
+```
+
+{cite:empty}`blackmarblepy`
+
+```{bibliography}
+:filter: docname in docnames
+:style: plain
+```
+
 ## License
 
 This project is open-source - see the [LICENSE](LICENSE) file for details
