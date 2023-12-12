@@ -2,15 +2,16 @@
 
 [![PyPI version](https://badge.fury.io/py/blackmarblepy.svg)](https://badge.fury.io/py/blackmarblepy)
 [![docs](https://github.com/worldbank/blackmarblepy/actions/workflows/gh-pages.yml/badge.svg)](https://github.com/worldbank/blackmarblepy/actions/workflows/gh-pages.yml)
+[![downloads](https://static.pepy.tech/badge/blackmarblepy/month)](https://pepy.tech/project/blackmarblepy)
 [![GitHub Repo stars](https://img.shields.io/github/stars/worldbank/blackmarblepy)](https://github.com/worldbank/blackmarblepy)
 [![activity](https://img.shields.io/github/commit-activity/m/worldbank/blackmarblepy)](https://github.com/worldbank/blackmarblepy/graphs/commit-activity)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**BlackMarblePy** provides a simple and efficient way to retrieve and extract nighttime lights data from NASA's Black Marble project. [Black Marble](https://blackmarble.gsfc.nasa.gov) is a [NASA Earth Observatory](https://earthobservatory.nasa.gov) project that provides a product suite of daily, monthly and yearly global nighttime lights. This package automates the process of downloading all relevant tiles from the [NASA LAADS archive](https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/5000/VNP46A3/) to cover a region of interest, converting the raw files (in HDF5 format), to georeferenced rasters, and mosaicing rasters together when needed.
+**BlackMarblePy** is a Python package that provides a simple way to use nighttime lights data from NASA's Black Marble project. [Black Marble](https://blackmarble.gsfc.nasa.gov) is a [NASA Earth Science Data Systems (ESDS)](https://www.earthdata.nasa.gov) project that provides a product suite of daily, monthly and yearly global [nighttime lights](https://www.earthdata.nasa.gov/learn/backgrounders/nighttime-lights). This package automates the process of downloading all relevant tiles from the [NASA LAADS DAAC](https://www.earthdata.nasa.gov/eosdis/daacs/laads) to cover a region of interest, converting the raw files (in HDF5 format), to georeferenced rasters, and mosaicing rasters together when needed.
 
 ## Features
 
-- Download daily, monthly, and yearly nighttime lights data  for user-specified region of interest and time range.
+- Download daily, monthly, and yearly nighttime lights data for user-specified region of interest and time.
 - Parallel downloading for faster data retrieval and automatic retry mechanism for handling network errors.
 - Access NASA Black Marble as a Xarray Dataset
   - Integrated data visualization with customization options
@@ -20,6 +21,11 @@
   - Perform time series analysis on nighttime lights data.
     - Calculate zonal statistics like mean and sum.
     - Plot time series of nighttime lights data.
+
+### Featured on
+
+- [Nighttime Lights Trends in Gaza and West Bank](https://datapartnership.org/gaza-israel-conflict-impact-analysis/notebooks/nighttime-lights/nighttime-lights.html)
+- [World Bank Support for Emergency Relief to Gaza](https://www.worldbank.org/en/news/press-release/2023/12/12/world-bank-support-for-emergency-relief-to-gaza)
 
 ## Installation
 
