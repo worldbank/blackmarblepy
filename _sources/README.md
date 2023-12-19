@@ -22,11 +22,6 @@
     - Calculate zonal statistics like mean and sum.
     - Plot time series of nighttime lights data.
 
-### Featured on
-
-- [Nighttime Lights Trends in Gaza and West Bank](https://datapartnership.org/gaza-israel-conflict-impact-analysis/notebooks/nighttime-lights/nighttime-lights.html)
-- [World Bank Support for Emergency Relief to Gaza](https://www.worldbank.org/en/news/press-release/2023/12/12/world-bank-support-for-emergency-relief-to-gaza)
-
 ## Installation
 
 **BlackMarblePy** is available on [PyPI](https://pypi.org) as [blackmarblepy](https://pypi.org/project/blackmarblepy) and can installed using `pip`:
