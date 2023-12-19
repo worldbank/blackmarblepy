@@ -10,3 +10,5 @@ parts:
     chapters:
       - file: examples/blackmarblepy.ipynb
       - file: examples/quality-assessment.ipynb
+      - url: https://datapartnership.github.io/gaza-israel-conflict-impact-analysis/notebooks/nighttime-lights/nighttime-lights.html
+        title: Nighttime Lights Trends in Gaza and West Bank
