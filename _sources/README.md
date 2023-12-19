@@ -76,7 +76,7 @@ When using **BlackMarblePy**, your support is much appreciated! Please consider 
   title = {{BlackMarblePy: Georeferenced Rasters and Statistics of Nighttime Lights from NASA Black Marble}},
   author = {Gabriel {Stefanini Vicente} and Robert Marty},
   year = {2023},
-  note = {{BlackMarblePy} v0.2.1},
+  note = {{BlackMarblePy} v0.2.2},
   url = {https://worldbank.github.io/blackmarblepy},
 }
 ```
