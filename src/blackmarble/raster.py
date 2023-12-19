@@ -109,7 +109,9 @@ def h5_to_geotiff(
                         variable
                     ]
         # Extract data and attributes
-        data = dataset[:]
+        scale_factor = dataset.attrs.get("scale_factor", 1)
+        offset = dataset.attrs.get("offset", 0)
+        data = scale_factor * dataset[:] + offset
         qf = qf[:]
 
         for val in quality_flag_rm:
@@ -309,10 +311,9 @@ def bm_raster(
         )
         if variable in VARIABLE_DEFAULT.values():
             ds.assign_attrs(
-                short_name="Radiance",
                 long_name=variable,
-                units="Watts per square meter per steradian (W/m²/sr)",
+                units="nW/cm²sr",
             )
-            ds[variable].attrs = {"units": "W/m²/sr"}
+            ds[variable].attrs = {"units": "nW/cm²sr"}
 
         return ds
