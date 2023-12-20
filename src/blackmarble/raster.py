@@ -117,11 +117,13 @@ def h5_to_geotiff(
         data = dataset[:]
         
         data = np.where(data == fill_value, np.nan, data)
-        data = scale_factor * dataset[:] + offset
-        qf = qf[:]
+        data = scale_factor * data + offset
 
-        for val in quality_flag_rm:
-            data = np.where(qf == val, np.nan, data)
+        if len(quality_flag_rm) > 0:
+            qf = qf[:]
+    
+            for val in quality_flag_rm:
+                data = np.where(qf == val, np.nan, data)
 
         # Get geospatial metadata (coordinates and attributes)
         height, width = data.shape
