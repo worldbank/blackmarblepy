@@ -110,7 +110,7 @@ def h5_to_geotiff(
                     ]
                     
         # Extract data and attributes
-        fill_value = dataset.attrs.get("Fill_Value", 9999999) # default to large value that no dataset will have
+        fill_value = dataset.attrs.get("fill_value", 9999999) # default to large value that no dataset will have
         data = np.where(data == fill_value, np.nan, data)
         
         scale_factor = dataset.attrs.get("scale_factor", 1)
