@@ -32,7 +32,7 @@ def h5_to_geotiff(
     f: Path,
     /,
     variable: str = None,
-    quality_flag_rm=[255],
+    quality_flag_rm=None,
     output_directory: Path = None,
     output_prefix: str = None,
 ):
@@ -108,7 +108,11 @@ def h5_to_geotiff(
                     qf = h5_data["HDFEOS"]["GRIDS"]["VIIRS_Grid_DNB_2d"]["Data Fields"][
                         variable
                     ]
+                    
         # Extract data and attributes
+        fill_value = dataset.attrs.get("Fill_Value", 9999999) # default to large value that no dataset will have
+        data = np.where(data == fill_value, np.nan, data)
+        
         scale_factor = dataset.attrs.get("scale_factor", 1)
         offset = dataset.attrs.get("offset", 0)
         data = scale_factor * dataset[:] + offset
@@ -185,7 +189,7 @@ def bm_raster(
     date_range: datetime.date | List[datetime.date],
     bearer: str,
     variable: Optional[str] = None,
-    quality_flag_rm: List[int] = [255],
+    quality_flag_rm: List[int] = None,
     check_all_tiles_exist: bool = True,
     file_directory: Optional[Path] = None,
     file_prefix: Optional[str] = None,
@@ -220,7 +224,7 @@ def bm_raster(
         - For ``VNP46A3``, uses ``NearNadir_Composite_Snow_Free``.
         - For ``VNP46A4``, uses ``NearNadir_Composite_Snow_Free``.
 
-    quality_flag: List[int], default = [255]
+    quality_flag: List[int], default = None
         Quality flag values to use to set values to ``NA``. Each pixel has a quality flag value, where low quality values can be removed. Values are set to ``NA`` for each value in ther ``quality_flag_rm`` vector.
 
         For ``VNP46A1`` and ``VNP46A2`` (daily data):
@@ -228,14 +232,12 @@ def bm_raster(
         - ``0``: High-quality, Persistent nighttime lights
         - ``1``: High-quality, Ephemeral nighttime Lights
         - ``2``: Poor-quality, Outlier, potential cloud contamination, or other issues
-        - ``255``: No retrieval, Fill value (masked out on ingestion)
 
         For ``VNP46A3`` and ``VNP46A4`` (monthly and annual data):
 
         - ``0``: Good-quality, The number of observations used for the composite is larger than 3
         - ``1``: Poor-quality, The number of observations used for the composite is less than or equal to 3
         - ``2``: Gap filled NTL based on historical data
-        - ``255``: Fill value
 
     check_all_tiles_exist: bool, default=True
         Check whether all Black Marble nighttime light tiles exist for the region of interest. Sometimes not all tiles are available, so the full region of interest may not be covered. By default (True), it skips cases where not all tiles are available.
