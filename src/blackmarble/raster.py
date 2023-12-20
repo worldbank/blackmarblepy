@@ -115,7 +115,8 @@ def h5_to_geotiff(
         offset = dataset.attrs.get("offset", 0)
 
         data = dataset[:]
-        
+
+        print(fill_value)
         data = np.where(data == fill_value, np.nan, data)
         data = scale_factor * data + offset
 
