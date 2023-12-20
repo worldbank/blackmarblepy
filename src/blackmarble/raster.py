@@ -32,7 +32,7 @@ def h5_to_geotiff(
     f: Path,
     /,
     variable: str = None,
-    quality_flag_rm=None,
+    quality_flag_rm=[],
     output_directory: Path = None,
     output_prefix: str = None,
 ):
@@ -191,7 +191,7 @@ def bm_raster(
     date_range: datetime.date | List[datetime.date],
     bearer: str,
     variable: Optional[str] = None,
-    quality_flag_rm: List[int] = None,
+    quality_flag_rm: List[int] = [],
     check_all_tiles_exist: bool = True,
     file_directory: Optional[Path] = None,
     file_prefix: Optional[str] = None,
@@ -226,7 +226,7 @@ def bm_raster(
         - For ``VNP46A3``, uses ``NearNadir_Composite_Snow_Free``.
         - For ``VNP46A4``, uses ``NearNadir_Composite_Snow_Free``.
 
-    quality_flag: List[int], default = None
+    quality_flag: List[int], default = []
         Quality flag values to use to set values to ``NA``. Each pixel has a quality flag value, where low quality values can be removed. Values are set to ``NA`` for each value in ther ``quality_flag_rm`` vector.
 
         For ``VNP46A1`` and ``VNP46A2`` (daily data):
