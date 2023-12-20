@@ -27,6 +27,107 @@ VARIABLE_DEFAULT = {
     Product.VNP46A4: "NearNadir_Composite_Snow_Free",
 }
 
+import numpy as np
+
+def remove_fill_value(x, variable):
+    """
+    # Remove fill values
+
+    # https://viirsland.gsfc.nasa.gov/PDF/BlackMarbleUserGuide_v1.2_20220916.pdf
+    # * Table 3 (page 12)
+    # * Table 6 (page 16)
+    # * Table 9 (page 18)
+
+    Parameters
+    ----------
+    x: np array of raster
+    variable: Black Marble Variable
+
+    Returns
+    ------
+    np array
+    """
+    
+    #### 255
+    if variable in [
+        "Granule",
+        "Mandatory_Quality_Flag",
+        "Latest_High_Quality_Retrieval",
+        "Snow_Flag",
+        "DNB_Platform",
+        "Land_Water_Mask",
+        "AllAngle_Composite_Snow_Covered_Quality",
+        "AllAngle_Composite_Snow_Free_Quality",
+        "NearNadir_Composite_Snow_Covered_Quality",
+        "NearNadir_Composite_Snow_Free_Quality",
+        "OffNadir_Composite_Snow_Covered_Quality",
+        "OffNadir_Composite_Snow_Free_Quality",
+    ]:
+        x = np.where(x == 255, np.nan, x)
+
+    #### -999.9
+    if variable == "UTC_Time":
+        x = np.where(x == -999.9, np.nan, x)
+
+    #### -32768
+    if variable in [
+        "Sensor_Azimuth",
+        "Sensor_Zenith",
+        "Solar_Azimuth",
+        "Solar_Zenith",
+        "Lunar_Azimuth",
+        "Lunar_Zenith",
+        "Glint_Angle",
+        "Moon_Illumination_Fraction",
+        "Moon_Phase_Angle",
+    ]:
+        x = np.where(x == -32768, np.nan, x)
+
+    #### 65535
+    if variable in [
+        "DNB_At_Sensor_Radiance_500m",
+        "BrightnessTemperature_M12",
+        "BrightnessTemperature_M13",
+        "BrightnessTemperature_M15",
+        "BrightnessTemperature_M16",
+        "QF_Cloud_Mask",
+        "QF_DNB",
+        "QF_VIIRS_M10",
+        "QF_VIIRS_M11",
+        "QF_VIIRS_M12",
+        "QF_VIIRS_M13",
+        "QF_VIIRS_M15",
+        "QF_VIIRS_M16",
+        "Radiance_M10",
+        "Radiance_M11",
+        "QF_Cloud_Mask",
+        "DNB_BRDF-Corrected_NTL",
+        "DNB_Lunar_Irradiance",
+        "Gap_Filled_DNB_BRDF-Corrected_NTL",
+        "AllAngle_Composite_Snow_Covered",
+        "AllAngle_Composite_Snow_Covered_Num",
+        "AllAngle_Composite_Snow_Free",
+        "AllAngle_Composite_Snow_Free_Num",
+        "NearNadir_Composite_Snow_Covered",
+        "NearNadir_Composite_Snow_Covered_Num",
+        "NearNadir_Composite_Snow_Free",
+        "NearNadir_Composite_Snow_Free_Num",
+        "OffNadir_Composite_Snow_Covered",
+        "OffNadir_Composite_Snow_Covered_Num",
+        "OffNadir_Composite_Snow_Free",
+        "OffNadir_Composite_Snow_Free_Num",
+        "AllAngle_Composite_Snow_Covered_Std",
+        "AllAngle_Composite_Snow_Free_Std",
+        "NearNadir_Composite_Snow_Covered_Std",
+        "NearNadir_Composite_Snow_Free_Std",
+        "OffNadir_Composite_Snow_Covered_Std",
+        "OffNadir_Composite_Snow_Free_Std",
+    ]:
+        x = np.where(x == 65535, np.nan, x)
+
+    return x
+
+
 
 def h5_to_geotiff(
     f: Path,
@@ -110,14 +211,12 @@ def h5_to_geotiff(
                     ]
                     
         # Extract data and attributes
-        fill_value = dataset.attrs.get("fill_value") # default to large value that no dataset will have        
         scale_factor = dataset.attrs.get("scale_factor", 1)
         offset = dataset.attrs.get("offset", 0)
 
         data = dataset[:]
 
-        print(fill_value)
-        data = np.where(data == fill_value, np.nan, data)
+        data = remove_fill_value(data, variable)
         data = scale_factor * data + offset
 
         if len(quality_flag_rm) > 0:
