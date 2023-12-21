@@ -205,10 +205,10 @@ def h5_to_geotiff(
                     qf = h5_data["HDFEOS"]["GRIDS"]["VIIRS_Grid_DNB_2d"]["Data Fields"][
                         qf_name
                     ]
-                if variable in h5_names:
-                    qf = h5_data["HDFEOS"]["GRIDS"]["VIIRS_Grid_DNB_2d"]["Data Fields"][
-                        variable
-                    ]
+                #if variable in h5_names:
+                #    qf = h5_data["HDFEOS"]["GRIDS"]["VIIRS_Grid_DNB_2d"]["Data Fields"][
+                #        variable
+                #    ]
                     
         # Extract data and attributes
         scale_factor = dataset.attrs.get("scale_factor", 1)
@@ -219,7 +219,6 @@ def h5_to_geotiff(
         data = remove_fill_value(data, variable)
         data = scale_factor * data + offset
 
-        print(quality_flag_rm)
         if len(quality_flag_rm) > 0:
             qf = qf[:]
     
