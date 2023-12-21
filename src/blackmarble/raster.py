@@ -219,6 +219,7 @@ def h5_to_geotiff(
         data = remove_fill_value(data, variable)
         data = scale_factor * data + offset
 
+        print(quality_flag_rm)
         if len(quality_flag_rm) > 0:
             qf = qf[:]
     
