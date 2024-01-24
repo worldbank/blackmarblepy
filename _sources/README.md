@@ -2,6 +2,7 @@
 
 [![PyPI version](https://badge.fury.io/py/blackmarblepy.svg)](https://badge.fury.io/py/blackmarblepy)
 [![docs](https://github.com/worldbank/blackmarblepy/actions/workflows/gh-pages.yml/badge.svg)](https://github.com/worldbank/blackmarblepy/actions/workflows/gh-pages.yml)
+[![tests](https://github.com/worldbank/blackmarblepy/actions/workflows/tests.yml/badge.svg)](https://github.com/worldbank/blackmarblepy/actions/workflows/tests.yml)
 [![downloads](https://static.pepy.tech/badge/blackmarblepy/month)](https://pepy.tech/project/blackmarblepy)
 [![GitHub Repo stars](https://img.shields.io/github/stars/worldbank/blackmarblepy)](https://github.com/worldbank/blackmarblepy)
 [![activity](https://img.shields.io/github/commit-activity/m/worldbank/blackmarblepy)](https://github.com/worldbank/blackmarblepy/graphs/commit-activity)
