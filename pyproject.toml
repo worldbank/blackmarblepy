@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61.0.0"]
+requires = ["setuptools>=64.0.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -45,12 +45,12 @@ dependencies = [
 ]
 [project.optional-dependencies]
 docs = [
-	"docutils==0.17.1",                  # https://jupyterbook.org/en/stable/content/citations.html?highlight=docutils#citations-and-bibliographies
-	"jupyter-book >= 0.15.1",
-	"sphinxcontrib-apidoc >= 0.4.0, <1",
+	"docutils==0.17.1",               # https://jupyterbook.org/en/stable/content/citations.html?highlight=docutils#citations-and-bibliographies
+	"jupyter-book>=0.15.1",
+	"sphinxcontrib-apidoc>=0.4.0,<1",
 	"docutils==0.17.1",
 ]
-
+tests = ["pytest"]
 
 [project.urls]
 "Homepage" = "https://github.com/worldbank/blackmarblepy"
