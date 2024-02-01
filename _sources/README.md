@@ -27,9 +27,59 @@
 
 **BlackMarblePy** is available on [PyPI](https://pypi.org) as [blackmarblepy](https://pypi.org/project/blackmarblepy) and can installed using `pip`:
 
+### From PyPI
+
 ```shell
 pip install blackmarblepy
 ```
+
+### From Source
+
+1. Clone or download this repository to your local machine. Then, navigate to the root directory of the repository:
+
+    ```shell
+    git clone https://github.com/worldbank/blackmarblepy.git
+    cd blackmarblepy
+    ```
+
+2. Create a virtual environment (optional but recommended):
+
+    ```shell
+    python3 -m venv venv
+    source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+    ```
+
+3. Install the package with dependencies:
+
+    ```shell
+    pip install .
+    ```
+
+    Install the package **in editable** mode with dependencies:
+
+    ```shell
+    pip install -e .
+    ```
+
+    The `-e` flag stands for "editable," meaning changes to the source code will immediately affect the installed package.
+
+### Bulding Documentation Locally
+
+To build the documentation locally, after (1) and (2) above, please follow these steps:
+
+- Install the package with documentation dependencies:
+
+  ```shell
+    pip install -e .[docs]
+  ```
+
+- Build the documentation:m
+
+  ```shell
+    sphinx-build docs _build/html -b html
+  ```
+
+The generated documentation will be available in the `_build/html` directory. Open the `index.html` file in a web browser to view it.
 
 ## Usage
 
@@ -54,7 +104,11 @@ For more detailed information and examples, please refer to the [documentation](
 
 ## Contributing
 
-Contributions are welcome! If you'd like to contribute, please follow our [contribution guidelines](CONTRIBUTING.md).
+We welcome contributions to improve this documentation. If you find errors, have suggestions, or want to add new content, please follow our [contribution guidelines](CONTRIBUTING.md).
+
+### Feedback and Issues
+
+If you have any feedback, encounter issues, or want to suggest improvements, please [open an issue](https://github.com/worldbank/blackmarblepy/issues).
 
 ### Contributors
 
@@ -91,4 +145,4 @@ When using **BlackMarblePy**, your support is much appreciated! Please consider 
 
 ## License
 
-This project is open-source - see the [LICENSE](LICENSE) file for details
+This projects is licensed under the [**Mozilal Public License**](https://opensource.org/license/mpl-2-0/) - see the [LICENSE](LICENSE) file for details.

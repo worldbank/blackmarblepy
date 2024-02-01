@@ -30,12 +30,12 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
@@ -47,9 +47,10 @@
     <script src="../_static/underscore.js"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
@@ -70,7 +71,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="prev" title="Examples using BlackMarblePy" href="blackmarblepy.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="Jan 25, 2024"/>
+    <meta name="docbuild:last-update" content="Feb 01, 2024"/>
   </head>
   
   
@@ -162,7 +163,18 @@ const thebe_selector_output = ".output, .cell_output"
   
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Documentation</span></p>
 <ul class="nav bd-sidenav">
@@ -386,20 +398,20 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview-a-name-overview-a">Overview <a name="overview"></a></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup-a-name-setup-a">Setup <a name="setup"></a></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#daily-data-a-name-daily-a">Daily Data <a name="daily"></a></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nighttime-lights-a-name-daily-ntl-a">Nighttime Lights <a name="daily-ntl"></a></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quality-a-name-daily-quality-a">Quality <a name="daily-quality"></a></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nighttime-lights-for-good-quality-observations-a-name-daily-goodq-a">Nighttime lights for good quality observations <a name="daily-goodq"></a></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nighttime-lights-for-good-quality-observations-without-gap-filling-a-name-daily-nogap-a">Nighttime lights for good quality observations, without gap filling <a name="daily-nogap"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview <a name="overview"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup <a name="setup"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#daily-data">Daily Data <a name="daily"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nighttime-lights">Nighttime Lights <a name="daily-ntl"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quality">Quality <a name="daily-quality"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nighttime-lights-for-good-quality-observations">Nighttime lights for good quality observations <a name="daily-goodq"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nighttime-lights-for-good-quality-observations-without-gap-filling">Nighttime lights for good quality observations, without gap filling <a name="daily-nogap"></a></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#monthly-annual-data-a-name-ma-a">Monthly/Annual Data <a name="ma"></a></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nighttime-lights-a-name-ma-ntl-a">Nighttime Lights <a name="ma-ntl"></a></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#number-of-observations-a-name-ma-numobs-a">Number of Observations <a name="ma-numobs"></a></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quality-a-name-ma-quality-a">Quality <a name="ma-quality"></a></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nighttime-lights-for-good-quality-observations-a-name-ma-ntl-gq-a">Nighttime lights for good quality observations <a name="ma-ntl_gq"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#monthly-annual-data">Monthly/Annual Data <a name="ma"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Nighttime Lights <a name="ma-ntl"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#number-of-observations">Number of Observations <a name="ma-numobs"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Quality <a name="ma-quality"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Nighttime lights for good quality observations <a name="ma-ntl_gq"></a></a></li>
 </ul>
 </li>
 </ul>
@@ -415,12 +427,12 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="assessing-quality-of-nighttime-lights-data">
 <h1>Assessing Quality of Nighttime Lights Data<a class="headerlink" href="#assessing-quality-of-nighttime-lights-data" title="Permalink to this heading">#</a></h1>
-<section id="overview-a-name-overview-a">
-<h2>Overview <a name="overview"></a><a class="headerlink" href="#overview-a-name-overview-a" title="Permalink to this heading">#</a></h2>
+<section id="overview">
+<h2>Overview <a name="overview"></a><a class="headerlink" href="#overview" title="Permalink to this heading">#</a></h2>
 <p>The quality of nighttime lights data can be impacted by a number of factors, particularly cloud cover. To facilitate analysis using high quality data, Black Marble (1) marks the quality of each pixel and (2) in some cases of poor quality pixels, Black Marble will use data from a previous date to fill the value—using a temporally-gap filled NTL value. Below we illustrate how to examine the quality of nighttime lights data.</p>
 </section>
-<section id="setup-a-name-setup-a">
-<h2>Setup <a name="setup"></a><a class="headerlink" href="#setup-a-name-setup-a" title="Permalink to this heading">#</a></h2>
+<section id="setup">
+<h2>Setup <a name="setup"></a><a class="headerlink" href="#setup" title="Permalink to this heading">#</a></h2>
 <p>We first load packages and obtain a polygon for a region of interest; for this example, we use Switzerland.</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
@@ -474,11 +486,11 @@ document.write(`
 </div>
 </div>
 </section>
-<section id="daily-data-a-name-daily-a">
-<h2>Daily Data <a name="daily"></a><a class="headerlink" href="#daily-data-a-name-daily-a" title="Permalink to this heading">#</a></h2>
+<section id="daily-data">
+<h2>Daily Data <a name="daily"></a><a class="headerlink" href="#daily-data" title="Permalink to this heading">#</a></h2>
 <p>Below shows an example examining quality for daily data (<code class="docutils literal notranslate"><span class="pre">VNP46A2</span></code>).</p>
-<section id="nighttime-lights-a-name-daily-ntl-a">
-<h3>Nighttime Lights <a name="daily-ntl"></a><a class="headerlink" href="#nighttime-lights-a-name-daily-ntl-a" title="Permalink to this heading">#</a></h3>
+<section id="nighttime-lights">
+<h3>Nighttime Lights <a name="daily-ntl"></a><a class="headerlink" href="#nighttime-lights" title="Permalink to this heading">#</a></h3>
 <p>We download data for January 1st, 2023. When the <code class="docutils literal notranslate"><span class="pre">variable</span></code> parameter is not specified, <code class="docutils literal notranslate"><span class="pre">bm_raster</span></code> creates a raster using the <code class="docutils literal notranslate"><span class="pre">Gap_Filled_DNB_BRDF-Corrected_NTL</span></code> variable for daily data.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -796,8 +808,8 @@ document.write(`
 </div>
 </div>
 </section>
-<section id="quality-a-name-daily-quality-a">
-<h3>Quality <a name="daily-quality"></a><a class="headerlink" href="#quality-a-name-daily-quality-a" title="Permalink to this heading">#</a></h3>
+<section id="quality">
+<h3>Quality <a name="daily-quality"></a><a class="headerlink" href="#quality" title="Permalink to this heading">#</a></h3>
 <p>For daily data, the quality values are:</p>
 <ul class="simple">
 <li><p>0: High-quality, Persistent nighttime lights</p></li>
@@ -847,8 +859,8 @@ document.write(`
 </div>
 </div>
 </section>
-<section id="nighttime-lights-for-good-quality-observations-a-name-daily-goodq-a">
-<h3>Nighttime lights for good quality observations <a name="daily-goodq"></a><a class="headerlink" href="#nighttime-lights-for-good-quality-observations-a-name-daily-goodq-a" title="Permalink to this heading">#</a></h3>
+<section id="nighttime-lights-for-good-quality-observations">
+<h3>Nighttime lights for good quality observations <a name="daily-goodq"></a><a class="headerlink" href="#nighttime-lights-for-good-quality-observations" title="Permalink to this heading">#</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">quality_flag_rm</span></code> parameter determines which pixels are set to <code class="docutils literal notranslate"><span class="pre">NA</span></code> based on the quality indicator. By default, only pixels with a value of <code class="docutils literal notranslate"><span class="pre">255</span></code> are filtered out. However, if we only want data for good quality pixels, we can adjust the <code class="docutils literal notranslate"><span class="pre">quality_flag_rm</span></code> parameter.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -892,8 +904,8 @@ document.write(`
 </div>
 </div>
 </section>
-<section id="nighttime-lights-for-good-quality-observations-without-gap-filling-a-name-daily-nogap-a">
-<h3>Nighttime lights for good quality observations, without gap filling <a name="daily-nogap"></a><a class="headerlink" href="#nighttime-lights-for-good-quality-observations-without-gap-filling-a-name-daily-nogap-a" title="Permalink to this heading">#</a></h3>
+<section id="nighttime-lights-for-good-quality-observations-without-gap-filling">
+<h3>Nighttime lights for good quality observations, without gap filling <a name="daily-nogap"></a><a class="headerlink" href="#nighttime-lights-for-good-quality-observations-without-gap-filling" title="Permalink to this heading">#</a></h3>
 <p>By default, the <code class="docutils literal notranslate"><span class="pre">bm_raster</span></code> function uses the <code class="docutils literal notranslate"><span class="pre">Gap_Filled_DNB_BRDF-Corrected_NTL</span></code> variable for daily data. Gap filling indicates that some poor quality pixels use data from a previous date; the <code class="docutils literal notranslate"><span class="pre">Latest_High_Quality_Retrieval</span></code> indicates the date the nighttime lights value came from.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -972,11 +984,11 @@ document.write(`
 </div>
 </section>
 </section>
-<section id="monthly-annual-data-a-name-ma-a">
-<h2>Monthly/Annual Data <a name="ma"></a><a class="headerlink" href="#monthly-annual-data-a-name-ma-a" title="Permalink to this heading">#</a></h2>
+<section id="monthly-annual-data">
+<h2>Monthly/Annual Data <a name="ma"></a><a class="headerlink" href="#monthly-annual-data" title="Permalink to this heading">#</a></h2>
 <p>Below shows an example examining quality for monthly data (<code class="docutils literal notranslate"><span class="pre">VNP46A3</span></code>). The same approach can be used for annual data (<code class="docutils literal notranslate"><span class="pre">VNP46A4</span></code>); the variables are the same for both monthly and annual data.</p>
-<section id="nighttime-lights-a-name-ma-ntl-a">
-<h3>Nighttime Lights <a name="ma-ntl"></a><a class="headerlink" href="#nighttime-lights-a-name-ma-ntl-a" title="Permalink to this heading">#</a></h3>
+<section id="id1">
+<h3>Nighttime Lights <a name="ma-ntl"></a><a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
 <p>We download data for January 2023. When the <code class="docutils literal notranslate"><span class="pre">variable</span></code> parameter is not specified, <code class="docutils literal notranslate"><span class="pre">bm_raster</span></code> creates a raster using the <code class="docutils literal notranslate"><span class="pre">NearNadir_Composite_Snow_Free</span></code> variable for monthly and annual data—which is nighttime lights, removing effects from snow cover.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1012,8 +1024,8 @@ document.write(`
 </div>
 </div>
 </section>
-<section id="number-of-observations-a-name-ma-numobs-a">
-<h3>Number of Observations <a name="ma-numobs"></a><a class="headerlink" href="#number-of-observations-a-name-ma-numobs-a" title="Permalink to this heading">#</a></h3>
+<section id="number-of-observations">
+<h3>Number of Observations <a name="ma-numobs"></a><a class="headerlink" href="#number-of-observations" title="Permalink to this heading">#</a></h3>
 <p>Black Marble removes poor quality observations, such as pixels covered by clouds. To determine the number of observations used to generate nighttime light values for each pixel, we add <code class="docutils literal notranslate"><span class="pre">_Num</span></code> to the variable name.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1055,8 +1067,8 @@ document.write(`
 </div>
 </div>
 </section>
-<section id="quality-a-name-ma-quality-a">
-<h3>Quality <a name="ma-quality"></a><a class="headerlink" href="#quality-a-name-ma-quality-a" title="Permalink to this heading">#</a></h3>
+<section id="id2">
+<h3>Quality <a name="ma-quality"></a><a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h3>
 <p>For monthly and annual data, the quality values are:</p>
 <ul class="simple">
 <li><p>0: Good-quality, The number of observations used for the composite is larger than 3</p></li>
@@ -1108,8 +1120,8 @@ document.write(`
 </div>
 </div>
 </section>
-<section id="nighttime-lights-for-good-quality-observations-a-name-ma-ntl-gq-a">
-<h3>Nighttime lights for good quality observations <a name="ma-ntl_gq"></a><a class="headerlink" href="#nighttime-lights-for-good-quality-observations-a-name-ma-ntl-gq-a" title="Permalink to this heading">#</a></h3>
+<section id="id3">
+<h3>Nighttime lights for good quality observations <a name="ma-ntl_gq"></a><a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">quality_flag_rm</span></code> parameter determines which pixels are set to <code class="docutils literal notranslate"><span class="pre">NA</span></code> based on the quality indicator. By default, only pixels with a value of <code class="docutils literal notranslate"><span class="pre">255</span></code> are filtered out. However, if we also want to remove poor quality pixels, we can adjust the <code class="docutils literal notranslate"><span class="pre">quality_flag_rm</span></code> parameter.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1211,20 +1223,20 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview-a-name-overview-a">Overview <a name="overview"></a></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup-a-name-setup-a">Setup <a name="setup"></a></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#daily-data-a-name-daily-a">Daily Data <a name="daily"></a></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nighttime-lights-a-name-daily-ntl-a">Nighttime Lights <a name="daily-ntl"></a></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quality-a-name-daily-quality-a">Quality <a name="daily-quality"></a></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nighttime-lights-for-good-quality-observations-a-name-daily-goodq-a">Nighttime lights for good quality observations <a name="daily-goodq"></a></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nighttime-lights-for-good-quality-observations-without-gap-filling-a-name-daily-nogap-a">Nighttime lights for good quality observations, without gap filling <a name="daily-nogap"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview <a name="overview"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup <a name="setup"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#daily-data">Daily Data <a name="daily"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nighttime-lights">Nighttime Lights <a name="daily-ntl"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quality">Quality <a name="daily-quality"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nighttime-lights-for-good-quality-observations">Nighttime lights for good quality observations <a name="daily-goodq"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nighttime-lights-for-good-quality-observations-without-gap-filling">Nighttime lights for good quality observations, without gap filling <a name="daily-nogap"></a></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#monthly-annual-data-a-name-ma-a">Monthly/Annual Data <a name="ma"></a></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nighttime-lights-a-name-ma-ntl-a">Nighttime Lights <a name="ma-ntl"></a></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#number-of-observations-a-name-ma-numobs-a">Number of Observations <a name="ma-numobs"></a></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quality-a-name-ma-quality-a">Quality <a name="ma-quality"></a></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nighttime-lights-for-good-quality-observations-a-name-ma-ntl-gq-a">Nighttime lights for good quality observations <a name="ma-ntl_gq"></a></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#monthly-annual-data">Monthly/Annual Data <a name="ma"></a></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Nighttime Lights <a name="ma-ntl"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#number-of-observations">Number of Observations <a name="ma-numobs"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Quality <a name="ma-quality"></a></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Nighttime lights for good quality observations <a name="ma-ntl_gq"></a></a></li>
 </ul>
 </li>
 </ul>
@@ -1253,7 +1265,7 @@ By World Bank Development Data Group
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Jan 25, 2024.
+  Last updated on Feb 01, 2024.
   <br/>
 </p>
   </div>
