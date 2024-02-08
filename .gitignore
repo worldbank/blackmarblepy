@@ -154,6 +154,7 @@ node_modules
 # Documentation
 _build/
 
-# Data
+# Project-specific
+.jupyter/
 *.tif
 *.h5

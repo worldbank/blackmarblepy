@@ -2,7 +2,7 @@ name: tests
 
 on:
   push:
-    branches: 
+    branches:
     - "main"
   pull_request:
     branches:
@@ -33,4 +33,4 @@ jobs:
         continue-on-error: true
       - name: Test with pytest
         run: |
-          pytest 
+          pytest
