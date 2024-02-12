@@ -3,8 +3,10 @@
 # If you wish to continue using _config.yml, make edits to that file and
 # re-generate this one.
 ###############################################################################
+import os
+
 apidoc_module_dir = "../src"
-author = "World Bank Development Data Group"
+author = "Development Data Group"
 bibtex_bibfiles = ["bibliography.bib"]
 comments_config = {"hypothesis": False, "utterances": False}
 copyright = "2023"
@@ -77,3 +79,7 @@ pygments_style = "sphinx"
 suppress_warnings = ["myst.domains"]
 use_jupyterbook_latex = True
 use_multitoc_numbering = True
+
+if os.getenv("GITHUB_ACTIONS"):
+    extensions.append("sphinxcontrib.googleanalytics")
+    googleanalytics_id = "G-ZWF69GP65G"
