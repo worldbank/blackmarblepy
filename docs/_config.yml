@@ -1,6 +1,6 @@
 # Book settings
 title:
-author: World Bank Development Data Group
+author: Development Data Group
 logo: images/logo.png
 only_build_toc_files: true
 
@@ -18,11 +18,12 @@ html:
   use_issues_button: true
   baseurl: https://worldbank.github.io/blackmarblepy
   html_favicon: "images/favicon.ico"
+  google_analytics_id: G-ZWF69GP65G
 
 #######################################################################################
 # Execution settings
 execute:
-  execute_notebooks: "off"
+  execute_notebooks: off
 
 #######################################################################################
 # Bibliography settings

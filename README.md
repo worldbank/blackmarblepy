@@ -63,7 +63,9 @@ pip install blackmarblepy
 
     The `-e` flag stands for "editable," meaning changes to the source code will immediately affect the installed package.
 
-### Bulding Documentation Locally
+this is a fds
+
+### Building Documentation Locally
 
 To build the documentation locally, after (1) and (2) above, please follow these steps:
 

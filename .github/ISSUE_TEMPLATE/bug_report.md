@@ -1,31 +1,43 @@
 ---
-name: Bug report
-about: Create a report to help us improve
+name: Bug Report
+about: Use to report a bug
 title: ''
-labels: bug, help wanted
+labels: bug
 assignees: ''
-
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+## Bug Report
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+### Description
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+Provide a brief overview of the bug encountered. Describe the behavior observed when the bug occurs and explain the behavior expected when the bug is not present.
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+### Reproducibility
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Version [e.g. 22]
+- [ ] The bug is reproducible.
+- [ ] The bug is intermittent.
+- [ ] The bug occurs only under specific conditions.
 
-**Additional context**
-Add any other context about the problem here.
+#### Steps to Reproduce
+
+1. List the steps to reproduce the bug.
+2. Be as detailed as possible to help with replication.
+
+#### Screenshots / Error Messages (if applicable)
+
+Insert any relevant screenshots or error messages related to the bug.
+
+#### Environment
+
+- **Operating System**: [e.g., Windows 10, macOS, Linux]
+- **Browser (if applicable)**: [e.g., Google Chrome, Firefox, Safari]
+- **Application Version/Commit**: [e.g., v1.2.3, Git commit hash]
+- **Additional Environment Details**: [e.g., hardware specifications, network conditions]
+
+### Additional Context
+
+Provide any additional context or information about the bug.
+
+### Possible Fix
+
+If you have suggestions for a fix, please describe them here.
