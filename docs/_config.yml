@@ -18,6 +18,7 @@ html:
   use_issues_button: true
   baseurl: https://worldbank.github.io/blackmarblepy
   html_favicon: "images/favicon.ico"
+  google_analytics_id: G-ZWF69GP65G
 
 #######################################################################################
 # Execution settings
