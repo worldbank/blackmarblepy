@@ -57,11 +57,7 @@
     <script src="../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script async="async" src="../_static/sphinx-thebe.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/blackmarble';</script>
     <link rel="canonical" href="https://worldbank.github.io/blackmarblepy/api/blackmarble.html" />
@@ -72,7 +68,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="prev" title="BlackMarblePy" href="../README.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="Feb 01, 2024"/>
+    <meta name="docbuild:last-update" content="Feb 12, 2024"/>
   </head>
   
   
@@ -604,7 +600,7 @@ mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</
 <li><p><strong>date_range</strong> (<em>datetime.date</em><em> | </em><em>List</em><em>[</em><em>datetime.date</em><em>]</em>) – Date range (single date or list of dates) for which to retrieve NASA Black Marble data.</p></li>
 <li><p><strong>bearer</strong> (<em>str</em>) – NASA Earthdata Bearer token. Please refer to the <a class="reference external" href="https://worldbank.github.io/blackmarblepy/examples/blackmarblepy.html#nasa-earthdata-bearer-token">documentation</a>.</p></li>
 <li><p><strong>aggfunc</strong> (<em>str</em><em> | </em><em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>default=</em><em>[</em><em>&quot;mean&quot;</em><em>]</em>) – Which statistics to calculate for each zone. All possible choices are listed in <a class="reference external" href="https://pythonhosted.org/rasterstats/rasterstats.html?highlight=zonal_stats#rasterstats.gen">rasterstats.utils.VALID_STATS</a>.</p></li>
-<li><p><strong>variable</strong> (<em>str</em><em>, </em><em>default = None</em>) – <p>Variable to create GeoTIFF raster. Further information, pleae see the <a class="reference external" href="https://ladsweb.modaps.eosdis.nasa.gov/api/v2/content/archives/Document%20Archive/Science%20Data%20Product%20Documentation/VIIRS_Black_Marble_UG_v1.2_April_2021.pdf">NASA Black Marble User Guide</a> for <cite>VNP46A1</cite>, see Table 3; for <cite>VNP46A2</cite> see Table 6; for <cite>VNP46A3</cite> and <cite>VNP46A4</cite>, see Table 9. By default, it uses the following default variables:</p>
+<li><p><strong>variable</strong> (<em>str</em><em>, </em><em>default = None</em>) – <p>Variable to create GeoTIFF raster. Further information, please see the <a class="reference external" href="https://ladsweb.modaps.eosdis.nasa.gov/api/v2/content/archives/Document%20Archive/Science%20Data%20Product%20Documentation/VIIRS_Black_Marble_UG_v1.2_April_2021.pdf">NASA Black Marble User Guide</a> for <cite>VNP46A1</cite>, see Table 3; for <cite>VNP46A2</cite> see Table 6; for <cite>VNP46A3</cite> and <cite>VNP46A4</cite>, see Table 9. By default, it uses the following default variables:</p>
 <ul>
 <li><p>For <code class="docutils literal notranslate"><span class="pre">VNP46A1</span></code>, uses <code class="docutils literal notranslate"><span class="pre">DNB_At_Sensor_Radiance_500m</span></code></p></li>
 <li><p>For <code class="docutils literal notranslate"><span class="pre">VNP46A2</span></code>, uses <code class="docutils literal notranslate"><span class="pre">Gap_Filled_DNB_BRDF-Corrected_NTL</span></code></p></li>
@@ -612,7 +608,7 @@ mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</
 <li><p>For <code class="docutils literal notranslate"><span class="pre">VNP46A4</span></code>, uses <code class="docutils literal notranslate"><span class="pre">NearNadir_Composite_Snow_Free</span></code>.</p></li>
 </ul>
 </p></li>
-<li><p><strong>quality_flag</strong> (<em>List</em><em>[</em><em>int</em><em>]</em><em>, </em><em>default =</em><em> [</em><em>255</em><em>]</em>) – <p>Quality flag values to use to set values to <code class="docutils literal notranslate"><span class="pre">NA</span></code>. Each pixel has a quality flag value, where low quality values can be removed. Values are set to <code class="docutils literal notranslate"><span class="pre">NA</span></code> for each value in ther <code class="docutils literal notranslate"><span class="pre">quality_flag_rm</span></code> vector.</p>
+<li><p><strong>quality_flag</strong> (<em>List</em><em>[</em><em>int</em><em>]</em><em>, </em><em>default =</em><em> [</em><em>255</em><em>]</em>) – <p>Quality flag values to use to set values to <code class="docutils literal notranslate"><span class="pre">NA</span></code>. Each pixel has a quality flag value, where low quality values can be removed. Values are set to <code class="docutils literal notranslate"><span class="pre">NA</span></code> for each value in the <code class="docutils literal notranslate"><span class="pre">quality_flag_rm</span></code> vector.</p>
 <p>For <code class="docutils literal notranslate"><span class="pre">VNP46A1</span></code> and <code class="docutils literal notranslate"><span class="pre">VNP46A2</span></code> (daily data):</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">0</span></code>: High-quality, Persistent nighttime lights</p></li>
@@ -629,7 +625,7 @@ mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</
 </ul>
 </p></li>
 <li><p><strong>check_all_tiles_exist</strong> (<em>bool</em><em>, </em><em>default=True</em>) – Check whether all Black Marble nighttime light tiles exist for the region of interest. Sometimes not all tiles are available, so the full region of interest may not be covered. By default (True), it skips cases where not all tiles are available.</p></li>
-<li><p><strong>file_directory</strong> (<em>pathlib.Path</em><em>, </em><em>optional</em>) – Where to produce output. By default, the output will be procuded onto a temporary directory.</p></li>
+<li><p><strong>file_directory</strong> (<em>pathlib.Path</em><em>, </em><em>optional</em>) – Where to produce output. By default, the output will be produced onto a temporary directory.</p></li>
 <li><p><strong>file_directory_prefix</strong> (<em>str</em><em>, </em><em>optional</em>) – Prefix</p></li>
 <li><p><strong>file_skip_if_exists</strong> (<em>bool</em><em>, </em><em>default=True</em>) – <p>Whether to skip downloading or extracting data if the data file for that date already exists.</p>
 <p>bearer</p>
@@ -637,7 +633,7 @@ mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>NASA Black Marble zonal statitics dataframe</p>
+<dd class="field-even"><p>NASA Black Marble zonal statistics dataframe</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>pandas.DataFrame</p>
@@ -667,7 +663,7 @@ mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</
 <li><p><strong>date_range</strong> (<em>datetime.date</em><em> | </em><em>List</em><em>[</em><em>datetime.date</em><em>]</em>) – Date range (single date or list of dates) for which to retrieve NASA Black Marble data.</p></li>
 <li><p><strong>bearer</strong> (<em>str</em>) – <p>NASA Earthdata Bearer token. Please refer to the <a class="reference external" href="https://worldbank.github.io/blackmarblepy/examples/blackmarblepy.html#nasa-earthdata-bearer-token">documentation</a>.</p>
 </p></li>
-<li><p><strong>variable</strong> (<em>str</em><em>, </em><em>default = None</em>) – <p>Variable to create GeoTIFF raster. Further information, pleae see the <a class="reference external" href="https://ladsweb.modaps.eosdis.nasa.gov/api/v2/content/archives/Document%20Archive/Science%20Data%20Product%20Documentation/VIIRS_Black_Marble_UG_v1.2_April_2021.pdf">NASA Black Marble User Guide</a> for <cite>VNP46A1</cite>, see Table 3; for <cite>VNP46A2</cite> see Table 6; for <cite>VNP46A3</cite> and <cite>VNP46A4</cite>, see Table 9. By default, it uses the following default variables:</p>
+<li><p><strong>variable</strong> (<em>str</em><em>, </em><em>default = None</em>) – <p>Variable for which to a GeoTIFF raster. Further information, please see the <a class="reference external" href="https://ladsweb.modaps.eosdis.nasa.gov/api/v2/content/archives/Document%20Archive/Science%20Data%20Product%20Documentation/VIIRS_Black_Marble_UG_v1.2_April_2021.pdf">NASA Black Marble User Guide</a> for <cite>VNP46A1</cite>, see Table 3; for <cite>VNP46A2</cite> see Table 6; for <cite>VNP46A3</cite> and <cite>VNP46A4</cite>, see Table 9. By default, it uses the following default variables:</p>
 <ul>
 <li><p>For <code class="docutils literal notranslate"><span class="pre">VNP46A1</span></code>, uses <code class="docutils literal notranslate"><span class="pre">DNB_At_Sensor_Radiance_500m</span></code></p></li>
 <li><p>For <code class="docutils literal notranslate"><span class="pre">VNP46A2</span></code>, uses <code class="docutils literal notranslate"><span class="pre">Gap_Filled_DNB_BRDF-Corrected_NTL</span></code></p></li>
@@ -675,7 +671,7 @@ mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</
 <li><p>For <code class="docutils literal notranslate"><span class="pre">VNP46A4</span></code>, uses <code class="docutils literal notranslate"><span class="pre">NearNadir_Composite_Snow_Free</span></code>.</p></li>
 </ul>
 </p></li>
-<li><p><strong>quality_flag</strong> (<em>List</em><em>[</em><em>int</em><em>]</em><em>, </em><em>default =</em><em> [</em><em>255</em><em>]</em>) – <p>Quality flag values to use to set values to <code class="docutils literal notranslate"><span class="pre">NA</span></code>. Each pixel has a quality flag value, where low quality values can be removed. Values are set to <code class="docutils literal notranslate"><span class="pre">NA</span></code> for each value in ther <code class="docutils literal notranslate"><span class="pre">quality_flag_rm</span></code> vector.</p>
+<li><p><strong>quality_flag</strong> (<em>List</em><em>[</em><em>int</em><em>]</em><em>, </em><em>default =</em><em> [</em><em>255</em><em>]</em>) – <p>Quality flag values to use to set values to <code class="docutils literal notranslate"><span class="pre">NA</span></code>. Each pixel has a quality flag value, where low quality values can be removed. Values are set to <code class="docutils literal notranslate"><span class="pre">NA</span></code> for each value in the <code class="docutils literal notranslate"><span class="pre">quality_flag_rm</span></code> vector.</p>
 <p>For <code class="docutils literal notranslate"><span class="pre">VNP46A1</span></code> and <code class="docutils literal notranslate"><span class="pre">VNP46A2</span></code> (daily data):</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">0</span></code>: High-quality, Persistent nighttime lights</p></li>
@@ -692,13 +688,13 @@ mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</
 </ul>
 </p></li>
 <li><p><strong>check_all_tiles_exist</strong> (<em>bool</em><em>, </em><em>default=True</em>) – Check whether all Black Marble nighttime light tiles exist for the region of interest. Sometimes not all tiles are available, so the full region of interest may not be covered. By default (True), it skips cases where not all tiles are available.</p></li>
-<li><p><strong>file_directory</strong> (<em>pathlib.Path</em><em>, </em><em>optional</em>) – Where to produce output. By default, the output will be procuded onto a temporary directory.</p></li>
+<li><p><strong>file_directory</strong> (<em>pathlib.Path</em><em>, </em><em>optional</em>) – Where to produce output. By default, the output will be produced onto a temporary directory.</p></li>
 <li><p><strong>file_prefix</strong> (<em>str</em><em>, </em><em>optional</em>) – Prefix</p></li>
 <li><p><strong>file_skip_if_exists</strong> (<em>bool</em><em>, </em><em>default=True</em>) – Whether to skip downloading or extracting data if the data file for that date already exists.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A Xarray dataset contaning a stack of nighttime lights rasters</p>
+<dd class="field-even"><p><cite>xarray.Dataset</cite> containing a stack of nighttime lights rasters</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>xarray.Dataset</p>
@@ -714,7 +710,7 @@ mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>f</strong> (<em>Path</em>) – H5DF filename</p></li>
-<li><p><strong>variable</strong> (<em>str</em><em>, </em><em>default = None</em>) – <p>Variable to create GeoTIFF raster. Further information, pleae see the <a class="reference external" href="https://ladsweb.modaps.eosdis.nasa.gov/api/v2/content/archives/Document%20Archive/Science%20Data%20Product%20Documentation/VIIRS_Black_Marble_UG_v1.2_April_2021.pdf">NASA Black Marble User Guide</a> for <cite>VNP46A1</cite>, see Table 3; for <cite>VNP46A2</cite> see Table 6; for <cite>VNP46A3</cite> and <cite>VNP46A4</cite>, see Table 9. By default, it uses the following default variables:</p>
+<li><p><strong>variable</strong> (<em>str</em><em>, </em><em>default = None</em>) – <p>Variable for which to create a GeoTIFF raster. Further information, please see the <a class="reference external" href="https://ladsweb.modaps.eosdis.nasa.gov/api/v2/content/archives/Document%20Archive/Science%20Data%20Product%20Documentation/VIIRS_Black_Marble_UG_v1.2_April_2021.pdf">NASA Black Marble User Guide</a> for <cite>VNP46A1</cite>, see Table 3; for <cite>VNP46A2</cite> see Table 6; for <cite>VNP46A3</cite> and <cite>VNP46A4</cite>, see Table 9. By default, it uses the following default variables:</p>
 <ul>
 <li><p>For <code class="docutils literal notranslate"><span class="pre">VNP46A1</span></code>, uses <code class="docutils literal notranslate"><span class="pre">DNB_At_Sensor_Radiance_500m</span></code></p></li>
 <li><p>For <code class="docutils literal notranslate"><span class="pre">VNP46A2</span></code>, uses <code class="docutils literal notranslate"><span class="pre">Gap_Filled_DNB_BRDF-Corrected_NTL</span></code></p></li>
@@ -725,7 +721,7 @@ mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>output_path</strong> – Path to which export GeoTIFF file</p>
+<dd class="field-even"><p><strong>output_path</strong> – Path to which export a GeoTIFF raster</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>Path</p>
@@ -907,7 +903,7 @@ By World Bank Development Data Group
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Feb 01, 2024.
+  Last updated on Feb 12, 2024.
   <br/>
 </p>
   </div>
