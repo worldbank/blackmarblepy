@@ -1,7 +1,4 @@
 import logging
-from pathlib import Path
-
-__version__ = (Path(__file__).parent / "VERSION").read_text().strip()
 
 logging.basicConfig(
     format="[%(asctime)s - %(name)s:%(lineno)d - %(levelname)s] %(message)s",
