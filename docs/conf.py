@@ -3,8 +3,6 @@
 # If you wish to continue using _config.yml, make edits to that file and
 # re-generate this one.
 ###############################################################################
-import os
-
 apidoc_module_dir = "../src"
 author = "Development Data Group"
 bibtex_bibfiles = ["bibliography.bib"]
@@ -52,7 +50,7 @@ html_theme_options = {
     "extra_footer": "",
     "home_page_in_toc": False,
     "announcement": "",
-    "analytics": {"google_analytics_id": ""},
+    "analytics": {"google_analytics_id": "G-ZWF69GP65G"},
     "use_repository_button": True,
     "use_edit_page_button": True,
     "use_issues_button": True,
@@ -79,7 +77,3 @@ pygments_style = "sphinx"
 suppress_warnings = ["myst.domains"]
 use_jupyterbook_latex = True
 use_multitoc_numbering = True
-
-if os.getenv("GITHUB_ACTIONS"):
-    extensions.append("sphinxcontrib.googleanalytics")
-    googleanalytics_id = "G-ZWF69GP65G"
