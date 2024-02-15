@@ -90,14 +90,11 @@ Before downloading and extracting Black Marble data, define the [NASA LAADS arch
 ```python
 from blackmarble.raster import bm_raster
 
-# Raster stack of daily data
-date_range = pd.date_range("2022-01-01", "2022-03-31", freq="D")
-
 # Retrieve VNP46A2 for date range into a Xarray Dataset
 daily = bm_raster(
     gdf,
     product_id="VNP46A2",
-    date_range=date_range,
+    date_range=pd.date_range("2022-01-01", "2022-03-31", freq="D"),
     bearer=bearer,
 )
 ```

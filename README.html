@@ -76,7 +76,7 @@
     <link rel="next" title="blackmarble package" href="api/blackmarble.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-    <meta name="docbuild:last-update" content="Feb 14, 2024"/>
+    <meta name="docbuild:last-update" content="Feb 15, 2024"/>
   </head>
   
   
@@ -525,14 +525,11 @@ document.write(`
 <p>Before downloading and extracting Black Marble data, define the <a class="reference external" href="https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/5000/VNP46A3/">NASA LAADS archive</a> <code class="docutils literal notranslate"><span class="pre">bearer</span></code> token, and define a region of interest (i.e., <code class="docutils literal notranslate"><span class="pre">gdf</span></code> as a <a class="reference external" href="https://geopandas.org/en/stable/docs/reference/api/geopandas.GeoDataFrame.html"><code class="docutils literal notranslate"><span class="pre">geopandas.GeoDataFrame</span></code></a>).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">blackmarble.raster</span> <span class="kn">import</span> <span class="n">bm_raster</span>
 
-<span class="c1"># Raster stack of daily data</span>
-<span class="n">date_range</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="s2">&quot;2022-01-01&quot;</span><span class="p">,</span> <span class="s2">&quot;2022-03-31&quot;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s2">&quot;D&quot;</span><span class="p">)</span>
-
 <span class="c1"># Retrieve VNP46A2 for date range into a Xarray Dataset</span>
 <span class="n">daily</span> <span class="o">=</span> <span class="n">bm_raster</span><span class="p">(</span>
     <span class="n">gdf</span><span class="p">,</span>
     <span class="n">product_id</span><span class="o">=</span><span class="s2">&quot;VNP46A2&quot;</span><span class="p">,</span>
-    <span class="n">date_range</span><span class="o">=</span><span class="n">date_range</span><span class="p">,</span>
+    <span class="n">date_range</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="s2">&quot;2022-01-01&quot;</span><span class="p">,</span> <span class="s2">&quot;2022-03-31&quot;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s2">&quot;D&quot;</span><span class="p">),</span>
     <span class="n">bearer</span><span class="o">=</span><span class="n">bearer</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
@@ -686,7 +683,7 @@ By Development Data Group
   
   <div class="footer-item">
     <p class="last-updated">
-  Last updated on Feb 14, 2024.
+  Last updated on Feb 15, 2024.
   <br/>
 </p>
   </div>
