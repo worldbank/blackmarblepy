@@ -145,4 +145,4 @@ When using **BlackMarblePy**, your support is much appreciated! Please consider 
 
 ## License
 
-This projects is licensed under the [**Mozilal Public License**](https://opensource.org/license/mpl-2-0/) - see the [LICENSE](LICENSE) file for details.
+This projects is licensed under the [**Mozilla Public License**](https://opensource.org/license/mpl-2-0/) - see the [LICENSE](LICENSE) file for details.
