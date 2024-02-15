@@ -9,15 +9,6 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZWF69GP65G"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-ZWF69GP65G');
-    </script>
-    
     <title>src</title>
   
   
@@ -66,6 +57,13 @@
     <script src="../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../_static/design-tabs.js"></script>
+    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-ZWF69GP65G"></script>
+    <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){ dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', 'G-ZWF69GP65G');
+            </script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script async="async" src="../_static/sphinx-thebe.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/modules';</script>
@@ -189,8 +187,9 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../examples/blackmarblepy.html">Examples using <code class="docutils literal notranslate"><span class="pre">BlackMarblePy</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples/quality-assessment.html">Assessing Quality of Nighttime Lights Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/blackmarblepy.html">Examples using <code class="docutils literal notranslate"><span class="pre">BlackMarblePy</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/quality-assessment.html">Assessing Quality of Nighttime Lights Data</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://blogs.worldbank.org/opendata/illuminating-insights-harnessing-nasas-black-marble-r-and-python-packages?auHash=U6q7khcBvDa_eUrNze0tnZkLg5TuvggWL18OTWQYmCA">Illuminating insights: harnessing NASA's Black Marble with R and Python packages</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://datapartnership.github.io/gaza-israel-conflict-impact-analysis/notebooks/nighttime-lights/nighttime-lights.html">Nighttime Lights Trends in Gaza and West Bank</a></li>
 </ul>
 
@@ -412,46 +411,11 @@ document.write(`
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="blackmarble.html">blackmarble package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="blackmarble.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="blackmarble.html#module-blackmarble.download">blackmarble.download module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="blackmarble.html#blackmarble.download.BlackMarbleDownloader"><code class="docutils literal notranslate"><span class="pre">BlackMarbleDownloader</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="blackmarble.html#blackmarble.download.BlackMarbleDownloader.bearer"><code class="docutils literal notranslate"><span class="pre">BlackMarbleDownloader.bearer</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="blackmarble.html#blackmarble.download.BlackMarbleDownloader.directory"><code class="docutils literal notranslate"><span class="pre">BlackMarbleDownloader.directory</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="blackmarble.html#blackmarble.download.BlackMarbleDownloader.TILES"><code class="docutils literal notranslate"><span class="pre">BlackMarbleDownloader.TILES</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="blackmarble.html#blackmarble.download.BlackMarbleDownloader.URL"><code class="docutils literal notranslate"><span class="pre">BlackMarbleDownloader.URL</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="blackmarble.html#id0"><code class="docutils literal notranslate"><span class="pre">BlackMarbleDownloader.bearer</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="blackmarble.html#id1"><code class="docutils literal notranslate"><span class="pre">BlackMarbleDownloader.directory</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="blackmarble.html#blackmarble.download.BlackMarbleDownloader.download"><code class="docutils literal notranslate"><span class="pre">BlackMarbleDownloader.download()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="blackmarble.html#blackmarble.download.BlackMarbleDownloader.get_manifest"><code class="docutils literal notranslate"><span class="pre">BlackMarbleDownloader.get_manifest()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="blackmarble.html#blackmarble.download.BlackMarbleDownloader.model_computed_fields"><code class="docutils literal notranslate"><span class="pre">BlackMarbleDownloader.model_computed_fields</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="blackmarble.html#blackmarble.download.BlackMarbleDownloader.model_config"><code class="docutils literal notranslate"><span class="pre">BlackMarbleDownloader.model_config</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="blackmarble.html#blackmarble.download.BlackMarbleDownloader.model_fields"><code class="docutils literal notranslate"><span class="pre">BlackMarbleDownloader.model_fields</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="blackmarble.html#blackmarble.download.chunks"><code class="docutils literal notranslate"><span class="pre">chunks()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="blackmarble.html#blackmarble.download.get_url"><code class="docutils literal notranslate"><span class="pre">get_url()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="blackmarble.html#module-blackmarble.extract">blackmarble.extract module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="blackmarble.html#blackmarble.extract.bm_extract"><code class="docutils literal notranslate"><span class="pre">bm_extract()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="blackmarble.html#module-blackmarble.raster">blackmarble.raster module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="blackmarble.html#blackmarble.raster.bm_raster"><code class="docutils literal notranslate"><span class="pre">bm_raster()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="blackmarble.html#blackmarble.raster.h5_to_geotiff"><code class="docutils literal notranslate"><span class="pre">h5_to_geotiff()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="blackmarble.html#blackmarble.raster.transform"><code class="docutils literal notranslate"><span class="pre">transform()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="blackmarble.html#module-blackmarble.types">blackmarble.types module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="blackmarble.html#blackmarble.types.Product"><code class="docutils literal notranslate"><span class="pre">Product</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="blackmarble.html#blackmarble.types.Product.VNP46A1"><code class="docutils literal notranslate"><span class="pre">Product.VNP46A1</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="blackmarble.html#blackmarble.types.Product.VNP46A2"><code class="docutils literal notranslate"><span class="pre">Product.VNP46A2</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="blackmarble.html#blackmarble.types.Product.VNP46A3"><code class="docutils literal notranslate"><span class="pre">Product.VNP46A3</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="blackmarble.html#blackmarble.types.Product.VNP46A4"><code class="docutils literal notranslate"><span class="pre">Product.VNP46A4</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="blackmarble.html#module-blackmarble">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blackmarble.html#blackmarble-download-module">blackmarble.download module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blackmarble.html#blackmarble-extract-module">blackmarble.extract module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blackmarble.html#blackmarble-raster-module">blackmarble.raster module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blackmarble.html#blackmarble-types-module">blackmarble.types module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blackmarble.html#module-contents">Module contents</a></li>
 </ul>
 </li>
 </ul>
