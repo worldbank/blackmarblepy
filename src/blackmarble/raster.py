@@ -29,6 +29,7 @@ VARIABLE_DEFAULT = {
 
 import numpy as np
 
+
 def remove_fill_value(x, variable):
     """
     # Remove fill values
@@ -47,7 +48,7 @@ def remove_fill_value(x, variable):
     ------
     np array
     """
-    
+
     #### 255
     if variable in [
         "Granule",
@@ -128,7 +129,6 @@ def remove_fill_value(x, variable):
     return x
 
 
-
 def h5_to_geotiff(
     f: Path,
     /,
@@ -146,7 +146,7 @@ def h5_to_geotiff(
         H5DF filename
 
     variable: str, default = None
-        Variable to create GeoTIFF raster. Further information, pleae see the `NASA Black Marble User Guide <https://ladsweb.modaps.eosdis.nasa.gov/api/v2/content/archives/Document%20Archive/Science%20Data%20Product%20Documentation/VIIRS_Black_Marble_UG_v1.2_April_2021.pdf>`_ for `VNP46A1`, see Table 3; for `VNP46A2` see Table 6; for `VNP46A3` and `VNP46A4`, see Table 9. By default, it uses the following default variables:
+        Variable for which to create a GeoTIFF raster. Further information, please see the `NASA Black Marble User Guide <https://ladsweb.modaps.eosdis.nasa.gov/api/v2/content/archives/Document%20Archive/Science%20Data%20Product%20Documentation/VIIRS_Black_Marble_UG_v1.2_April_2021.pdf>`_ for `VNP46A1`, see Table 3; for `VNP46A2` see Table 6; for `VNP46A3` and `VNP46A4`, see Table 9. By default, it uses the following default variables:
 
         - For ``VNP46A1``, uses ``DNB_At_Sensor_Radiance_500m``
         - For ``VNP46A2``, uses ``Gap_Filled_DNB_BRDF-Corrected_NTL``
@@ -156,7 +156,7 @@ def h5_to_geotiff(
     Returns
     ------
     output_path: Path
-        Path to which export GeoTIFF file
+        Path to which export a GeoTIFF raster
     """
     output_path = Path(output_directory, f.name).with_suffix(".tif")
     product_id = Product(f.stem.split(".")[0])
@@ -205,11 +205,11 @@ def h5_to_geotiff(
                     qf = h5_data["HDFEOS"]["GRIDS"]["VIIRS_Grid_DNB_2d"]["Data Fields"][
                         qf_name
                     ]
-                #if variable in h5_names:
+                # if variable in h5_names:
                 #    qf = h5_data["HDFEOS"]["GRIDS"]["VIIRS_Grid_DNB_2d"]["Data Fields"][
                 #        variable
                 #    ]
-                    
+
         # Extract data and attributes
         scale_factor = dataset.attrs.get("scale_factor", 1)
         offset = dataset.attrs.get("offset", 0)
@@ -221,7 +221,7 @@ def h5_to_geotiff(
 
         if len(quality_flag_rm) > 0:
             qf = qf[:]
-    
+
             for val in quality_flag_rm:
                 data = np.where(qf == val, np.nan, data)
 
@@ -321,7 +321,7 @@ def bm_raster(
         NASA Earthdata Bearer token. Please refer to the `documentation <https://worldbank.github.io/blackmarblepy/examples/blackmarblepy.html#nasa-earthdata-bearer-token>`_.
 
     variable: str, default = None
-        Variable to create GeoTIFF raster. Further information, pleae see the `NASA Black Marble User Guide <https://ladsweb.modaps.eosdis.nasa.gov/api/v2/content/archives/Document%20Archive/Science%20Data%20Product%20Documentation/VIIRS_Black_Marble_UG_v1.2_April_2021.pdf>`_ for `VNP46A1`, see Table 3; for `VNP46A2` see Table 6; for `VNP46A3` and `VNP46A4`, see Table 9. By default, it uses the following default variables:
+        Variable for which to a GeoTIFF raster. Further information, please see the `NASA Black Marble User Guide <https://ladsweb.modaps.eosdis.nasa.gov/api/v2/content/archives/Document%20Archive/Science%20Data%20Product%20Documentation/VIIRS_Black_Marble_UG_v1.2_April_2021.pdf>`_ for `VNP46A1`, see Table 3; for `VNP46A2` see Table 6; for `VNP46A3` and `VNP46A4`, see Table 9. By default, it uses the following default variables:
 
         - For ``VNP46A1``, uses ``DNB_At_Sensor_Radiance_500m``
         - For ``VNP46A2``, uses ``Gap_Filled_DNB_BRDF-Corrected_NTL``
@@ -347,7 +347,7 @@ def bm_raster(
         Check whether all Black Marble nighttime light tiles exist for the region of interest. Sometimes not all tiles are available, so the full region of interest may not be covered. By default (True), it skips cases where not all tiles are available.
 
     file_directory: pathlib.Path, optional
-        Where to produce output. By default, the output will be procuded onto a temporary directory.
+        Where to produce output. By default, the output will be produced onto a temporary directory.
 
     file_prefix: str, optional
         Prefix
@@ -358,7 +358,7 @@ def bm_raster(
     Returns
     -------
     xarray.Dataset
-        A Xarray dataset contaning a stack of nighttime lights rasters
+        `xarray.Dataset` containing a stack of nighttime lights rasters
     """
     # Validate and fix args
     if not isinstance(quality_flag_rm, list):

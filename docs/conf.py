@@ -4,7 +4,7 @@
 # re-generate this one.
 ###############################################################################
 apidoc_module_dir = "../src"
-author = "World Bank Development Data Group"
+author = "Development Data Group"
 bibtex_bibfiles = ["bibliography.bib"]
 comments_config = {"hypothesis": False, "utterances": False}
 copyright = "2023"
@@ -50,7 +50,7 @@ html_theme_options = {
     "extra_footer": "",
     "home_page_in_toc": False,
     "announcement": "",
-    "analytics": {"google_analytics_id": ""},
+    "analytics": {"google_analytics_id": "G-ZWF69GP65G"},
     "use_repository_button": True,
     "use_edit_page_button": True,
     "use_issues_button": True,
