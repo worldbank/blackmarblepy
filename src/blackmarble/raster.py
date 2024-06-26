@@ -32,7 +32,7 @@ def h5_to_geotiff(
     f: Path,
     /,
     variable: str = None,
-    quality_flag_rm=[255],
+    quality_flag_rm=None,
     output_directory: Path = None,
     output_prefix: str = None,
 ):
@@ -44,18 +44,24 @@ def h5_to_geotiff(
     f: Path
         H5DF filename
 
-    variable: str, default = None
-        Variable for which to create a GeoTIFF raster. Further information, please see the `NASA Black Marble User Guide <https://ladsweb.modaps.eosdis.nasa.gov/api/v2/content/archives/Document%20Archive/Science%20Data%20Product%20Documentation/VIIRS_Black_Marble_UG_v1.2_April_2021.pdf>`_ for `VNP46A1`, see Table 3; for `VNP46A2` see Table 6; for `VNP46A3` and `VNP46A4`, see Table 9. By default, it uses the following default variables:
-
-        - For ``VNP46A1``, uses ``DNB_At_Sensor_Radiance_500m``
-        - For ``VNP46A2``, uses ``Gap_Filled_DNB_BRDF-Corrected_NTL``
-        - For ``VNP46A3``, uses ``NearNadir_Composite_Snow_Free``.
-        - For ``VNP46A4``, uses ``NearNadir_Composite_Snow_Free``.
+    variable: str, optional
+        Variable for which to create a GeoTIFF raster. If None, defaults will be used based on the product.
+            - VNP46A1: 'DNB_At_Sensor_Radiance_500m'
+            - VNP46A2: 'Gap_Filled_DNB_BRDF-Corrected_NTL'
+            - VNP46A3: 'NearNadir_Composite_Snow_Free'
+            - VNP46A4: 'NearNadir_Composite_Snow_Free'
+        Further information, please see the `NASA Black Marble User Guide <https://ladsweb.modaps.eosdis.nasa.gov/api/v2/content/archives/Document%20Archive/Science%20Data%20Product%20Documentation/VIIRS_Black_Marble_UG_v1.2_April_2021.pdf>`_ for `VNP46A1`, see Table 3; for `VNP46A2` see Table 6; for `VNP46A3` and `VNP46A4`, see Table 9.
+    quality_flag_rm : list, optional
+        Values of quality flags to be removed. Default is [255].
+    output_directory : Path, optional
+        Directory to save the output GeoTIFF file. If None, uses the same directory as input file.
+    output_prefix : str, optional
+        Prefix for the output file name. If None, uses the input file name.
 
     Returns
     ------
     output_path: Path
-        Path to which export a GeoTIFF raster
+        Path to the exported GeoTIFF raster.
     """
     output_path = Path(output_directory, f.name).with_suffix(".tif")
     product_id = Product(f.stem.split(".")[0])
@@ -65,49 +71,31 @@ def h5_to_geotiff(
 
     with h5py.File(f, "r") as h5_data:
         attrs = h5_data.attrs
+        data_field_key = "HDFEOS/GRIDS/VNP_Grid_DNB/Data Fields"
 
         if product_id in [Product.VNP46A1, Product.VNP46A2]:
-            dataset = h5_data["HDFEOS"]["GRIDS"]["VNP_Grid_DNB"]["Data Fields"][
-                variable
-            ]
-
+            dataset = h5_data[data_field_key][variable]
             left, bottom, right, top = (
                 attrs.get("WestBoundingCoord"),
                 attrs.get("SouthBoundingCoord"),
                 attrs.get("EastBoundingCoord"),
                 attrs.get("NorthBoundingCoord"),
             )
-
-            qf = h5_data["HDFEOS"]["GRIDS"]["VNP_Grid_DNB"]["Data Fields"][
-                "Mandatory_Quality_Flag"
-            ]
+            qf = h5_data[data_field_key]["Mandatory_Quality_Flag"]
         else:
-            dataset = h5_data["HDFEOS"]["GRIDS"]["VIIRS_Grid_DNB_2d"]["Data Fields"][
-                variable
-            ]
-
-            lat = h5_data["HDFEOS"]["GRIDS"]["VIIRS_Grid_DNB_2d"]["Data Fields"]["lat"]
-            lon = h5_data["HDFEOS"]["GRIDS"]["VIIRS_Grid_DNB_2d"]["Data Fields"]["lon"]
+            data_field_key = "HDFEOS/GRIDS/VIIRS_Grid_DNB_2d/Data Fields"
+            dataset = h5_data[data_field_key][variable]
+            lat = h5_data[data_field_key]["lat"]
+            lon = h5_data[data_field_key]["lon"]
             left, bottom, right, top = min(lon), min(lat), max(lon), max(lat)
 
-            if len(quality_flag_rm) > 0:
-                variable_short = variable
-                variable_short = re.sub("_Num", "", variable_short)
-                variable_short = re.sub("_Std", "", variable_short)
-
-                h5_names = list(
-                    h5_data["HDFEOS"]["GRIDS"]["VIIRS_Grid_DNB_2d"][
-                        "Data Fields"
-                    ].keys()
+            if quality_flag_rm is not None:
+                variable_short = re.sub("_Num|_Std", "", variable)
+                qf_name = f"{variable_short}_Quality"
+                qf = h5_data[data_field_key].get(
+                    qf_name, h5_data[data_field_key].get(variable)
                 )
-                if (qf_name := f"{variable_short}_Quality") in h5_names:
-                    qf = h5_data["HDFEOS"]["GRIDS"]["VIIRS_Grid_DNB_2d"]["Data Fields"][
-                        qf_name
-                    ]
-                if variable in h5_names:
-                    qf = h5_data["HDFEOS"]["GRIDS"]["VIIRS_Grid_DNB_2d"]["Data Fields"][
-                        variable
-                    ]
+
         # Extract data and attributes
         scale_factor = dataset.attrs.get("scale_factor", 1)
         offset = dataset.attrs.get("offset", 0)
@@ -120,10 +108,7 @@ def h5_to_geotiff(
         # Get geospatial metadata (coordinates and attributes)
         height, width = data.shape
         transform = from_origin(
-            left,
-            top,
-            (right - left) / width,
-            (top - bottom) / height,
+            left, top, (right - left) / width, (top - bottom) / height
         )
 
         with rasterio.open(
@@ -303,7 +288,7 @@ def bm_raster(
                 continue
 
         # Filter out None values
-        datasets = list(filter(None, datasets))
+        datasets = filter(lambda item: item is not None, datasets)
 
         # Stack the individual dates along "time" dimension
         combined_dataset = (
