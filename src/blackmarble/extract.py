@@ -12,7 +12,7 @@ from .types import Product
 
 
 def bm_extract(
-    roi: geopandas.GeoDataFrame,
+    gdf: geopandas.GeoDataFrame,
     product_id: Product,
     date_range: datetime.date | List[datetime.date],
     bearer: str,
@@ -28,7 +28,7 @@ def bm_extract(
 
     Parameters
     ----------
-    roi: geopandas.GeoDataFrame
+    gdf: geopandas.GeoDataFrame
         Region of interest
 
     product_id: Product
@@ -94,8 +94,8 @@ def bm_extract(
     if variable is None:
         variable = VARIABLE_DEFAULT.get(Product(product_id))
 
-    ds = bm_raster(
-        roi,
+    dataset = bm_raster(
+        gdf,
         product_id,
         date_range,
         bearer,
@@ -108,19 +108,24 @@ def bm_extract(
     )
 
     results = []
-    for t in ds["time"]:
-        da = ds[variable].sel(time=t)
+    for time in dataset["time"]:
+        da = dataset[variable].sel(time=time)
 
-        zs = zonal_stats(
-            roi,
+        # Perform zonal statistics
+        zonal_statistics = zonal_stats(
+            gdf,
             da.values,
             nodata=np.nan,
             affine=transform(da),
             stats=aggfunc,
         )
-        zs = pd.DataFrame(zs).add_prefix("ntl_")
-        zs = pd.concat([roi, zs], axis=1)
-        zs["date"] = t.values
-        results.append(zs)
+        # Convert the statistics to a DataFrame and add the prefix 'ntl_'
+        zonal_statistics_df = pd.DataFrame(zonal_statistics).add_prefix("ntl_")
+
+        # Concatenate the GeoDataFrame with the zonal statistics
+        zonal_statistics_df = pd.concat([gdf, zonal_statistics_df], axis=1)
+        zonal_statistics_df["date"] = time.values
+
+        results.append(zonal_statistics_df)
 
     return pd.concat(results)
