@@ -195,7 +195,7 @@ def bm_raster(
 
     Parameters
     ----------
-    roi: geopandas.GeoDataFrame
+    gdf: geopandas.GeoDataFrame
         Region of interest
 
     product_id: Product
