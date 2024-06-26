@@ -27,8 +27,6 @@ VARIABLE_DEFAULT = {
     Product.VNP46A4: "NearNadir_Composite_Snow_Free",
 }
 
-import numpy as np
-
 
 def remove_fill_value(x, variable):
     """
