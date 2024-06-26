@@ -12,13 +12,13 @@ from .types import Product
 
 
 def bm_extract(
-    roi: geopandas.GeoDataFrame,
+    gdf: geopandas.GeoDataFrame,
     product_id: Product,
     date_range: datetime.date | List[datetime.date],
     bearer: str,
     aggfunc: str | List[str] = ["mean"],
     variable: Optional[str] = None,
-    quality_flag_rm: List[int] = [],
+    quality_flag_rm: List[int] = [255],
     check_all_tiles_exist: bool = True,
     file_directory: Optional[Path] = None,
     file_prefix: Optional[str] = None,
@@ -28,7 +28,7 @@ def bm_extract(
 
     Parameters
     ----------
-    roi: geopandas.GeoDataFrame
+    gdf: geopandas.GeoDataFrame
         Region of interest
 
     product_id: Product
@@ -57,19 +57,21 @@ def bm_extract(
         - For ``VNP46A4``, uses ``NearNadir_Composite_Snow_Free``.
 
     quality_flag: List[int], default = [255]
-        Quality flag values to use to set values to ``NA``. Each pixel has a quality flag value, where low quality values can be removed. Values are set to ``NA`` for each value in ther ``quality_flag_rm`` vector.
+        Quality flag values to use to set values to ``NA``. Each pixel has a quality flag value, where low quality values can be removed. Values are set to ``NA`` for each value in the ``quality_flag_rm`` vector.
 
         For ``VNP46A1`` and ``VNP46A2`` (daily data):
 
         - ``0``: High-quality, Persistent nighttime lights
         - ``1``: High-quality, Ephemeral nighttime Lights
         - ``2``: Poor-quality, Outlier, potential cloud contamination, or other issues
+        - ``255``: No retrieval, Fill value (masked out on ingestion)
 
         For ``VNP46A3`` and ``VNP46A4`` (monthly and annual data):
 
         - ``0``: Good-quality, The number of observations used for the composite is larger than 3
         - ``1``: Poor-quality, The number of observations used for the composite is less than or equal to 3
         - ``2``: Gap filled NTL based on historical data
+        - ``255``: Fill value
 
     check_all_tiles_exist: bool, default=True
         Check whether all Black Marble nighttime light tiles exist for the region of interest. Sometimes not all tiles are available, so the full region of interest may not be covered. By default (True), it skips cases where not all tiles are available.
@@ -92,8 +94,8 @@ def bm_extract(
     if variable is None:
         variable = VARIABLE_DEFAULT.get(Product(product_id))
 
-    ds = bm_raster(
-        roi,
+    dataset = bm_raster(
+        gdf,
         product_id,
         date_range,
         bearer,
@@ -106,19 +108,24 @@ def bm_extract(
     )
 
     results = []
-    for t in ds["time"]:
-        da = ds[variable].sel(time=t)
+    for time in dataset["time"]:
+        da = dataset[variable].sel(time=time)
 
-        zs = zonal_stats(
-            roi,
+        # Perform zonal statistics
+        zonal_statistics = zonal_stats(
+            gdf,
             da.values,
             nodata=np.nan,
             affine=transform(da),
             stats=aggfunc,
         )
-        zs = pd.DataFrame(zs).add_prefix("ntl_")
-        zs = pd.concat([roi, zs], axis=1)
-        zs["date"] = t.values
-        results.append(zs)
+        # Convert the statistics to a DataFrame and add the prefix 'ntl_'
+        zonal_statistics_df = pd.DataFrame(zonal_statistics).add_prefix("ntl_")
+
+        # Concatenate the GeoDataFrame with the zonal statistics
+        zonal_statistics_df = pd.concat([gdf, zonal_statistics_df], axis=1)
+        zonal_statistics_df["date"] = time.values
+
+        results.append(zonal_statistics_df)
 
     return pd.concat(results)

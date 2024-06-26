@@ -28,110 +28,11 @@ VARIABLE_DEFAULT = {
 }
 
 
-def remove_fill_value(x, variable):
-    """
-    # Remove fill values
-
-    # https://viirsland.gsfc.nasa.gov/PDF/BlackMarbleUserGuide_v1.2_20220916.pdf
-    # * Table 3 (page 12)
-    # * Table 6 (page 16)
-    # * Table 9 (page 18)
-
-    Parameters
-    ----------
-    x: np array of raster
-    variable: Black Marble Variable
-
-    Returns
-    ------
-    np array
-    """
-
-    #### 255
-    if variable in [
-        "Granule",
-        "Mandatory_Quality_Flag",
-        "Latest_High_Quality_Retrieval",
-        "Snow_Flag",
-        "DNB_Platform",
-        "Land_Water_Mask",
-        "AllAngle_Composite_Snow_Covered_Quality",
-        "AllAngle_Composite_Snow_Free_Quality",
-        "NearNadir_Composite_Snow_Covered_Quality",
-        "NearNadir_Composite_Snow_Free_Quality",
-        "OffNadir_Composite_Snow_Covered_Quality",
-        "OffNadir_Composite_Snow_Free_Quality",
-    ]:
-        x = np.where(x == 255, np.nan, x)
-
-    #### -999.9
-    if variable == "UTC_Time":
-        x = np.where(x == -999.9, np.nan, x)
-
-    #### -32768
-    if variable in [
-        "Sensor_Azimuth",
-        "Sensor_Zenith",
-        "Solar_Azimuth",
-        "Solar_Zenith",
-        "Lunar_Azimuth",
-        "Lunar_Zenith",
-        "Glint_Angle",
-        "Moon_Illumination_Fraction",
-        "Moon_Phase_Angle",
-    ]:
-        x = np.where(x == -32768, np.nan, x)
-
-    #### 65535
-    if variable in [
-        "DNB_At_Sensor_Radiance_500m",
-        "BrightnessTemperature_M12",
-        "BrightnessTemperature_M13",
-        "BrightnessTemperature_M15",
-        "BrightnessTemperature_M16",
-        "QF_Cloud_Mask",
-        "QF_DNB",
-        "QF_VIIRS_M10",
-        "QF_VIIRS_M11",
-        "QF_VIIRS_M12",
-        "QF_VIIRS_M13",
-        "QF_VIIRS_M15",
-        "QF_VIIRS_M16",
-        "Radiance_M10",
-        "Radiance_M11",
-        "QF_Cloud_Mask",
-        "DNB_BRDF-Corrected_NTL",
-        "DNB_Lunar_Irradiance",
-        "Gap_Filled_DNB_BRDF-Corrected_NTL",
-        "AllAngle_Composite_Snow_Covered",
-        "AllAngle_Composite_Snow_Covered_Num",
-        "AllAngle_Composite_Snow_Free",
-        "AllAngle_Composite_Snow_Free_Num",
-        "NearNadir_Composite_Snow_Covered",
-        "NearNadir_Composite_Snow_Covered_Num",
-        "NearNadir_Composite_Snow_Free",
-        "NearNadir_Composite_Snow_Free_Num",
-        "OffNadir_Composite_Snow_Covered",
-        "OffNadir_Composite_Snow_Covered_Num",
-        "OffNadir_Composite_Snow_Free",
-        "OffNadir_Composite_Snow_Free_Num",
-        "AllAngle_Composite_Snow_Covered_Std",
-        "AllAngle_Composite_Snow_Free_Std",
-        "NearNadir_Composite_Snow_Covered_Std",
-        "NearNadir_Composite_Snow_Free_Std",
-        "OffNadir_Composite_Snow_Covered_Std",
-        "OffNadir_Composite_Snow_Free_Std",
-    ]:
-        x = np.where(x == 65535, np.nan, x)
-
-    return x
-
-
 def h5_to_geotiff(
     f: Path,
     /,
     variable: str = None,
-    quality_flag_rm=[],
+    quality_flag_rm=[255],
     output_directory: Path = None,
     output_prefix: str = None,
 ):
@@ -203,25 +104,18 @@ def h5_to_geotiff(
                     qf = h5_data["HDFEOS"]["GRIDS"]["VIIRS_Grid_DNB_2d"]["Data Fields"][
                         qf_name
                     ]
-                # if variable in h5_names:
-                #    qf = h5_data["HDFEOS"]["GRIDS"]["VIIRS_Grid_DNB_2d"]["Data Fields"][
-                #        variable
-                #    ]
-
+                if variable in h5_names:
+                    qf = h5_data["HDFEOS"]["GRIDS"]["VIIRS_Grid_DNB_2d"]["Data Fields"][
+                        variable
+                    ]
         # Extract data and attributes
         scale_factor = dataset.attrs.get("scale_factor", 1)
         offset = dataset.attrs.get("offset", 0)
+        data = scale_factor * dataset[:] + offset
+        qf = qf[:]
 
-        data = dataset[:]
-
-        data = remove_fill_value(data, variable)
-        data = scale_factor * data + offset
-
-        if len(quality_flag_rm) > 0:
-            qf = qf[:]
-
-            for val in quality_flag_rm:
-                data = np.where(qf == val, np.nan, data)
+        for val in quality_flag_rm:
+            data = np.where(qf == val, np.nan, data)
 
         # Get geospatial metadata (coordinates and attributes)
         height, width = data.shape
@@ -291,7 +185,7 @@ def bm_raster(
     date_range: datetime.date | List[datetime.date],
     bearer: str,
     variable: Optional[str] = None,
-    quality_flag_rm: List[int] = [],
+    quality_flag_rm: List[int] = [255],
     check_all_tiles_exist: bool = True,
     file_directory: Optional[Path] = None,
     file_prefix: Optional[str] = None,
@@ -326,20 +220,22 @@ def bm_raster(
         - For ``VNP46A3``, uses ``NearNadir_Composite_Snow_Free``.
         - For ``VNP46A4``, uses ``NearNadir_Composite_Snow_Free``.
 
-    quality_flag: List[int], default = []
-        Quality flag values to use to set values to ``NA``. Each pixel has a quality flag value, where low quality values can be removed. Values are set to ``NA`` for each value in ther ``quality_flag_rm`` vector.
+    quality_flag: List[int], default = [255]
+        Quality flag values to use to set values to ``NA``. Each pixel has a quality flag value, where low quality values can be removed. Values are set to ``NA`` for each value in the ``quality_flag_rm`` vector.
 
         For ``VNP46A1`` and ``VNP46A2`` (daily data):
 
         - ``0``: High-quality, Persistent nighttime lights
         - ``1``: High-quality, Ephemeral nighttime Lights
         - ``2``: Poor-quality, Outlier, potential cloud contamination, or other issues
+        - ``255``: No retrieval, Fill value (masked out on ingestion)
 
         For ``VNP46A3`` and ``VNP46A4`` (monthly and annual data):
 
         - ``0``: Good-quality, The number of observations used for the composite is larger than 3
         - ``1``: Poor-quality, The number of observations used for the composite is less than or equal to 3
         - ``2``: Gap filled NTL based on historical data
+        - ``255``: Fill value
 
     check_all_tiles_exist: bool, default=True
         Check whether all Black Marble nighttime light tiles exist for the region of interest. Sometimes not all tiles are available, so the full region of interest may not be covered. By default (True), it skips cases where not all tiles are available.
@@ -358,7 +254,7 @@ def bm_raster(
     xarray.Dataset
         `xarray.Dataset` containing a stack of nighttime lights rasters
     """
-    # Validate and fix args
+    # Validate and fix arguments
     if not isinstance(quality_flag_rm, list):
         quality_flag_rm = [quality_flag_rm]
     if not isinstance(date_range, list):
@@ -378,7 +274,7 @@ def bm_raster(
         downloader = BlackMarbleDownloader(bearer, d)
         pathnames = downloader.download(gdf, product_id, date_range)
 
-        dx = []
+        datasets = []
         for date in tqdm(date_range, desc="COLLATING RESULTS | Processing..."):
             filenames = _pivot_paths_by_date(pathnames).get(date)
 
@@ -397,18 +293,21 @@ def bm_raster(
                     for f in filenames
                 ]
                 ds = merge_arrays(da)
-                ds = ds.rio.clip(gdf.geometry.apply(mapping), gdf.crs, drop=True)
-                ds["time"] = pd.to_datetime(date)
+                clipped_dataset = ds.rio.clip(
+                    gdf.geometry.apply(mapping), gdf.crs, drop=True
+                )
+                clipped_dataset["time"] = pd.to_datetime(date)
 
-                dx.append(ds.squeeze())
+                datasets.append(clipped_dataset.squeeze())
             except TypeError:
                 continue
 
-        dx = filter(lambda item: item is not None, dx)
+        # Filter out None values
+        datasets = list(filter(None, datasets))
 
         # Stack the individual dates along "time" dimension
-        ds = (
-            xr.concat(dx, dim="time", combine_attrs="drop_conflicts")
+        combined_dataset = (
+            xr.concat(datasets, dim="time", combine_attrs="drop_conflicts")
             .to_dataset(name=variable, promote_attrs=True)
             .sortby("time")
             .drop(["band", "spatial_ref"])
@@ -418,6 +317,6 @@ def bm_raster(
                 long_name=variable,
                 units="nW/cm²sr",
             )
-            ds[variable].attrs = {"units": "nW/cm²sr"}
+            combined_dataset[variable].attrs = {"units": "nW/cm²sr"}
 
-        return ds
+        return combined_dataset
