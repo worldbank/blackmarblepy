@@ -18,7 +18,7 @@ def bm_extract(
     bearer: str,
     aggfunc: str | List[str] = ["mean"],
     variable: Optional[str] = None,
-    quality_flag_rm: List[int] = [255],
+    drop_values_by_quality_flag: List[int] = [],
     check_all_tiles_exist: bool = True,
     file_directory: Optional[Path] = None,
     file_prefix: Optional[str] = None,
@@ -56,8 +56,8 @@ def bm_extract(
         - For ``VNP46A3``, uses ``NearNadir_Composite_Snow_Free``.
         - For ``VNP46A4``, uses ``NearNadir_Composite_Snow_Free``.
 
-    quality_flag: List[int], default = [255]
-        Quality flag values to use to set values to ``NA``. Each pixel has a quality flag value, where low quality values can be removed. Values are set to ``NA`` for each value in the ``quality_flag_rm`` vector.
+    drop_values_by_quality_flag: List[int], optional
+        List of the quality flag values for which to drop data values. Each pixel has a quality flag value, where low quality values can be removed. Values are set to ``NA`` for each value in the list.
 
         For ``VNP46A1`` and ``VNP46A2`` (daily data):
 
@@ -89,7 +89,7 @@ def bm_extract(
     Returns
     -------
     pandas.DataFrame
-        NASA Black Marble zonal statistics dataframe
+        Zonal statistics dataframe
     """
     if variable is None:
         variable = VARIABLE_DEFAULT.get(Product(product_id))
@@ -100,7 +100,7 @@ def bm_extract(
         date_range,
         bearer,
         variable,
-        quality_flag_rm,
+        drop_values_by_quality_flag,
         check_all_tiles_exist,
         file_directory,
         file_prefix,

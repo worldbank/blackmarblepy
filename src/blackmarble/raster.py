@@ -28,11 +28,117 @@ VARIABLE_DEFAULT = {
 }
 
 
+def _pivot_paths_by_date(paths: List[Path]):
+    """Return dictionary of paths by date
+
+    Returns
+    -------
+    dict
+    """
+    results = {}
+    for p in paths:
+        key = datetime.datetime.strptime(p.stem.split(".")[1], "A%Y%j").date()
+        if key not in results:
+            results[key] = []
+        results[key].append(p)
+
+    return results
+
+
+def _remove_fill_value(x, variable):
+    """
+    Remove fill values from the given numpy array based on the specified Black Marble variable.
+    Reference: https://viirsland.gsfc.nasa.gov/PDF/BlackMarbleUserGuide_v1.2_20220916.pdf
+      * Table 3 (page 12)
+      * Table 6 (page 16)
+      * Table 9 (page 18)
+
+    Parameters
+    ----------
+    x: np.array
+        Numpy array of raster data.
+    variable: str
+        Black Marble Variable name.
+
+    Returns
+    -------
+    np.array
+        Numpy array with fill values replaced by np.nan.
+    """
+
+    # Dictionary mapping variables to their fill values
+    fill_values = {
+        "Granule": 255,
+        "Mandatory_Quality_Flag": 255,
+        "Latest_High_Quality_Retrieval": 255,
+        "Snow_Flag": 255,
+        "DNB_Platform": 255,
+        "Land_Water_Mask": 255,
+        "AllAngle_Composite_Snow_Covered_Quality": 255,
+        "AllAngle_Composite_Snow_Free_Quality": 255,
+        "NearNadir_Composite_Snow_Covered_Quality": 255,
+        "NearNadir_Composite_Snow_Free_Quality": 255,
+        "OffNadir_Composite_Snow_Covered_Quality": 255,
+        "OffNadir_Composite_Snow_Free_Quality": 255,
+        "UTC_Time": -999.9,
+        "Sensor_Azimuth": -32768,
+        "Sensor_Zenith": -32768,
+        "Solar_Azimuth": -32768,
+        "Solar_Zenith": -32768,
+        "Lunar_Azimuth": -32768,
+        "Lunar_Zenith": -32768,
+        "Glint_Angle": -32768,
+        "Moon_Illumination_Fraction": -32768,
+        "Moon_Phase_Angle": -32768,
+        "DNB_At_Sensor_Radiance_500m": 65535,
+        "BrightnessTemperature_M12": 65535,
+        "BrightnessTemperature_M13": 65535,
+        "BrightnessTemperature_M15": 65535,
+        "BrightnessTemperature_M16": 65535,
+        "QF_Cloud_Mask": 65535,
+        "QF_DNB": 65535,
+        "QF_VIIRS_M10": 65535,
+        "QF_VIIRS_M11": 65535,
+        "QF_VIIRS_M12": 65535,
+        "QF_VIIRS_M13": 65535,
+        "QF_VIIRS_M15": 65535,
+        "QF_VIIRS_M16": 65535,
+        "Radiance_M10": 65535,
+        "Radiance_M11": 65535,
+        "DNB_BRDF-Corrected_NTL": 65535,
+        "DNB_Lunar_Irradiance": 65535,
+        "Gap_Filled_DNB_BRDF-Corrected_NTL": 65535,
+        "AllAngle_Composite_Snow_Covered": 65535,
+        "AllAngle_Composite_Snow_Covered_Num": 65535,
+        "AllAngle_Composite_Snow_Free": 65535,
+        "AllAngle_Composite_Snow_Free_Num": 65535,
+        "NearNadir_Composite_Snow_Covered": 65535,
+        "NearNadir_Composite_Snow_Covered_Num": 65535,
+        "NearNadir_Composite_Snow_Free": 65535,
+        "NearNadir_Composite_Snow_Free_Num": 65535,
+        "OffNadir_Composite_Snow_Covered": 65535,
+        "OffNadir_Composite_Snow_Covered_Num": 65535,
+        "OffNadir_Composite_Snow_Free": 65535,
+        "OffNadir_Composite_Snow_Free_Num": 65535,
+        "AllAngle_Composite_Snow_Covered_Std": 65535,
+        "AllAngle_Composite_Snow_Free_Std": 65535,
+        "NearNadir_Composite_Snow_Covered_Std": 65535,
+        "NearNadir_Composite_Snow_Free_Std": 65535,
+        "OffNadir_Composite_Snow_Covered_Std": 65535,
+        "OffNadir_Composite_Snow_Free_Std": 65535,
+    }
+
+    if fill_value := fill_values.get(variable):
+        x = np.where(x == fill_value, np.nan, x)
+
+    return x
+
+
 def h5_to_geotiff(
     f: Path,
     /,
     variable: str = None,
-    quality_flag_rm=None,
+    drop_values_by_quality_flag: List[int] = [255],
     output_directory: Path = None,
     output_prefix: str = None,
 ):
@@ -51,10 +157,13 @@ def h5_to_geotiff(
             - VNP46A3: 'NearNadir_Composite_Snow_Free'
             - VNP46A4: 'NearNadir_Composite_Snow_Free'
         Further information, please see the `NASA Black Marble User Guide <https://ladsweb.modaps.eosdis.nasa.gov/api/v2/content/archives/Document%20Archive/Science%20Data%20Product%20Documentation/VIIRS_Black_Marble_UG_v1.2_April_2021.pdf>`_ for `VNP46A1`, see Table 3; for `VNP46A2` see Table 6; for `VNP46A3` and `VNP46A4`, see Table 9.
-    quality_flag_rm : list, optional
-        Values of quality flags to be removed. Default is [255].
+
+    drop_values_by_quality_flag: List[int], optional
+        List of the quality flag values for which to drop data values. Each pixel has a quality flag value, where low quality values can be removed. Values are set to ``NA`` for each value in the list.
+
     output_directory : Path, optional
         Directory to save the output GeoTIFF file. If None, uses the same directory as input file.
+
     output_prefix : str, optional
         Prefix for the output file name. If None, uses the input file name.
 
@@ -89,20 +198,21 @@ def h5_to_geotiff(
             lon = h5_data[data_field_key]["lon"]
             left, bottom, right, top = min(lon), min(lat), max(lon), max(lat)
 
-            if quality_flag_rm is not None:
-                variable_short = re.sub("_Num|_Std", "", variable)
-                qf_name = f"{variable_short}_Quality"
-                qf = h5_data[data_field_key].get(
-                    qf_name, h5_data[data_field_key].get(variable)
-                )
+            variable_short = re.sub("_Num|_Std", "", variable)
+            qf_name = f"{variable_short}_Quality"
+            qf = h5_data[data_field_key].get(
+                qf_name, h5_data[data_field_key].get(variable)
+            )
 
         # Extract data and attributes
         scale_factor = dataset.attrs.get("scale_factor", 1)
         offset = dataset.attrs.get("offset", 0)
-        data = scale_factor * dataset[:] + offset
+        data = scale_factor * _remove_fill_value(dataset[:], variable) + offset
+
+        # Quality flag
         qf = qf[:]
 
-        for val in quality_flag_rm:
+        for val in drop_values_by_quality_flag:
             data = np.where(qf == val, np.nan, data)
 
         # Get geospatial metadata (coordinates and attributes)
@@ -146,23 +256,6 @@ def transform(da: xr.DataArray):
     )
 
 
-def _pivot_paths_by_date(paths: List[Path]):
-    """Return dictionary of paths by date
-
-    Returns
-    -------
-    dict
-    """
-    results = {}
-    for p in paths:
-        key = datetime.datetime.strptime(p.stem.split(".")[1], "A%Y%j").date()
-        if key not in results:
-            results[key] = []
-        results[key].append(p)
-
-    return results
-
-
 @validate_call(config=ConfigDict(arbitrary_types_allowed=True))
 def bm_raster(
     gdf: geopandas.GeoDataFrame,
@@ -170,7 +263,7 @@ def bm_raster(
     date_range: datetime.date | List[datetime.date],
     bearer: str,
     variable: Optional[str] = None,
-    quality_flag_rm: List[int] = [255],
+    drop_values_by_quality_flag: List[int] = [],
     check_all_tiles_exist: bool = True,
     file_directory: Optional[Path] = None,
     file_prefix: Optional[str] = None,
@@ -205,8 +298,8 @@ def bm_raster(
         - For ``VNP46A3``, uses ``NearNadir_Composite_Snow_Free``.
         - For ``VNP46A4``, uses ``NearNadir_Composite_Snow_Free``.
 
-    quality_flag: List[int], default = [255]
-        Quality flag values to use to set values to ``NA``. Each pixel has a quality flag value, where low quality values can be removed. Values are set to ``NA`` for each value in the ``quality_flag_rm`` vector.
+    drop_values_by_quality_flag: List[int], optional
+        List of the quality flag values for which to drop data values. Each pixel has a quality flag value, where low quality values can be removed. Values are set to ``NA`` for each value in the list.
 
         For ``VNP46A1`` and ``VNP46A2`` (daily data):
 
@@ -240,8 +333,8 @@ def bm_raster(
         `xarray.Dataset` containing a stack of nighttime lights rasters
     """
     # Validate and fix arguments
-    if not isinstance(quality_flag_rm, list):
-        quality_flag_rm = [quality_flag_rm]
+    if not isinstance(drop_values_by_quality_flag, list):
+        drop_values_by_quality_flag = [drop_values_by_quality_flag]
     if not isinstance(date_range, list):
         date_range = [date_range]
 
@@ -270,7 +363,7 @@ def bm_raster(
                         h5_to_geotiff(
                             f,
                             variable=variable,
-                            quality_flag_rm=quality_flag_rm,
+                            drop_values_by_quality_flag=drop_values_by_quality_flag,
                             output_prefix=file_prefix,
                             output_directory=d,
                         ),
