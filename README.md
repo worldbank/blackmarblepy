@@ -74,7 +74,7 @@ To build the documentation locally, after (1) and (2) above, please follow these
     pip install -e .[docs]
   ```
 
-- Build the documentation:m
+- Build the documentation:
 
   ```shell
     sphinx-build docs _build/html -b html
