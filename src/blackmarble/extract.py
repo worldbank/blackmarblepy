@@ -20,9 +20,8 @@ def bm_extract(
     variable: Optional[str] = None,
     drop_values_by_quality_flag: List[int] = [],
     check_all_tiles_exist: bool = True,
-    file_directory: Optional[Path] = None,
-    file_prefix: Optional[str] = None,
-    file_skip_if_exists: bool = True,
+    output_directory: Optional[Path] = None,
+    output_skip_if_exists: bool = True,
 ):
     """Extract and aggregate nighttime lights zonal statistics from `NASA Black Marble <https://blackmarble.gsfc.nasa.gov>`_.
 
@@ -76,13 +75,10 @@ def bm_extract(
     check_all_tiles_exist: bool, default=True
         Check whether all Black Marble nighttime light tiles exist for the region of interest. Sometimes not all tiles are available, so the full region of interest may not be covered. By default (True), it skips cases where not all tiles are available.
 
-    file_directory: pathlib.Path, optional
-        Where to produce output. By default, the output will be produced onto a temporary directory.
+    output_directory: pathlib.Path, optional
+        Directory to produce output. By default, the output will be produced onto a temporary directory.
 
-    file_directory_prefix: str, optional
-        Prefix
-
-    file_skip_if_exists: bool, default=True
+    outout_skip_if_exists: bool, default=True
         Whether to skip downloading or extracting data if the data file for that date already exists.
 
      bearer
@@ -102,9 +98,8 @@ def bm_extract(
         variable,
         drop_values_by_quality_flag,
         check_all_tiles_exist,
-        file_directory,
-        file_prefix,
-        file_skip_if_exists,
+        output_directory,
+        output_skip_if_exists,
     )
 
     results = []

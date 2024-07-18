@@ -140,7 +140,6 @@ def h5_to_geotiff(
     variable: str = None,
     drop_values_by_quality_flag: List[int] = [255],
     output_directory: Path = None,
-    output_prefix: str = None,
 ):
     """
     Convert HDF5 file to GeoTIFF for a selected (or default) variable from NASA Black Marble data
@@ -163,9 +162,6 @@ def h5_to_geotiff(
 
     output_directory : Path, optional
         Directory to save the output GeoTIFF file. If None, uses the same directory as input file.
-
-    output_prefix : str, optional
-        Prefix for the output file name. If None, uses the input file name.
 
     Returns
     ------
@@ -265,9 +261,8 @@ def bm_raster(
     variable: Optional[str] = None,
     drop_values_by_quality_flag: List[int] = [],
     check_all_tiles_exist: bool = True,
-    file_directory: Optional[Path] = None,
-    file_prefix: Optional[str] = None,
-    file_skip_if_exists: bool = True,
+    output_directory: Optional[Path] = None,
+    output_skip_if_exists: bool = True,
 ):
     """Create a stack of nighttime lights rasters by retrieiving from `NASA Black Marble <https://blackmarble.gsfc.nasa.gov>`_ data.
 
@@ -318,13 +313,10 @@ def bm_raster(
     check_all_tiles_exist: bool, default=True
         Check whether all Black Marble nighttime light tiles exist for the region of interest. Sometimes not all tiles are available, so the full region of interest may not be covered. By default (True), it skips cases where not all tiles are available.
 
-    file_directory: pathlib.Path, optional
-        Where to produce output. By default, the output will be produced onto a temporary directory.
+    output_directory: pathlib.Path, optional
+        Directory to produce output. By default, the output will be produced onto a temporary directory.
 
-    file_prefix: str, optional
-        Prefix
-
-    file_skip_if_exists: bool, default=True
+    output_skip_if_exists: bool, default=True
         Whether to skip downloading or extracting data if the data file for that date already exists.
 
     Returns
@@ -348,9 +340,11 @@ def bm_raster(
             date_range = sorted(set([d.replace(day=1, month=1) for d in date_range]))
 
     # Download and construct Dataset
-    with file_directory if file_directory else tempfile.TemporaryDirectory() as d:
+    with output_directory if output_directory else tempfile.TemporaryDirectory() as d:
         downloader = BlackMarbleDownloader(bearer, d)
-        pathnames = downloader.download(gdf, product_id, date_range)
+        pathnames = downloader.download(
+            gdf, product_id, date_range, output_skip_if_exists
+        )
 
         datasets = []
         for date in tqdm(date_range, desc="COLLATING RESULTS | Processing..."):
@@ -364,7 +358,6 @@ def bm_raster(
                             f,
                             variable=variable,
                             drop_values_by_quality_flag=drop_values_by_quality_flag,
-                            output_prefix=file_prefix,
                             output_directory=d,
                         ),
                     )
