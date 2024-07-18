@@ -98,7 +98,7 @@ daily = bm_raster(
 )
 ```
 
-For more detailed information and examples, please refer to the [documentation](https://worldbank.github.io/blackmarblepy/examples/blackmarblepy.html).
+For more detailed information and examples, please refer to the [documentation](https://worldbank.github.io/blackmarblepy/notebooks/blackmarblepy.html).
 
 ## Contributing
 
