@@ -134,6 +134,7 @@ class BlackMarbleDownloader(BaseModel):
     def _download_file(
         self,
         name: str,
+        skip_if_exists: bool = True,
     ):
         """Download NASA Black Marble file
 
@@ -150,25 +151,25 @@ class BlackMarbleDownloader(BaseModel):
         url = f"{self.URL}{name}"
         name = name.split("/")[-1]
 
-        with open(filename := Path(self.directory, name), "wb+") as f:
-            with httpx.stream(
-                "GET",
-                url,
-                headers={"Authorization": f"Bearer {self.bearer}"},
-            ) as response:
-                total = int(response.headers["Content-Length"])
-                with tqdm(
-                    total=total,
-                    unit="B",
-                    unit_scale=True,
-                    leave=None,
-                ) as pbar:
-                    pbar.set_description(f"Retrieving {name}...")
-                    for chunk in response.iter_raw():
-                        f.write(chunk)
-                        pbar.update(len(chunk))
-
-                return filename
+        if not (filename := Path(self.directory, name)).exists() or not skip_if_exists:
+            with open(filename, "wb+") as f:
+                with httpx.stream(
+                    "GET",
+                    url,
+                    headers={"Authorization": f"Bearer {self.bearer}"},
+                ) as response:
+                    total = int(response.headers["Content-Length"])
+                    with tqdm(
+                        total=total,
+                        unit="B",
+                        unit_scale=True,
+                        leave=None,
+                    ) as pbar:
+                        pbar.set_description(f"Downloading {name}...")
+                        for chunk in response.iter_raw():
+                            f.write(chunk)
+                            pbar.update(len(chunk))
+        return filename
 
     def download(
         self,
@@ -177,12 +178,13 @@ class BlackMarbleDownloader(BaseModel):
         date_range: List[datetime.date],
         skip_if_exists: bool = True,
     ):
-        """Download (in parallel) from NASA Black Marble archive
+        """
+        Downloads files asynchronously from NASA Black Marble archive.
 
         Parameters
         ----------
         gdf: geopandas.GeoDataFrame
-            Region of Interest
+             Region of Interest. Converted to EPSG:4326 and intersected with Black Mable tiles
 
         product: Product
             Nasa Black Marble Product Id (e.g, VNP46A1)
@@ -192,22 +194,32 @@ class BlackMarbleDownloader(BaseModel):
 
         skip_if_exists: bool, default=True
             Whether to skip downloading data if file already exists
+
+        Returns
+        -------
+        list: List[pathlib.Path]
+            List of downloaded H5 filenames.
         """
+        # Convert to EPSG:4326 and intersect with self.TILES
         gdf = geopandas.overlay(
             gdf.to_crs("EPSG:4326").dissolve(), self.TILES, how="intersection"
         )
 
+        # Fetch manifest data asynchronously
         bm_files_df = asyncio.run(self.get_manifest(gdf, product_id, date_range))
+
+        # Filter files to those intersecting with Black Marble tiles
         bm_files_df = bm_files_df[
             bm_files_df["name"].str.contains("|".join(gdf["TileID"]))
         ]
-        names = bm_files_df["fileURL"].tolist()
 
-        args = [(name,) for name in names]
+        # Prepare arguments for parallel download
+        names = bm_files_df["fileURL"].tolist()
+        args = [(name, skip_if_exists) for name in names]
         return pqdm(
             args,
             self._download_file,
-            n_jobs=16,
+            n_jobs=4,  # os.cpu_count(),
             argument_type="args",
             desc="Downloading...",
         )
