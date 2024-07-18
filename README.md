@@ -140,7 +140,7 @@ Robert Marty
 
 ## Citation
 
-When using **BlackMarblePy**, your support is much appreciated! Please consider using the following citation or download [bibliography.bib](bibliography.bib):
+When using **BlackMarblePy**, your support is much appreciated! Please consider using the following citation or download [bibliography.bib](https://raw.githubusercontent.com/worldbank/blackmarblepy/main/docs/bibliography.bib):
 
 ```bibtex
 @misc{blackmarblepy,
