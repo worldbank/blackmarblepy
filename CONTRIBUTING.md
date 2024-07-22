@@ -1,6 +1,6 @@
 # CONTRIBUTING
 
-Thank you for considering contributing! We appreciate your interest in helping us improve our project. By contributing, you agree to abide by our [Code of Conduct](docs/CODE_OF_CONDUCT.md).
+Thank you for considering contributing! We appreciate your interest in helping us improve our project. By contributing, you agree to abide by our [Code of Conduct](CODE_OF_CONDUCT.md).
 
 Please take a moment to review this document for important information on how to contribute effectively.
 
@@ -38,8 +38,8 @@ If you're contributing code, please follow these guidelines:
 
 ## Code of Conduct
 
-Please note that we have a [Code of Conduct](docs/CODE_OF_CONDUCT) in place. We expect all contributors to adhere to it, both in interactions within this project and in interactions with other project members.
+Please note that we have a [Code of Conduct](CODE_OF_CONDUCT.md) in place. We expect all contributors to adhere to it, both in interactions within this project and in interactions with other project members.
 
 ## Licensing
 
-By contributing to this project, you agree that your contributions will be licensed under the project's [LICENSE](LICENSE).
+By contributing to this project, you agree that your contributions will be licensed under the project's [LICENSE](../LICENSE).

@@ -13,9 +13,9 @@
 
 ## Features
 
-- Download daily, monthly, and yearly nighttime lights data for user-specified region of interest and time.
+- Download *daily*, *monthly*, and *yearly* nighttime lights data for user-specified **region of interest** and **time**.
 - Parallel downloading for faster data retrieval and automatic retry mechanism for handling network errors.
-- Access NASA Black Marble as a Xarray Dataset
+- Access [NASA Black Marble](https://blackmarble.gsfc.nasa.gov) as a [xarray.Dataset](https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html)
   - Integrated data visualization with customization options
     - Choose between various plot types, including bar charts, line graphs, and heatmaps.
     - Customize plot appearance with color palettes, axes labels, titles, and legends.
@@ -162,4 +162,4 @@ When using **BlackMarblePy**, your support is much appreciated! Please consider 
 
 ## License
 
-This projects is licensed under the [**Mozilla Public License**](https://opensource.org/license/mpl-2-0/) - see the [LICENSE](LICENSE) file for details.
+This projects is licensed under the [**Mozilla Public License**](https://opensource.org/license/mpl-2-0/) - see the **LICENSE** file for details.
