@@ -25,17 +25,21 @@
     - Calculate zonal statistics like mean and sum.
     - Plot time series of nighttime lights data.
 
-## Installation
+## Documentation
+
+The [**BlackMarblePy**](https://pypi.org/project/blackmarblepy) library allows you to interact with and manipulate data from NASA's Black Marble, which provides global nighttime lights data. Below is a guide on how to use the key functionalities of the library.
+
+### Installation
 
 **BlackMarblePy** is available on [PyPI](https://pypi.org) as [blackmarblepy](https://pypi.org/project/blackmarblepy) and can installed using `pip`:
 
-### From PyPI
+#### From PyPI
 
 ```shell
 pip install blackmarblepy
 ```
 
-### From Source
+#### From Source
 
 1. Clone or download this repository to your local machine. Then, navigate to the root directory of the repository:
 
@@ -65,7 +69,7 @@ pip install blackmarblepy
 
     The `-e` flag stands for "editable," meaning changes to the source code will immediately affect the installed package.
 
-### Building Documentation Locally
+#### Building Documentation Locally
 
 To build the documentation locally, after (1) and (2) above, please follow these steps:
 
@@ -83,7 +87,7 @@ To build the documentation locally, after (1) and (2) above, please follow these
 
 The generated documentation will be available in the `_build/html` directory. Open the `index.html` file in a web browser to view it.
 
-## Usage
+### Usage
 
 Before downloading and extracting Black Marble data, define the [NASA LAADS archive](https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/5000/VNP46A3/) `bearer` token, and define a region of interest (i.e., `gdf` as a [`geopandas.GeoDataFrame`](https://geopandas.org/en/stable/docs/reference/api/geopandas.GeoDataFrame.html)).
 
@@ -99,7 +103,11 @@ daily = bm_raster(
 )
 ```
 
-For more detailed information and examples, please refer to the [documentation](https://worldbank.github.io/blackmarblepy/notebooks/blackmarblepy.html).
+For more detailed information and examples, please refer to the [examples](https://worldbank.github.io/blackmarblepy/notebooks/blackmarblepy.html).
+
+### Full API Reference
+
+For a full reference of all available functions and their parameters, please refer to the [official documentation](api/blackmarble.rst).
 
 ## Contributing
 
