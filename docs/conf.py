@@ -50,7 +50,6 @@ html_theme_options = {
     "extra_footer": "",
     "home_page_in_toc": False,
     "announcement": "",
-    "analytics": {"google_analytics_id": "G-ZWF69GP65G"},
     "use_repository_button": True,
     "use_edit_page_button": True,
     "use_issues_button": True,
