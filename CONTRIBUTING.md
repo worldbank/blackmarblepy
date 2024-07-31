@@ -1,6 +1,6 @@
 # CONTRIBUTING
 
-Thank you for considering contributing! We appreciate your interest in helping us improve our project. By contributing, you agree to abide by our [Code of Conduct](./CODE_OF_CONDUCT.md).
+Thank you for considering contributing! We appreciate your interest in helping us improve our project. By contributing, you agree to abide by our [Code of Conduct](CODE_OF_CONDUCT.md).
 
 Please take a moment to review this document for important information on how to contribute effectively.
 
