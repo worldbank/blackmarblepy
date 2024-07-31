@@ -1,6 +1,6 @@
 # CONTRIBUTING
 
-Thank you for considering contributing! We appreciate your interest in helping us improve our project. By contributing, you agree to abide by our [Code of Conduct](CODE_OF_CONDUCT.md).
+Thank you for considering contributing! We appreciate your interest in helping us improve our project. By contributing, you agree to abide by our [Code of Conduct](./CODE_OF_CONDUCT.md).
 
 Please take a moment to review this document for important information on how to contribute effectively.
 
@@ -12,7 +12,7 @@ There are several ways you can contribute to this project:
 
 - **Feature Requests**: If you have an idea for a new feature or enhancement, please open an issue on our GitHub issue tracker and label it as a "feature request." Describe the feature and its use case in detail.
 
-- **Pull Requests:** If you'd like to contribute code or documentation changes, we encourage you to submit a pull request (PR). Please follow the guidelines outlined in the [Contributing Code](CONTRIBUTING.md) section below.
+- **Pull Requests:** If you'd like to contribute code or documentation changes, we encourage you to submit a pull request (PR). Please follow the guidelines outlined in the [Contributing Code](#contributing-code) section below.
 
 - **Documentation:** If you find any errors or have suggestions for improving our documentation, you can submit changes directly through a pull request.
 

@@ -25,7 +25,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinxcontrib.apidoc",
 ]
-external_toc_exclude_missing = True
+external_toc_exclude_missing = False
 external_toc_path = "_toc.yml"
 extra_extensions = ["sphinxcontrib.apidoc"]
 html_baseurl = "https://worldbank.github.io/blackmarblepy"
