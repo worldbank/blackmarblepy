@@ -2,10 +2,9 @@ format: jb-book
 root: README
 
 parts:
-  - caption: Documentation
+  - caption: API Reference
     chapters:
       - file: api/blackmarble.rst
-      - file: CONTRIBUTING
   - caption: Examples
     chapters:
       - file: notebooks/blackmarblepy.ipynb

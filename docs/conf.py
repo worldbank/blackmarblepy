@@ -25,7 +25,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinxcontrib.apidoc",
 ]
-external_toc_exclude_missing = True
+external_toc_exclude_missing = False
 external_toc_path = "_toc.yml"
 extra_extensions = ["sphinxcontrib.apidoc"]
 html_baseurl = "https://worldbank.github.io/blackmarblepy"
@@ -50,7 +50,6 @@ html_theme_options = {
     "extra_footer": "",
     "home_page_in_toc": False,
     "announcement": "",
-    "analytics": {"google_analytics_id": "G-ZWF69GP65G"},
     "use_repository_button": True,
     "use_edit_page_button": True,
     "use_issues_button": True,
