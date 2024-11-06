@@ -158,3 +158,5 @@ _build/
 .jupyter/
 *.tif
 *.h5
+
+docs/api/
