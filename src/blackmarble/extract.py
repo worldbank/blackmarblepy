@@ -48,7 +48,7 @@ def bm_extract(
         Which statistics to calculate for each zone. All possible choices are listed in `rasterstats.utils.VALID_STATS <https://pythonhosted.org/rasterstats/rasterstats.html?highlight=zonal_stats#rasterstats.gen>`_.
 
     variable: str, default = None
-        Variable to create GeoTIFF raster. Further information, please see the `NASA Black Marble User Guide <https://ladsweb.modaps.eosdis.nasa.gov/api/v2/content/archives/Document%20Archive/Science%20Data%20Product%20Documentation/VIIRS_Black_Marble_UG_v1.2_April_2021.pdf>`_ for `VNP46A1`, see Table 3; for `VNP46A2` see Table 6; for `VNP46A3` and `VNP46A4`, see Table 9. By default, it uses the following default variables:
+        Variable to create GeoTIFF raster. Further information, please see the `NASA Black Marble User Guide <https://viirsland.gsfc.nasa.gov/PDF/BlackMarbleUserGuide_Collection2.0.pdf>`. By default, it uses the following default variables:
 
         - For ``VNP46A1``, uses ``DNB_At_Sensor_Radiance_500m``
         - For ``VNP46A2``, uses ``Gap_Filled_DNB_BRDF-Corrected_NTL``
@@ -60,9 +60,12 @@ def bm_extract(
 
         For ``VNP46A1`` and ``VNP46A2`` (daily data):
 
-        - ``0``: High-quality, Persistent nighttime lights
-        - ``1``: High-quality, Ephemeral nighttime Lights
-        - ``2``: Poor-quality, Outlier, potential cloud contamination, or other issues
+        - ``0``: High-quality
+        - ``1``: Poor-quality - Main Algorithm (Outlier, Potential cloud contamination or other issues)
+        - ``2``: Poor-quality - Main Algorithm (high solar zenith angle 102-108 degrees)
+        - ``3``: Poor-quality - Main Algorithm (Lunar eclipse)
+        - ``4``: Poor-quality - Main Algorithm (Aurora)
+        - ``5``: Poor-quality - Main Algorithm (Glint)
         - ``255``: No retrieval, Fill value (masked out on ingestion)
 
         For ``VNP46A3`` and ``VNP46A4`` (monthly and annual data):

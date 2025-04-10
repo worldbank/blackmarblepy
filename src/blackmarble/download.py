@@ -103,7 +103,7 @@ class BlackMarbleDownloader(BaseModel):
                     url = f"{self.URL}/api/v1/files"
                     params = {
                         "product": product_id.value,
-                        "collection": "5000",
+                        "collection": "5200",
                         "dateRanges": f"{min(chunk)}..{max(chunk)}",
                         "areaOfInterest": row["bbox"],
                     }
