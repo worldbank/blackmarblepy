@@ -48,7 +48,7 @@ def _pivot_paths_by_date(paths: List[Path]):
 def _remove_fill_value(x, variable):
     """
     Remove fill values from the given numpy array based on the specified Black Marble variable.
-    Reference: https://viirsland.gsfc.nasa.gov/PDF/BlackMarbleUserGuide_v1.2_20220916.pdf
+    Reference: https://viirsland.gsfc.nasa.gov/PDF/BlackMarbleUserGuide_Collection2.0
       * Table 3 (page 12)
       * Table 6 (page 16)
       * Table 9 (page 18)
@@ -155,7 +155,7 @@ def h5_to_geotiff(
             - VNP46A2: 'Gap_Filled_DNB_BRDF-Corrected_NTL'
             - VNP46A3: 'NearNadir_Composite_Snow_Free'
             - VNP46A4: 'NearNadir_Composite_Snow_Free'
-        Further information, please see the `NASA Black Marble User Guide <https://ladsweb.modaps.eosdis.nasa.gov/api/v2/content/archives/Document%20Archive/Science%20Data%20Product%20Documentation/VIIRS_Black_Marble_UG_v1.2_April_2021.pdf>`_ for `VNP46A1`, see Table 3; for `VNP46A2` see Table 6; for `VNP46A3` and `VNP46A4`, see Table 9.
+        Further information, please see the `NASA Black Marble User Guide <https://viirsland.gsfc.nasa.gov/PDF/BlackMarbleUserGuide_Collection2.0>`.
 
     drop_values_by_quality_flag: List[int], optional
         List of the quality flag values for which to drop data values. Each pixel has a quality flag value, where low quality values can be removed. Values are set to ``NA`` for each value in the list.
@@ -286,7 +286,7 @@ def bm_raster(
         NASA Earthdata Bearer token. Please refer to the `documentation <https://worldbank.github.io/blackmarblepy/examples/blackmarblepy.html#nasa-earthdata-bearer-token>`_.
 
     variable: str, default = None
-        Variable for which to a GeoTIFF raster. Further information, please see the `NASA Black Marble User Guide <https://ladsweb.modaps.eosdis.nasa.gov/api/v2/content/archives/Document%20Archive/Science%20Data%20Product%20Documentation/VIIRS_Black_Marble_UG_v1.2_April_2021.pdf>`_ for `VNP46A1`, see Table 3; for `VNP46A2` see Table 6; for `VNP46A3` and `VNP46A4`, see Table 9. By default, it uses the following default variables:
+        Variable for which to a GeoTIFF raster. Further information, please see the `NASA Black Marble User Guide <https://viirsland.gsfc.nasa.gov/PDF/BlackMarbleUserGuide_Collection2.0.pdf>` . By default, it uses the following default variables:
 
         - For ``VNP46A1``, uses ``DNB_At_Sensor_Radiance_500m``
         - For ``VNP46A2``, uses ``Gap_Filled_DNB_BRDF-Corrected_NTL``
@@ -298,9 +298,12 @@ def bm_raster(
 
         For ``VNP46A1`` and ``VNP46A2`` (daily data):
 
-        - ``0``: High-quality, Persistent nighttime lights
-        - ``1``: High-quality, Ephemeral nighttime Lights
-        - ``2``: Poor-quality, Outlier, potential cloud contamination, or other issues
+        - ``0``: High-quality
+        - ``1``: Poor-quality - Main Algorithm (Outlier, Potential cloud contamination or other issues)
+        - ``2``: Poor-quality - Main Algorithm (high solar zenith angle 102-108 degrees)
+        - ``3``: Poor-quality - Main Algorithm (Lunar eclipse)
+        - ``4``: Poor-quality - Main Algorithm (Aurora)
+        - ``5``: Poor-quality - Main Algorithm (Glint)
         - ``255``: No retrieval, Fill value (masked out on ingestion)
 
         For ``VNP46A3`` and ``VNP46A4`` (monthly and annual data):
