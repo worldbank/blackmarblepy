@@ -120,6 +120,7 @@ class BlackMarbleDownloader(BaseModel):
 
             rs = []
             for r in responses:
+                r.raise_for_status()
                 try:
                     rs.append(pd.DataFrame(r.json()).T)
                 except json.decoder.JSONDecodeError:
@@ -156,9 +157,15 @@ class BlackMarbleDownloader(BaseModel):
                 with httpx.stream(
                     "GET",
                     url,
+                    follow_redirects=True,
                     headers={"Authorization": f"Bearer {self.bearer}"},
                 ) as response:
-                    total = int(response.headers["Content-Length"])
+                    response.raise_for_status()
+                    if "text/html" in response.headers.get("Content-Type"):
+                        raise Exception(
+                            f"Received HTML while trying to download - possibly invalid token: {url}"
+                        )
+                    total = int(response.headers.get("Content-Length", 0))
                     with tqdm(
                         total=total,
                         unit="B",
@@ -216,10 +223,16 @@ class BlackMarbleDownloader(BaseModel):
         # Prepare arguments for parallel download
         names = bm_files_df["fileURL"].tolist()
         args = [(name, skip_if_exists) for name in names]
-        return pqdm(
+        results = pqdm(
             args,
             self._download_file,
             n_jobs=4,  # os.cpu_count(),
             argument_type="args",
             desc="Downloading...",
         )
+
+        for result in results:
+            if isinstance(result, Exception):
+                raise result
+
+        return results
