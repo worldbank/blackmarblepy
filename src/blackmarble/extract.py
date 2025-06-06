@@ -31,12 +31,16 @@ def bm_extract(
         Region of interest
 
     product_id: Product
-        NASA Black Marble product suite (VNP46) identifier. The available products are shown in following list:
+        Identifier for the NASA Black Marble VNP46 product.
 
-        - ``VNP46A1``: Daily (raw)
-        - ``VNP46A2``: Daily (corrected)
-        - ``VNP46A3``: Monthly
-        - ``VNP46A4``: Annual
+        Available options include:
+
+        - ``VNP46A1``: Daily top-of-atmosphere (TOA) radiance (raw)
+        - ``VNP46A2``: Daily moonlight-corrected nighttime lights
+        - ``VNP46A3``: Monthly gap-filled nighttime light composites
+        - ``VNP46A4``: Annual gap-filled nighttime light composites
+
+        For detailed product descriptions, see: https://blackmarble.gsfc.nasa.gov/#product
 
     date_range: datetime.date | List[datetime.date]
         Date range (single date or list of dates) for which to retrieve NASA Black Marble data.
