@@ -6,16 +6,24 @@ from importlib.resources import files
 from pathlib import Path
 from typing import ClassVar, List
 
-import backoff
 import geopandas
+import h5py
 import httpx
 import nest_asyncio
 import pandas as pd
 from httpx import HTTPError
 from pqdm.threads import pqdm
 from pydantic import BaseModel
+from tenacity import retry, retry_if_exception_type, wait_exponential
 from tqdm.auto import tqdm
+
 from .types import Product
+
+
+class InvalidHDF5File(Exception):
+    """Raised when the downloaded HDF5 file is invalid or corrupted."""
+
+    pass
 
 
 def chunks(ls, n):
@@ -24,11 +32,12 @@ def chunks(ls, n):
         yield ls[i : i + n]
 
 
-@backoff.on_exception(
-    backoff.expo,
-    HTTPError,
+@retry(
+    wait=wait_exponential(multiplier=1, min=1, max=60),
+    retry=retry_if_exception_type(HTTPError),
+    reraise=True,
 )
-async def get_url(client, url, params):
+async def get_url(client: httpx.AsyncClient, url: str, params: dict) -> httpx.Response:
     """
 
     Returns
@@ -128,9 +137,10 @@ class BlackMarbleDownloader(BaseModel):
 
             return pd.concat(rs)
 
-    @backoff.on_exception(
-        backoff.expo,
-        HTTPError,
+    @retry(
+        wait=wait_exponential(multiplier=1, min=1, max=60),
+        retry=retry_if_exception_type((HTTPError, InvalidHDF5File)),
+        reraise=True,
     )
     def _download_file(
         self,
@@ -162,20 +172,31 @@ class BlackMarbleDownloader(BaseModel):
                 ) as response:
                     response.raise_for_status()
                     if "text/html" in response.headers.get("Content-Type"):
-                        raise Exception(
-                            f"Received HTML while trying to download - possibly invalid token: {url}"
+                        raise ValueError(
+                            "Received an HTML response, which likely indicates an invalid or expired NASA Earthdata token.\n"
+                            "Please visit https://urs.earthdata.nasa.gov/profile to verify that your token is valid and not expired."
                         )
-                    total = int(response.headers.get("Content-Length", 0))
-                    with tqdm(
-                        total=total,
-                        unit="B",
-                        unit_scale=True,
-                        leave=None,
-                    ) as pbar:
-                        pbar.set_description(f"Downloading {name}...")
-                        for chunk in response.iter_raw():
-                            f.write(chunk)
-                            pbar.update(len(chunk))
+                    else:
+                        total = int(response.headers.get("Content-Length", 0))
+                        with tqdm(
+                            total=total,
+                            unit="B",
+                            unit_scale=True,
+                            leave=None,
+                        ) as pbar:
+                            pbar.set_description(f"Downloading {name}...")
+                            for chunk in response.iter_raw():
+                                f.write(chunk)
+                                pbar.update(len(chunk))
+
+        # Validate the HDF5 file after writing
+        try:
+            with h5py.File(filename, "r"):
+                pass
+        except Exception as e:
+            filename.unlink(missing_ok=True)
+            raise InvalidHDF5File(f"HDF5 validation failed for {filename}: {e}")
+
         return filename
 
     def download(
