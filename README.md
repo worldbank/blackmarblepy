@@ -39,57 +39,16 @@ The [**BlackMarblePy**](https://pypi.org/project/blackmarblepy) library allows y
 pip install blackmarblepy
 ```
 
-#### From Source
-
-1. Clone or download this repository to your local machine. Then, navigate to the root directory of the repository:
-
-    ```shell
-    git clone https://github.com/worldbank/blackmarblepy.git
-    cd blackmarblepy
-    ```
-
-2. Create a virtual environment (optional but recommended):
-
-    ```shell
-    python3 -m venv venv
-    source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
-    ```
-
-3. Install the package with dependencies:
-
-    ```shell
-    pip install .
-    ```
-
-    Install the package **in editable** mode with dependencies:
-
-    ```shell
-    pip install -e .
-    ```
-
-    The `-e` flag stands for "editable," meaning changes to the source code will immediately affect the installed package.
-
-#### Building Documentation Locally
-
-To build the documentation locally, after (1) and (2) above, please follow these steps:
-
-- Install the package with documentation dependencies:
-
-  ```shell
-    pip install -e .[docs]
-  ```
-
-- Build the documentation:
-
-  ```shell
-    sphinx-build docs _build/html -b html
-  ```
-
-The generated documentation will be available in the `_build/html` directory. Open the `index.html` file in a web browser to view it.
-
 ### Usage
 
-Before downloading and extracting Black Marble data, define the [NASA LAADS archive](https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/5000/VNP46A3/) `bearer` token, and define a region of interest (i.e., `gdf` as a [`geopandas.GeoDataFrame`](https://geopandas.org/en/stable/docs/reference/api/geopandas.GeoDataFrame.html)).
+**BlackMarblePy** requires a NASA Earthdata bearer token for authenticated access to the NASA LAADS archive. To obtain a token, log in or register at Earthdata Login and generate a personal access token from your [Earthdata profile](https://urs.earthdata.nasa.gov/profile).
+
+Before downloading or extracting [NASA Black Marble data](https://blackmarble.gsfc.nasa.gov), ensure the following:
+
+- You have a valid and not expired `bearer` token set (retrieved from your [Earthdata profile](https://urs.earthdata.nasa.gov/profile)).
+- You have defined a region of interest `gdf` as a [`geopandas.GeoDataFrame`](https://geopandas.org/en/stable/docs/reference/api/geopandas.GeoDataFrame.html), which represents the area over which data will be queried and downloaded.
+
+For example, use [bm_raster](https://worldbank.github.io/blackmarblepy/api/blackmarble.html#blackmarble.raster.bm_raster) to retrieve daily NASA Black Marble data (*VNP46A2*) as an [`xarray.Dataset`](https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html):
 
 ```python
 from blackmarble.raster import bm_raster
@@ -103,7 +62,7 @@ daily = bm_raster(
 )
 ```
 
-For more detailed information and examples, please refer to the [examples](https://worldbank.github.io/blackmarblepy/notebooks/blackmarblepy.html).
+Data is sourced from the [NASA LAADS archive](https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/5000/VNP46A3/), specifically from the **VNP46** product suite (e.g., *VNP46A1*, *VNP46A4*). For more detailed information and examples, please refer to the [examples](https://worldbank.github.io/blackmarblepy/notebooks/blackmarblepy.html).
 
 ### Full API Reference
 
@@ -119,9 +78,7 @@ If you have any feedback, encounter issues, or want to suggest improvements, ple
 
 ### Versioning
 
-[![CalVer](https://img.shields.io/badge/calver-YY.0M.MICRO-22bfda.svg)](https://calver.org)
-
-This project follows the [CALVER](https://calver.org) (Calendar Versioning) scheme for versioning. If you have any questions or need more information about our versioning approach, feel free to ask.
+This project follows the **YYYY.0M.MICRO** [CALVER](https://calver.org) scheme for versioning. If you have any questions or need more information about our versioning approach, feel free to ask.
 
 ### Contributors
 
