@@ -3,14 +3,14 @@ import logging
 import sys
 
 try:
-    __version__ = importlib.metadata.version(__name__)
+    __version__ = importlib.metadata.version("blackmarblepy")
 except importlib.metadata.PackageNotFoundError:
     __version__ = "dev"
 
 LOG_FORMAT = "[%(asctime)s - %(name)s:%(lineno)d - %(levelname)s] %(message)s"
 DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("blackmarblepy")
 logger.setLevel(logging.WARN)
 
 # Prevent adding multiple handlers
