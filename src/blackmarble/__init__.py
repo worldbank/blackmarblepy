@@ -1,10 +1,21 @@
+import importlib.metadata
 import logging
+import sys
 
-logging.basicConfig(
-    format="[%(asctime)s - %(name)s:%(lineno)d - %(levelname)s] %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S",
-)
+try:
+    __version__ = importlib.metadata.version(__name__)
+except importlib.metadata.PackageNotFoundError:
+    __version__ = "dev"
 
-logger: logging.Logger = logging.getLogger(__name__)
+LOG_FORMAT = "[%(asctime)s - %(name)s:%(lineno)d - %(levelname)s] %(message)s"
+DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 
+logger = logging.getLogger(__name__)
 logger.setLevel(logging.WARN)
+
+# Prevent adding multiple handlers
+if not logger.handlers:
+    handler = logging.StreamHandler(sys.stdout)
+    handler.setFormatter(logging.Formatter(LOG_FORMAT, DATE_FORMAT))
+    handler.setLevel(logging.WARN)
+    logger.addHandler(handler)

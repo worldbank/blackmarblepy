@@ -1,48 +1,57 @@
-[build-system]
-requires = ["hatchling>=1.21.0", "hatch-vcs>=0.3.0"]
-build-backend = "hatchling.build"
-
 [project]
-name = "blackmarblepy"
+name = "blackmarble"
 description = "Georeferenced Rasters of Nighttime Lights from NASA Black Marble data"
 readme = { file = "README.md", content-type = "text/markdown" }
 license = { file = "LICENSE" }
 keywords = ["nighttime lights", "nasa black marble", "world bank"]
-authors = [{ name = "World Bank", email = "github@worldbank.org" }]
+requires-python = ">=3.10"
+dynamic = ["version"]
+
+authors = [
+	{ name = "World Bank", email = "github@worldbank.org" }
+]
+
 maintainers = [
 	{ name = "Gabriel Stefanini Vicente", email = "gvicente@worldbank.org" },
 	{ name = "Robert Marty", email = "rmarty@worldbank.org" },
 ]
+
 classifiers = [
-	"Programming Language :: Python :: 3",
-	"Programming Language :: Python :: 3.10",
-	"Programming Language :: Python :: 3.11",
-	"Programming Language :: Python :: 3.12",
-	"Programming Language :: Python :: 3 :: Only",
-	"Development Status :: 3 - Alpha",
-	"Intended Audience :: Science/Research",
-	"Topic :: Scientific/Engineering",
+  "Intended Audience :: Science/Research",
+  "Natural Language :: English",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3 :: Only",
+  "Topic :: Scientific/Engineering",
+  "Topic :: Scientific/Engineering :: GIS",
 ]
-requires-python = ">=3.10"
+
 dependencies = [
-	"backoff>=2,<3",
+	"aiohttp>=3.12.7",
+	"backoff>=2.2.1",
 	"geopandas<2",
-	"h5py",
-	"httpx",
+	"h5py>=3.13.0",
+	"httpx>=0.28.1",
 	"ipywidgets<9",
 	"nest_asyncio<2",
-	"numpy",
+	"numpy>=1.21.0,<3",
 	"pandas>=2,<3",
-	"pqdm",
+	"pqdm>=0.2.0",
 	"pydantic>2,<3",
-	"rasterio",
-	"rasterstats",
-	"rioxarray",
-	"tqdm",
-	"xarray",
-	"aiohttp",
+	"rasterio>=1,<2",
+	"rasterstats>=0.20.0",
+	"rioxarray>=0.15.1,<0.18.0",
+	"tqdm>=4.67.1",
+	"xarray>=0.7.0",
 ]
-dynamic = ["version"]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.11.13",
+]
 
 [project.optional-dependencies]
 docs = [
@@ -50,18 +59,29 @@ docs = [
 	"jupyter-book>=0.15.1",
 	"sphinxcontrib-apidoc>=0.4.0,<1",
 ]
-tests = ["pytest"]
+examples = [
+    "bokeh>=3.7.3",
+    "colorcet>=3.1.0",
+    "contextily>=1.6.2",
+    "folium>=0.19.7",
+    "mapclassify>=2.8.1",
+    "python-dotenv>=1.1.0",
+]
+tests = [
+	"pytest"
+]
 
 [project.urls]
 "Homepage" = "https://worldbank.github.io/blackmarblepy"
 "Bug Reports" = "https://github.com/worldbank/blackmarblepy/issues"
 "Source" = "https://github.com/worldbank/blackmarblepy"
 
+[build-system]
+requires = ["hatchling>=1.21.0", "hatch-vcs>=0.3.0"]
+build-backend = "hatchling.build"
+
 [tool.hatch.version]
 source = "vcs"
-
-[tool.hatch.build.hooks.vcs]
-version-file = "src/blackmarble/_version.py"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/blackmarble"]
