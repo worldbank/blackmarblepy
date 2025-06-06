@@ -127,6 +127,10 @@ When using **BlackMarblePy**, your support is much appreciated! Please consider 
 :style: plain
 ```
 
+## Related Projects
+
+Looking for an R implementation? Check out the [blackmarbler](https://github.com/worldbank/blackmarbler) package, which provides similar functionality for working with NASA Black Marble data in R.
+
 ## License
 
 This projects is licensed under the [**Mozilla Public License**](https://opensource.org/license/mpl-2-0/) - see the **LICENSE** file for details.
