@@ -31,6 +31,7 @@ classifiers = [
 
 dependencies = [
 	"aiohttp>=3.12.7",
+	"backoff>=2.2.1",
 	"geopandas<2",
 	"h5py>=3.13.0",
 	"httpx>=0.28.1",
@@ -43,7 +44,6 @@ dependencies = [
 	"rasterio>=1,<2",
 	"rasterstats>=0.20.0",
 	"rioxarray>=0.15.1,<0.18.0",
-	"tenacity>=9.1.2",
 	"tqdm>=4.67.1",
 	"xarray>=0.7.0",
 ]
