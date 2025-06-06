@@ -36,6 +36,64 @@ If you're contributing code, please follow these guidelines:
 
 7. **Review and Iterate:** Expect feedback and be prepared to make additional changes if necessary. We may request changes, and once everything looks good, your PR will be merged.
 
+### Installation
+
+**BlackMarblePy** is available on [PyPI](https://pypi.org) as [blackmarblepy](https://pypi.org/project/blackmarblepy) and can installed using `pip`:
+
+#### From PyPI
+
+```shell
+pip install blackmarblepy
+```
+
+#### From Source
+
+1. Clone or download this repository to your local machine. Then, navigate to the root directory of the repository:
+
+    ```shell
+    git clone https://github.com/worldbank/blackmarblepy.git
+    cd blackmarblepy
+    ```
+
+2. Create a virtual environment (optional but recommended):
+
+    ```shell
+    python3 -m venv venv
+    source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+    ```
+
+3. Install the package with dependencies:
+
+    ```shell
+    pip install .
+    ```
+
+    Install the package **in editable** mode with dependencies:
+
+    ```shell
+    pip install -e .
+    ```
+
+    The `-e` flag stands for "editable," meaning changes to the source code will immediately affect the installed package.
+
+#### Building Documentation Locally
+
+To build the documentation locally, after (1) and (2) above, please follow these steps:
+
+- Install the package with documentation dependencies:
+
+  ```shell
+    pip install -e .[docs]
+  ```
+
+- Build the documentation:
+
+  ```shell
+    sphinx-build docs _build/html -b html
+  ```
+
+The generated documentation will be available in the `_build/html` directory. Open the `index.html` file in a web browser to view it.
+
 ## Code of Conduct
 
 Please note that we have a [Code of Conduct](CODE_OF_CONDUCT.md) in place. We expect all contributors to adhere to it, both in interactions within this project and in interactions with other project members.
