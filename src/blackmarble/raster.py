@@ -347,7 +347,7 @@ def bm_raster(
         )
 
         datasets = []
-        for date in tqdm(date_range, desc="COLLATING RESULTS | Processing..."):
+        for date in tqdm(date_range, desc="COLLATING TILES | Processing..."):
             filenames = _pivot_paths_by_date(pathnames).get(date)
 
             try:
