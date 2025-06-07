@@ -11,4 +11,4 @@ def test_raster_validate_call():
 
 def test_raster_validate_gdf():
     with pytest.raises(ValidationError):
-        bm_raster(roi="geodataframe")  # wrong type
+        bm_raster(gdf="geodataframe")  # wrong type
