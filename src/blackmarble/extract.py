@@ -1,28 +1,26 @@
 import datetime
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Union
 
-import geopandas
-import numpy as np
+import geopandas as gpd
 import pandas as pd
-from rasterstats import zonal_stats
 
-from .raster import VARIABLE_DEFAULT, bm_raster, transform
+from .core import BlackMarble
 from .types import Product
 
 
 def bm_extract(
-    gdf: geopandas.GeoDataFrame,
+    gdf: gpd.GeoDataFrame,
     product_id: Product,
-    date_range: datetime.date | List[datetime.date],
+    date_range: Union[datetime.date, List[datetime.date]],
     bearer: str,
-    aggfunc: str | List[str] = ["mean"],
+    aggfunc: Union[str, List[str]] = ["mean"],
     variable: Optional[str] = None,
     drop_values_by_quality_flag: List[int] = [],
     check_all_tiles_exist: bool = True,
     output_directory: Optional[Path] = None,
     output_skip_if_exists: bool = True,
-):
+) -> pd.DataFrame:
     """Extract and aggregate nighttime lights zonal statistics from `NASA Black Marble <https://blackmarble.gsfc.nasa.gov>`_.
 
     Parameters
@@ -82,7 +80,7 @@ def bm_extract(
     output_directory: pathlib.Path, optional
         Directory to produce output. By default, the output will be produced onto a temporary directory.
 
-    outout_skip_if_exists: bool, default=True
+    output_skip_if_exists: bool, default=True
         Whether to skip downloading or extracting data if the data file for that date already exists.
 
      bearer
@@ -91,40 +89,17 @@ def bm_extract(
     pandas.DataFrame
         Zonal statistics dataframe
     """
-    if variable is None:
-        variable = VARIABLE_DEFAULT.get(Product(product_id))
 
-    dataset = bm_raster(
-        gdf,
-        product_id,
-        date_range,
-        bearer,
-        variable,
-        drop_values_by_quality_flag,
-        check_all_tiles_exist,
-        output_directory,
-        output_skip_if_exists,
+    return BlackMarble(
+        bearer=bearer,
+        check_all_tiles_exist=check_all_tiles_exist,
+        drop_values_by_quality_flag=drop_values_by_quality_flag,
+        output_directory=output_directory,
+        output_skip_if_exists=output_skip_if_exists,
+    ).extract(
+        gdf=gdf,
+        product_id=product_id,
+        date_range=date_range,
+        variable=variable,
+        aggfunc=aggfunc,
     )
-
-    results = []
-    for time in dataset["time"]:
-        da = dataset[variable].sel(time=time)
-
-        # Perform zonal statistics
-        zonal_statistics = zonal_stats(
-            gdf,
-            da.values,
-            nodata=np.nan,
-            affine=transform(da),
-            stats=aggfunc,
-        )
-        # Convert the statistics to a DataFrame and add the prefix 'ntl_'
-        zonal_statistics_df = pd.DataFrame(zonal_statistics).add_prefix("ntl_")
-
-        # Concatenate the GeoDataFrame with the zonal statistics
-        zonal_statistics_df = pd.concat([gdf, zonal_statistics_df], axis=1)
-        zonal_statistics_df["date"] = time.values
-
-        results.append(zonal_statistics_df)
-
-    return pd.concat(results)

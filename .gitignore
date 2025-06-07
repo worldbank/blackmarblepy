@@ -160,3 +160,4 @@ _build/
 *.h5
 
 docs/api/
+uv.lock
