@@ -1,8 +1,9 @@
 # BlackMarblePy
 
-[![License: MPL 2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)
 [![PyPI version](https://badge.fury.io/py/blackmarblepy.svg)](https://badge.fury.io/py/blackmarblepy)
 ![Python Version](https://img.shields.io/pypi/pyversions/blackmarblepy)
+[![License: MPL 2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)
+[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![docs](https://github.com/worldbank/blackmarblepy/actions/workflows/gh-pages.yml/badge.svg)](https://github.com/worldbank/blackmarblepy/actions/workflows/gh-pages.yml)
 [![tests](https://github.com/worldbank/blackmarblepy/actions/workflows/tests.yml/badge.svg)](https://github.com/worldbank/blackmarblepy/actions/workflows/tests.yml)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/worldbank/blackmarblepy/main.svg)](https://results.pre-commit.ci/latest/github/worldbank/blackmarblepy/main)
@@ -46,24 +47,47 @@ pip install blackmarblepy
 
 Before downloading or extracting [NASA Black Marble data](https://blackmarble.gsfc.nasa.gov), ensure the following:
 
-- You have a valid and not expired `bearer` token set (retrieved from your [Earthdata profile](https://urs.earthdata.nasa.gov/profile)).
+- You have a valid and not expired `bearer` token set (retrieved from your [Earthdata profile](https://urs.earthdata.nasa.gov/profile)). For convenience and security, we [recommend setting your token as an `BLACKMARBLE_TOKEN` environment variable](https://duckduckgo.com/?q=how+to+set+environment+variable+linux+or+mac+or+windows).
 - You have defined a region of interest `gdf` as a [`geopandas.GeoDataFrame`](https://geopandas.org/en/stable/docs/reference/api/geopandas.GeoDataFrame.html), which represents the area over which data will be queried and downloaded.
 
-For example, use [bm_raster](https://worldbank.github.io/blackmarblepy/api/blackmarble.html#blackmarble.raster.bm_raster) to retrieve daily NASA Black Marble data (*VNP46A2*) as an [`xarray.Dataset`](https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html):
+```python
+# Option 1: Class-based interface
+from blackmarble import BlackMarble, Product
+
+# Create a BlackMarble instance. If no bearer token is passed explicitly,
+# it will attempt to read from the BLACKMARBLE_TOKEN environment variable.
+bm = BlackMarble()  # or: BlackMarble(bearer="YOUR_BLACKMARBLE_TOKEN")
+
+# Define your region of interest as a GeoDataFrame (gdf)
+# For example: gdf = gpd.read_file("path_to_shapefile.geojson")
+
+# Retrieve VNP46A2 for date range into a Xarray Dataset
+daily = bm.raster(
+    gdf,
+    product_id=Product.VNP46A2,
+    date_range=pd.date_range("2022-01-01", "2022-03-31", freq="D"),
+)
+```
+
+Alternatively, use the [bm_raster](https://worldbank.github.io/blackmarblepy/api/blackmarble.html#blackmarble.raster.bm_raster) procedural interface to retrieve daily NASA Black Marble data (*VNP46A2*) as an [`xarray.Dataset`](https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html):
 
 ```python
-from blackmarble.raster import bm_raster
+# Option 2: Backward-compatible procedural interface
+from blackmarble import bm_raster, Product
+
+# Define your region of interest as a GeoDataFrame (gdf)
+# For example: gdf = gpd.read_file("path_to_shapefile.geojson")
 
 # Retrieve VNP46A2 for date range into a Xarray Dataset
 daily = bm_raster(
     gdf,
-    product_id="VNP46A2",
+    product_id=Product.VNP46A2,
     date_range=pd.date_range("2022-01-01", "2022-03-31", freq="D"),
-    bearer=bearer,
+    bearer=bearer, # optional: can be omitted if BLACKMARBLE_TOKEN is set in the environment
 )
 ```
 
-Data is sourced from the [NASA LAADS archive](https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/5000/VNP46A3/), specifically from the **VNP46** product suite (e.g., *VNP46A1*, *VNP46A4*). For more detailed information and examples, please refer to the [examples](https://worldbank.github.io/blackmarblepy/notebooks/blackmarblepy.html).
+Data is sourced from the [NASA LAADS archive](https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/5000/VNP46A3/), specifically from the [**VNP46**](https://blackmarble.gsfc.nasa.gov/#product) product suite (e.g., *VNP46A1*, *VNP46A4*). For more detailed information and examples, please refer to the [examples](https://worldbank.github.io/blackmarblepy/notebooks/blackmarblepy.html).
 
 ### Full API Reference
 

@@ -2,6 +2,8 @@ import importlib.metadata
 import logging
 import sys
 
+__all__ = ["BlackMarble", "bm_extract", "bm_raster", "Product"]
+
 try:
     __version__ = importlib.metadata.version("blackmarblepy")
 except importlib.metadata.PackageNotFoundError:
