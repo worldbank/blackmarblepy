@@ -35,8 +35,6 @@ The [**BlackMarblePy**](https://pypi.org/project/blackmarblepy) library allows y
 
 **BlackMarblePy** is available on [PyPI](https://pypi.org) as [blackmarblepy](https://pypi.org/project/blackmarblepy) and can installed using `pip`:
 
-#### From PyPI
-
 ```shell
 pip install blackmarblepy
 ```
