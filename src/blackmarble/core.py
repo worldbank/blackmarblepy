@@ -13,13 +13,13 @@ import rasterio
 import rioxarray
 import xarray as xr
 from pydantic import ConfigDict, validate_call
-from rasterio.transform import from_origin
+from rasterio.transform import from_bounds, from_origin
 from rasterstats import zonal_stats
 from rioxarray.merge import merge_arrays
 from shapely.geometry import mapping
 from tqdm.auto import tqdm
 
-from . import logger
+from . import TILES, logger
 from .download import BlackMarbleDownloader
 from .types import Product
 
@@ -28,13 +28,35 @@ class BlackMarble:
     """
     Interface for extracting and processing NASA Black Marble nighttime light products.
 
-    This class handles downloading and extracting zonal statistics for
-    selected NASA Black Marble products using a specified region of interest.
+    The `BlackMarble` class provides tools for downloading, extracting, and processing
+    NASA Black Marble nighttime light data. It supports zonal statistics extraction
+    for selected products within a user-defined region of interest (ROI).
 
-    Attributes
-    ----------
-    VARIABLE_DEFAULT : dict
-        Default variables for each Black Marble product, used if no variable is explicitly provided.
+    Examples
+    --------
+    >>> # Option 1: Class-based interface
+    >>> from blackmarble import BlackMarble, Product
+    >>>
+    >>> # Create a BlackMarble instance. If no bearer token is passed explicitly,
+    >>> # it will attempt to read from the BLACKMARBLE_TOKEN environment variable.
+    >>> bm = BlackMarble()  # or: BlackMarble(bearer="YOUR_BLACKMARBLE_TOKEN")
+    >>>
+    >>> # Define your region of interest as a GeoDataFrame (gdf)
+    >>> # For example: gdf = gpd.read_file("path_to_shapefile.geojson")
+    >>>
+    >>> # Retrieve VNP46A2 for date range into a Xarray Dataset
+    >>> daily = bm.raster(
+    >>>     gdf,
+    >>>     product_id=Product.VNP46A2,
+    >>>     date_range="2022-01-01",
+    >>> )
+
+    References
+    --------
+    NASA Black Marble Products Overview:
+      https://viirsland.gsfc.nasa.gov/Products/NASA/BlackMarble.html
+    Black Marble User Guide:
+        https://viirsland.gsfc.nasa.gov/PDF/BlackMarbleUserGuide_v1.2_20220916.pdf
     """
 
     VARIABLE_DEFAULT = {
@@ -127,7 +149,7 @@ class BlackMarble:
         x: np.array
             Numpy array of raster data.
         variable: str
-            Black Marble Variable name.
+            Black Marble variable name.
 
         Returns
         -------
@@ -199,15 +221,46 @@ class BlackMarble:
         fill_value = fill_values.get(variable)
         return np.where(x == fill_value, np.nan, x) if fill_value is not None else x
 
-    def _transform(self, da: xr.DataArray):
-        left, bottom, right, top = (
-            da["x"].min(),
-            da["y"].min(),
-            da["x"].max(),
-            da["y"].max(),
+    def _mask_by_quality_flag(
+        self, data: np.ndarray, qf: np.ndarray, drop_values_by_quality_flag: List[int]
+    ) -> np.ndarray:
+        """
+        Set elements in `data` to np.nan where the corresponding element in `qf` matches any value in `drop_values_by_quality_flag`.
+        """
+        if qf is None or len(drop_values_by_quality_flag) == 0:
+            data
+
+        qf = np.asarray(qf)
+        drop_values_by_quality_flag = np.asarray(
+            drop_values_by_quality_flag, dtype=qf.dtype
         )
-        height, width = da.shape
-        return from_origin(left, top, (right - left) / width, (top - bottom) / height)
+
+        # Create a boolean mask where qf matches any of the drop values
+        mask = np.isin(qf, drop_values_by_quality_flag)
+        data = np.where(mask, np.nan, data)
+
+        # for val in drop_values_by_quality_flag:
+        # data = np.where(qf == val, np.nan, data)
+
+        return data
+
+    def _transform(self, tile_id: str, width, height):
+        """
+        Calculate the affine transform for a given tile ID and raster shape.
+
+        Parameters
+        ----------
+        tile_id : str
+            The NASA Black Marble tile identifier.
+        width : int
+            The number of columns (pixels) in the raster.
+        height : int
+            The number of rows (pixels) in the raster.
+        """
+        tile = TILES[TILES["TileID"] == tile_id]
+        minx, miny, maxx, maxy = tile.total_bounds
+
+        return from_bounds(minx, miny, maxx, maxy, width, height)
 
     def _h5_to_geotiff(
         self,
@@ -249,45 +302,39 @@ class BlackMarble:
 
         with h5py.File(f, "r") as h5_data:
             attrs = h5_data.attrs
-            if product_id in [Product.VNP46A1, Product.VNP46A2]:
-                data_key = "HDFEOS/GRIDS/VNP_Grid_DNB/Data Fields"
-                qf = h5_data[data_key]["Mandatory_Quality_Flag"]
-                dataset = h5_data[data_key][variable]
-                left, bottom, right, top = (
-                    attrs["WestBoundingCoord"],
-                    attrs["SouthBoundingCoord"],
-                    attrs["EastBoundingCoord"],
-                    attrs["NorthBoundingCoord"],
-                )
-            else:
-                data_key = "HDFEOS/GRIDS/VIIRS_Grid_DNB_2d/Data Fields"
-                lat = h5_data[data_key]["lat"]
-                lon = h5_data[data_key]["lon"]
-                left, bottom, right, top = (
-                    min(lon[:]),
-                    min(lat[:]),
-                    max(lon[:]),
-                    max(lat[:]),
-                )
-                dataset = h5_data[data_key][variable]
-                variable_short = re.sub("_Num|_Std", "", variable)
-                qf_name = f"{variable_short}_Quality"
-                qf = h5_data[data_key].get(qf_name, dataset)
 
+            # Obtain TileID
+            h = attrs["HorizontalTileNumber"].decode("utf-8")
+            v = attrs["VerticalTileNumber"].decode("utf-8")
+
+            match product_id:
+                case Product.VNP46A1:
+                    data_key = "HDFEOS/GRIDS/VNP_Grid_DNB/Data Fields"
+                    dataset = h5_data[data_key][variable]
+                    qf = None  # No quality flag available
+                case Product.VNP46A2:
+                    data_key = "HDFEOS/GRIDS/VNP_Grid_DNB/Data Fields"
+                    dataset = h5_data[data_key][variable]
+                    qf = h5_data[data_key]["Mandatory_Quality_Flag"]
+                case Product.VNP46A3 | Product.VNP46A4:
+                    data_key = "HDFEOS/GRIDS/VIIRS_Grid_DNB_2d/Data Fields"
+                    dataset = h5_data[data_key][variable]
+                    variable_short = re.sub("_Num|_Std", "", variable)
+                    qf_name = f"{variable_short}_Quality"
+                    qf = h5_data[data_key].get(qf_name, dataset)
+
+            # Post-processing
             data = dataset[:]
             data = self._remove_fill_value(data, variable)
+            data = self._mask_by_quality_flag(data, qf, drop_values_by_quality_flag)
+
             scale = dataset.attrs.get("scale_factor", 1)
             offset = dataset.attrs.get("offset", 0)
             data = scale * data + offset
-            qf = qf[:]
 
-            for val in drop_values_by_quality_flag:
-                data = np.where(qf == val, np.nan, data)
-
+            # Prepare raster and transformation
             height, width = data.shape
-            transform = from_origin(
-                left, top, (right - left) / width, (top - bottom) / height
-            )
+            transform = self._transform(f"h{h}v{v}", width, height)
 
             with rasterio.open(
                 output_path,
@@ -305,12 +352,80 @@ class BlackMarble:
 
         return output_path
 
-    def _pivot_paths_by_date(self, paths: List[Path]):
-        results = {}
-        for p in paths:
-            key = datetime.datetime.strptime(p.stem.split(".")[1], "A%Y%j").date()
-            results.setdefault(key, []).append(p)
-        return results
+    def collate_tiles(self, gdf, date_range, pathnames, variable):
+        """
+        Convert HDF5 files to GeoTIFFs, load them as DataArrays, merge, clip, and combine along time.
+
+        Parameters
+        ----------
+        gdf : geopandas.GeoDataFrame
+            Region of interest.
+        date_range : iterable
+            Sequence of dates to process.
+        pathnames : list
+            List of HDF5 file paths.
+        variable : str
+            Name of the variable to extract from the HDF5 files.
+
+        Returns
+        -------
+        combined : xarray.Dataset
+            Dataset containing the processed variable, merged, clipped to the region of interest, and combined along the time dimension.
+        """
+
+        def pivot_paths_by_date(paths: List[Path]):
+            results = {}
+            for p in paths:
+                key = datetime.datetime.strptime(p.stem.split(".")[1], "A%Y%j").date()
+                results.setdefault(key, []).append(p)
+            return results
+
+        pivoted_paths = pivot_paths_by_date(pathnames)
+        clipped_arrays = []
+
+        for date in tqdm(date_range, desc="COLLATING TILES | Processing..."):
+            h5_files = pivoted_paths.get(date)
+            data_arrays = [
+                rioxarray.open_rasterio(
+                    self._h5_to_geotiff(
+                        h5_file,
+                        variable=variable,
+                        drop_values_by_quality_flag=self.drop_values_by_quality_flag,
+                        output_directory=self.output_directory,
+                    )
+                )
+                for h5_file in h5_files
+            ]
+            if not data_arrays:
+                continue  # Skip dates with no data
+
+            # Merge tiles and clip to region of interest
+            merged = merge_arrays(data_arrays, nodata=np.nan)
+            clipped = merged.rio.clip(
+                gdf.geometry.apply(mapping), gdf.crs, drop=True
+            ).squeeze()
+            clipped["time"] = pd.to_datetime(date)
+            clipped_arrays.append(clipped)
+
+        if not clipped_arrays:
+            raise ValueError("No data arrays were processed. Check your inputs.")
+
+        # Combine along time dimension
+        combined = (
+            xr.concat(clipped_arrays, dim="time", combine_attrs="drop_conflicts")
+            .to_dataset(name=variable, promote_attrs=True)
+            .sortby("time")
+            .drop_vars(["band", "spatial_ref"], errors="ignore")
+        )
+
+        # Add metadata if standard variable
+        if variable in self.VARIABLE_DEFAULT.values():
+            combined[variable].attrs = {
+                "units": "nW/cm²sr",
+                "long_name": variable,
+            }
+
+        return combined
 
     @validate_call(config=ConfigDict(arbitrary_types_allowed=True))
     def raster(
@@ -328,16 +443,7 @@ class BlackMarble:
             Region of interest
 
         product_id: Product
-            Identifier for the NASA Black Marble VNP46 product.
-
-            Available options include:
-
-            - ``VNP46A1``: Daily top-of-atmosphere (TOA) radiance (raw)
-            - ``VNP46A2``: Daily moonlight-corrected nighttime lights
-            - ``VNP46A3``: Monthly gap-filled nighttime light composites
-            - ``VNP46A4``: Annual gap-filled nighttime light composites
-
-            For detailed product descriptions, see: https://blackmarble.gsfc.nasa.gov/#product
+            Identifier for the NASA Black Marble VNP46 product. For detailed product descriptions, see also https://blackmarble.gsfc.nasa.gov/#product.
 
         date_range: datetime.date | List[datetime.date]
             Date range (single date or list of dates) for which to retrieve NASA Black Marble data.
@@ -378,56 +484,16 @@ class BlackMarble:
         # returns a mapping of file paths grouped by date for further processing.
         downloader = BlackMarbleDownloader(self._bearer, self.output_directory)
         pathnames = downloader.download(
-            gdf, product_id, date_range, self.output_skip_if_exists
+            gdf=gdf,
+            product_id=product_id,
+            date_range=date_range,
+            skip_if_exists=self.output_skip_if_exists,
         )
 
-        datasets = []
-
-        # Process tiles for each date in the range
-        for date in tqdm(date_range, desc="COLLATING TILES | Processing..."):
-            pathnames_by_date = self._pivot_paths_by_date(pathnames).get(date)
-
-            try:
-                # Convert HDF5 files to GeoTIFFs and open them as DataArrays
-                da = [
-                    rioxarray.open_rasterio(
-                        self._h5_to_geotiff(
-                            f,
-                            variable=variable,
-                            drop_values_by_quality_flag=self.drop_values_by_quality_flag,
-                            output_directory=self.output_directory,
-                        ),
-                    )
-                    for f in pathnames_by_date
-                ]
-                # Merge tiles and clip to region of interest
-                merged = merge_arrays(da)
-                clipped = merged.rio.clip(
-                    gdf.geometry.apply(mapping), gdf.crs, drop=True
-                )
-                clipped["time"] = pd.to_datetime(date)
-                datasets.append(clipped.squeeze())
-
-            except TypeError:
-                continue
-
-        # Materialize list from filter object
-        datasets = filter(lambda item: item is not None, datasets)
-
-        # Combine along time dimension
-        combined = (
-            xr.concat(datasets, dim="time", combine_attrs="drop_conflicts")
-            .to_dataset(name=variable, promote_attrs=True)
-            .sortby("time")
-            .drop_vars(["band", "spatial_ref"], errors="ignore")
+        # Process and combine tiles into a single dataset
+        combined = self.collate_tiles(
+            gdf=gdf, date_range=date_range, pathnames=pathnames, variable=variable
         )
-
-        # Add metadata if standard variable
-        if variable in self.VARIABLE_DEFAULT.values():
-            combined[variable].attrs = {
-                "units": "nW/cm²sr",
-                "long_name": variable,
-            }
 
         return combined
 
@@ -447,16 +513,7 @@ class BlackMarble:
             Region of interest
 
         product_id: Product
-            Identifier for the NASA Black Marble VNP46 product.
-
-            Available options include:
-
-            - ``VNP46A1``: Daily top-of-atmosphere (TOA) radiance (raw)
-            - ``VNP46A2``: Daily moonlight-corrected nighttime lights
-            - ``VNP46A3``: Monthly gap-filled nighttime light composites
-            - ``VNP46A4``: Annual gap-filled nighttime light composites
-
-            For detailed product descriptions, see: https://blackmarble.gsfc.nasa.gov/#product
+            Identifier for the NASA Black Marble VNP46 product. For detailed product descriptions, see also https://blackmarble.gsfc.nasa.gov/#product.
 
         date_range: datetime.date | List[datetime.date]
             Date range (single date or list of dates) for which to retrieve NASA Black Marble data.
@@ -477,6 +534,19 @@ class BlackMarble:
         pandas.DataFrame
             Zonal statistics dataframe
         """
+
+        def affine(da: xr.DataArray):
+            left, bottom, right, top = (
+                da["x"].min(),
+                da["y"].min(),
+                da["x"].max(),
+                da["y"].max(),
+            )
+            height, width = da.shape
+            return from_origin(
+                left, top, (right - left) / width, (top - bottom) / height
+            )
+
         # If no variable is explicitly specified, use the default variable associated
         if variable is None:
             variable = self.VARIABLE_DEFAULT.get(Product(product_id))
@@ -496,7 +566,7 @@ class BlackMarble:
                 gdf,
                 da.values,
                 nodata=np.nan,
-                affine=self._transform(da),
+                affine=affine(da),
                 stats=aggfunc,
             )
 
