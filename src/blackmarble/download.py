@@ -5,6 +5,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import ClassVar, List
 
+import humanize
+
 import geopandas
 import h5py
 import httpx
@@ -16,7 +18,7 @@ from pydantic import BaseModel
 from tenacity import retry, retry_if_exception_type, wait_exponential
 from tqdm.auto import tqdm
 
-from . import TILES
+from . import TILES, logger
 from .types import Product
 
 
@@ -112,6 +114,14 @@ class BlackMarbleDownloader(BaseModel):
                         "dateRanges": f"{min(chunk)}..{max(chunk)}",
                         "areaOfInterest": row["bbox"],
                     }
+
+                    from urllib.parse import urlencode
+
+                    # Encode parameters and build full URL
+                    query_string = urlencode(params)
+                    full_url = f"{url}?{query_string}"
+
+                    print(full_url)
                     tasks.append(asyncio.ensure_future(get_url(client, url, params)))
 
             responses = [
@@ -184,6 +194,8 @@ class BlackMarbleDownloader(BaseModel):
                             for chunk in response.iter_raw():
                                 f.write(chunk)
                                 pbar.update(len(chunk))
+        else:
+            logger.info(f"File already exists, reusing: {filename}")
 
         # Validate the HDF5 file after writing
         try:
@@ -237,15 +249,19 @@ class BlackMarbleDownloader(BaseModel):
             bm_files_df["name"].str.contains("|".join(gdf["TileID"]))
         ]
 
+        # Calculate total size in a human-readable format
+        total_size = humanize.naturalsize(bm_files_df["size"].astype(int).sum())
+
         # Prepare arguments for parallel download
         names = bm_files_df["fileURL"].tolist()
-        args = [(name, skip_if_exists) for name in names]
+        download_args = [(name, skip_if_exists) for name in names]
         results = pqdm(
-            args,
+            download_args,
             self._download_file,
-            n_jobs=4,  # os.cpu_count(),
+            n_jobs=4,
             argument_type="args",
-            desc="Downloading...",
+            desc=f"Downloading ({total_size})...",
+            unit="file",
         )
 
         for result in results:
