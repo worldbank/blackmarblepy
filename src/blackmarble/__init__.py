@@ -1,6 +1,9 @@
 import importlib.metadata
 import logging
 import sys
+from importlib.resources import files
+
+import geopandas as gpd
 
 __all__ = ["BlackMarble", "bm_extract", "bm_raster", "Product"]
 
@@ -21,6 +24,10 @@ if not logger.handlers:
     handler.setFormatter(logging.Formatter(LOG_FORMAT, DATE_FORMAT))
     handler.setLevel(logging.WARN)
     logger.addHandler(handler)
+
+TILES: gpd.GeoDataFrame = gpd.read_file(
+    files("blackmarble.data").joinpath("blackmarbletiles.geojson")
+)
 
 from .core import BlackMarble  # noqa: E402
 from .extract import bm_extract  # noqa: E402

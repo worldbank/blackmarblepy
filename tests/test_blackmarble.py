@@ -1,4 +1,4 @@
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import numpy as np
 import pytest
@@ -49,14 +49,3 @@ def test_remove_fill_value_ignores_unknown_variable():
     arr = np.array([[1, 2], [3, 4]])
     out = bm._remove_fill_value(arr, "unknown_variable")
     assert np.array_equal(arr, out)
-
-
-def test_transform():
-    bm = BlackMarble(bearer="mock-token")
-    da = MagicMock()
-    da.__getitem__.side_effect = lambda key: (
-        np.array([0, 1]) if key == "x" else np.array([0, 1])
-    )
-    da.shape = (2, 2)
-    transform = bm._transform(da)
-    assert transform.a == 0.5

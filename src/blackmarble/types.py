@@ -1,5 +1,3 @@
-"""Types for blackmarblepy"""
-
 from enum import Enum
 
 

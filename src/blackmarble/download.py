@@ -2,7 +2,6 @@ import asyncio
 import datetime
 import json
 from dataclasses import dataclass
-from importlib.resources import files
 from pathlib import Path
 from typing import ClassVar, List
 
@@ -17,6 +16,7 @@ from pydantic import BaseModel
 from tenacity import retry, retry_if_exception_type, wait_exponential
 from tqdm.auto import tqdm
 
+from . import TILES
 from .types import Product
 
 
@@ -63,10 +63,6 @@ class BlackMarbleDownloader(BaseModel):
 
     bearer: str
     directory: Path
-
-    TILES: ClassVar[geopandas.GeoDataFrame] = geopandas.read_file(
-        files("blackmarble.data").joinpath("blackmarbletiles.geojson")
-    )
     URL: ClassVar[str] = "https://ladsweb.modaps.eosdis.nasa.gov"
 
     def __init__(self, bearer: str, directory: Path):
@@ -123,7 +119,7 @@ class BlackMarbleDownloader(BaseModel):
                 for f in tqdm(
                     asyncio.as_completed(tasks),
                     total=len(tasks),
-                    desc="GETTING MANIFEST...",
+                    desc="OBTAINING MANIFEST...",
                 )
             ]
 
@@ -228,9 +224,9 @@ class BlackMarbleDownloader(BaseModel):
         list: List[pathlib.Path]
             List of downloaded H5 filenames.
         """
-        # Convert to EPSG:4326 and intersect with self.TILES
+        # Convert to EPSG:4326 and intersect with TILES
         gdf = geopandas.overlay(
-            gdf.to_crs("EPSG:4326").dissolve(), self.TILES, how="intersection"
+            gdf.to_crs("EPSG:4326").dissolve(), TILES, how="intersection"
         )
 
         # Fetch manifest data asynchronously
