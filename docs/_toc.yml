@@ -15,5 +15,9 @@ parts:
         title: "Illuminating insights: harnessing NASA's Black Marble with R and Python packages"
       - url: https://worldbank.github.io/blackmarbler/
         title: BlackMarbleR
+      - url: https://datapartnership.org/syria-economic-monitor/notebooks/ntl-analysis/README.html
+        title: Nighttime Lights Syria
+      - url: https://datapartnership.org/egypt-economic-monitor/notebooks/nighttime-lights/nighttime-lights-in-egypt.html
+        title: Nighttime Lights in Egypt
       - url: https://worldbank.github.io/gaza-israel-conflict-impact-analysis/notebooks/nighttime-lights/nighttime-lights.html
-        title: "Nighttime Lights Trends in Gaza and West Bank"
+        title: "Nighttime Lights in Gaza and West Bank"
