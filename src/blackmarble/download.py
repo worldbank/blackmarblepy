@@ -4,10 +4,12 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 from typing import ClassVar, List
+from urllib.parse import urlencode
 
 import geopandas
 import h5py
 import httpx
+import humanize
 import nest_asyncio
 import pandas as pd
 from httpx import HTTPError
@@ -16,7 +18,7 @@ from pydantic import BaseModel
 from tenacity import retry, retry_if_exception_type, wait_exponential
 from tqdm.auto import tqdm
 
-from . import TILES
+from . import TILES, logger
 from .types import Product
 
 
@@ -112,6 +114,7 @@ class BlackMarbleDownloader(BaseModel):
                         "dateRanges": f"{min(chunk)}..{max(chunk)}",
                         "areaOfInterest": row["bbox"],
                     }
+                    logger.debug(f"{url}?{urlencode(params)}")
                     tasks.append(asyncio.ensure_future(get_url(client, url, params)))
 
             responses = [
@@ -123,15 +126,23 @@ class BlackMarbleDownloader(BaseModel):
                 )
             ]
 
-            rs = []
+            # Build manifest
+            manifests = []
             for r in responses:
                 r.raise_for_status()
                 try:
-                    rs.append(pd.DataFrame(r.json()).T)
-                except json.decoder.JSONDecodeError:
-                    continue
+                    data = r.json()
+                    manifests.append(pd.DataFrame(data).T)
+                except json.decoder.JSONDecodeError as e:
+                    raise (e)
 
-            return pd.concat(rs)
+            manifest = pd.concat(manifests, ignore_index=True)
+            manifest["TileID"] = (
+                manifest["name"].apply(lambda x: x.split(".")[2]).astype(str)
+            )
+            manifest["date"] = pd.to_datetime(manifest["end"]).dt.date
+
+            return manifest.drop_duplicates(subset="name")
 
     @retry(
         wait=wait_exponential(multiplier=1, min=1, max=60),
@@ -184,6 +195,8 @@ class BlackMarbleDownloader(BaseModel):
                             for chunk in response.iter_raw():
                                 f.write(chunk)
                                 pbar.update(len(chunk))
+        else:
+            logger.info(f"File already exists, reusing: {filename}")
 
         # Validate the HDF5 file after writing
         try:
@@ -230,22 +243,46 @@ class BlackMarbleDownloader(BaseModel):
         )
 
         # Fetch manifest data asynchronously
-        bm_files_df = asyncio.run(self.get_manifest(gdf, product_id, date_range))
+        manifest = asyncio.run(self.get_manifest(gdf, product_id, date_range))
+
+        # Create a full cross-join of tiles and dates
+        all_combinations = gdf.merge(
+            pd.DataFrame(date_range, columns=["date"]), how="cross"
+        )
+        # Merge with manifest to identify missing files
+        merged = all_combinations.merge(
+            manifest, on=["TileID", "date"], how="left", indicator=True
+        )
+
+        # Find missing tiles (those present in all_combinations but not in manifest)
+        missing_tiles = merged[merged["_merge"] == "left_only"]
+        if not missing_tiles.empty:
+            for idx, row in missing_tiles.iterrows():
+                logger.warning(
+                    f"Tile '{row['TileID']}' for date '{row['date']}' could not be found in the manifest."
+                )
+            msg = (
+                f"Manifest from NASA DAAC ({self.URL}) indicates that {len(missing_tiles)} required files could not found.\n"
+                "Some files may be missing due to recent data removals, maintenance periods, or changes in data availability.\n"
+                "Please check data availability again, or report this issue if the problem persists."
+            )
+            raise ValueError(msg)
 
         # Filter files to those intersecting with Black Marble tiles
-        bm_files_df = bm_files_df[
-            bm_files_df["name"].str.contains("|".join(gdf["TileID"]))
-        ]
+        matched = manifest[manifest["name"].str.contains("|".join(gdf["TileID"]))]
 
         # Prepare arguments for parallel download
-        names = bm_files_df["fileURL"].tolist()
-        args = [(name, skip_if_exists) for name in names]
+        names = matched["fileURL"].tolist()
+        download_args = [(name, skip_if_exists) for name in names]
+        total_size = humanize.naturalsize(matched["size"].astype(int).sum())
+
         results = pqdm(
-            args,
+            download_args,
             self._download_file,
-            n_jobs=4,  # os.cpu_count(),
+            n_jobs=4,
             argument_type="args",
-            desc="Downloading...",
+            desc=f"Downloading ({total_size})...",
+            unit="file",
         )
 
         for result in results:

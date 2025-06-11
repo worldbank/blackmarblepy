@@ -133,7 +133,7 @@ class BlackMarble:
     def output_directory(self) -> Path:
         """Return the active output directory path."""
         self._output_directory.mkdir(parents=True, exist_ok=True)
-        logger.info(self._output_directory)
+        logger.debug(f"Active output directory: {self._output_directory}")
         return self._output_directory
 
     def _remove_fill_value(self, x: np.ndarray, variable: str) -> np.array:
@@ -238,9 +238,6 @@ class BlackMarble:
         # Create a boolean mask where qf matches any of the drop values
         mask = np.isin(qf, drop_values_by_quality_flag)
         data = np.where(mask, np.nan, data)
-
-        # for val in drop_values_by_quality_flag:
-        # data = np.where(qf == val, np.nan, data)
 
         return data
 
@@ -383,7 +380,9 @@ class BlackMarble:
         pivoted_paths = pivot_paths_by_date(pathnames)
         clipped_arrays = []
 
-        for date in tqdm(date_range, desc="COLLATING TILES | Processing..."):
+        for date in tqdm(
+            date_range, desc="COLLATING TILES | Processing...", unit="date"
+        ):
             h5_files = pivoted_paths.get(date)
             data_arrays = [
                 rioxarray.open_rasterio(
@@ -397,6 +396,7 @@ class BlackMarble:
                 for h5_file in h5_files
             ]
             if not data_arrays:
+                logger.warning(f"No data available for date: {date}")
                 continue  # Skip dates with no data
 
             # Merge tiles and clip to region of interest
