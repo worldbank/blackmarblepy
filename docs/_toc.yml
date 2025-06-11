@@ -5,11 +5,15 @@ parts:
   - caption: API Reference
     chapters:
       - file: api/blackmarble.rst
-  - caption: Examples
+  - caption: Examples & Tutorials
     chapters:
       - file: notebooks/blackmarblepy.ipynb
       - file: notebooks/quality-assessment.ipynb
+  - caption: Relevant Links
+    chapters:
       - url: https://blogs.worldbank.org/opendata/illuminating-insights-harnessing-nasas-black-marble-r-and-python-packages?auHash=U6q7khcBvDa_eUrNze0tnZkLg5TuvggWL18OTWQYmCA
         title: "Illuminating insights: harnessing NASA's Black Marble with R and Python packages"
+      - url: https://worldbank.github.io/blackmarbler/
+        title: BlackMarbleR
       - url: https://worldbank.github.io/gaza-israel-conflict-impact-analysis/notebooks/nighttime-lights/nighttime-lights.html
         title: "Nighttime Lights Trends in Gaza and West Bank"
