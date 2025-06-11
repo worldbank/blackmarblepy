@@ -11,5 +11,5 @@ parts:
       - file: notebooks/quality-assessment.ipynb
       - url: https://blogs.worldbank.org/opendata/illuminating-insights-harnessing-nasas-black-marble-r-and-python-packages?auHash=U6q7khcBvDa_eUrNze0tnZkLg5TuvggWL18OTWQYmCA
         title: "Illuminating insights: harnessing NASA's Black Marble with R and Python packages"
-      - url: https://datapartnership.github.io/gaza-israel-conflict-impact-analysis/notebooks/nighttime-lights/nighttime-lights.html
+      - url: https://worldbank.github.io/gaza-israel-conflict-impact-analysis/notebooks/nighttime-lights/nighttime-lights.html
         title: "Nighttime Lights Trends in Gaza and West Bank"
