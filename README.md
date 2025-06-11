@@ -39,10 +39,18 @@ The [**BlackMarblePy**](https://pypi.org/project/blackmarblepy) library allows y
 ![Python Version](https://img.shields.io/pypi/pyversions/blackmarblepy)
 [![License: MPL 2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)
 
-**BlackMarblePy** is available on [PyPI](https://pypi.org) as [blackmarblepy](https://pypi.org/project/blackmarblepy) and can installed using `pip`:
+**BlackMarblePy** is available on [PyPI](https://pypi.org) as [blackmarblepy](https://pypi.org/project/blackmarblepy). To install, it is recommended to use a modern Python package manager. While [pip](https://packaging.python.org/en/latest/key_projects/#pip) is the traditional choice, you can also use [uv](https://docs.astral.sh/uv/), a fast, drop-in replacement for [pip](https://packaging.python.org/en/latest/key_projects/#pip) that offers improved performance and compatibility with modern workflows
+
+#### Using pip
 
 ```shell
 pip install blackmarblepy
+```
+
+#### Using uv (modern, faster alternative)
+
+```shell
+uv install blackmarblepy
 ```
 
 ### Usage
