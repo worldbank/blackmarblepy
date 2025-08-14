@@ -101,6 +101,20 @@ daily = bm_raster(
 
 Data is sourced from the [NASA LAADS archive](https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/5000/VNP46A3/), specifically from the [**VNP46**](https://blackmarble.gsfc.nasa.gov/#product) product suite (e.g., *VNP46A1*, *VNP46A4*). For more detailed information and examples, please refer to the [examples](https://worldbank.github.io/blackmarblepy/notebooks/blackmarblepy.html).
 
+**Specifying NASA Black Marble Collection Version**
+
+By default, BlackMarblePy uses Collection 2 (version "5200"). To choose a different collection, pass the `collection` parameter when instantiating the BlackMarble class. For example:
+
+```python
+from blackmarble import BlackMarble, Product
+
+# For Collection 1 (version "5000")
+bm = BlackMarble(bearer="YOUR_TOKEN", collection="5000")
+
+# For Collection 2 (version "5200")
+bm = BlackMarble(bearer="YOUR_TOKEN", collection="5200")
+```
+
 ### Full API Reference
 
 For a full reference of all available functions and their parameters, please refer to the [official documentation](api/blackmarble.rst).
