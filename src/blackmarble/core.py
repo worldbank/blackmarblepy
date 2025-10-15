@@ -102,7 +102,21 @@ class BlackMarble:
         check_all_tiles_exist: bool, default=True
             Check whether all Black Marble nighttime light tiles exist for the region of interest.
         drop_values_by_quality_flag: List[int], optional
-            List of quality flag values to drop from the data.
+               List of the quality flag values for which to drop data values. Each pixel has a quality flag value, where low quality values can be removed. Values are set to ``NA`` for each value in the list.
+
+            For ``VNP46A1`` and ``VNP46A2`` (daily data):
+
+            - ``0``: High-quality, Persistent nighttime lights
+            - ``1``: High-quality, Ephemeral nighttime Lights
+            - ``2``: Poor-quality, Outlier, potential cloud contamination, or other issues
+            - ``255``: No retrieval, Fill value (masked out on ingestion)
+
+            For ``VNP46A3`` and ``VNP46A4`` (monthly and annual data):
+
+            - ``0``: Good-quality, The number of observations used for the composite is larger than 3
+            - ``1``: Poor-quality, The number of observations used for the composite is less than or equal to 3
+            - ``2``: Gap filled NTL based on historical data
+            - ``255``: Fill value
         output_directory : pathlib.Path, optional
             Directory where output data will be saved. If None, a temporary directory is used.
         output_skip_if_exists: bool, default=True
@@ -117,10 +131,10 @@ class BlackMarble:
             )
         
         # Map collection parameter to valid collection versions and set default variable mapping
-        if collection in ["5200", "2", "2000"]:
+        if collection in ["5200", "2"]:
             self.collection = "5200"
             self.VARIABLE_DEFAULT = self.VARIABLE_DEFAULT_C2.copy()
-        elif collection in ["5000", "1", "1000"]:
+        elif collection in ["5000", "1"]:
             self.collection = "5000"
             self.VARIABLE_DEFAULT = self.VARIABLE_DEFAULT.copy()
         else:
@@ -339,65 +353,62 @@ class BlackMarble:
         gc.collect()
 
         try:
-            print(f"Opening HDF5 file: {f}")  # Debug
-            # Open with swmr mode as in the GitHub fix
             h5_data = h5py.File(f, 'r', swmr=True)
-            
-            print(f"File size: {os.path.getsize(f)} bytes")  # Debug
-            print("\nHDF5 root groups:", list(h5_data.keys()))  # Debug
-            
-            print("\nGetting attributes...")  # Debug
-            attrs = h5_data.attrs
-            print("Available attributes:", list(attrs.keys()))  # Debug
 
-            print("\nGetting tile numbers...")  # Debug
+            attrs = h5_data.attrs
+
             # Obtain TileID
             h = attrs["HorizontalTileNumber"].decode("utf-8")
             v = attrs["VerticalTileNumber"].decode("utf-8")
 
-            # Try each known grid path and use the first that exists in the file
-            data_key = None
-            data_fields = None
-            for path in self.GRID_PATHS:
-                components = path.split('/')
-                current = h5_data
-                found = True
-                print(f"\nChecking path components: {components}")  # Debug
-                for component in components:
-                    if component in current:
-                        print(f"Found component: {component}")  # Debug
-                        current = current[component]
-                    else:
-                        found = False
-                        print(f"Component '{component}' not found in HDF5 file. Available components: {list(current.keys())}")
-                        break
-                if found:
-                    data_key = path
-                    data_fields = current
-                    break
-            if data_key is None or data_fields is None:
-                raise ValueError("Unable to find data fields in HDF5 file using any known path")
-            
             # Set variable if not provided
             if variable is None:
                 variable = self.VARIABLE_DEFAULT[product_id]
 
-            try:
-                dataset = data_fields[variable]
-            except KeyError:
-                available_vars = list(data_fields.keys())
-                raise KeyError(f"Variable '{variable}' not found in Data Fields. Available variables: {available_vars}")
-            
-            # Get quality flag based on product type
+            # Get data fields and quality flags based on product type and collection
             match product_id:
                 case Product.VNP46A1:
-                    qf = None  # No quality flag available
+                    # VNP46A1 path depends on collection
+                    if self.collection == "5000":
+                        data_key = "HDFEOS/GRIDS/VNP_Grid_DNB/Data Fields"
+                    else:  # Collection 5200
+                        data_key = "HDFEOS/GRIDS/VIIRS_Grid_DNB_2d/Data Fields"
+                    
+                    try:
+                        data_fields = h5_data[data_key]
+                        dataset = data_fields[variable]
+                        qf = None  # No quality flag available
+                    except KeyError as e:
+                        available_vars = list(h5_data.get(data_key, {}).keys()) if data_key in h5_data else []
+                        raise KeyError(f"Unable to access VNP46A1 data. Variable '{variable}' not found. Available variables: {available_vars}")
+                        
                 case Product.VNP46A2:
-                    qf = data_fields["Mandatory_Quality_Flag"]
+                    # VNP46A2 path depends on collection
+                    if self.collection == "5000":
+                        data_key = "HDFEOS/GRIDS/VNP_Grid_DNB/Data Fields"
+                    else:  # Collection 5200
+                        data_key = "HDFEOS/GRIDS/VIIRS_Grid_DNB_2d/Data Fields"
+                    
+                    try:
+                        data_fields = h5_data[data_key]
+                        dataset = data_fields[variable]
+                        qf = data_fields["Mandatory_Quality_Flag"]
+                    except KeyError as e:
+                        available_vars = list(h5_data.get(data_key, {}).keys()) if data_key in h5_data else []
+                        raise KeyError(f"Unable to access VNP46A2 data. Variable '{variable}' not found. Available variables: {available_vars}")
+                        
                 case Product.VNP46A3 | Product.VNP46A4:
-                    variable_short = re.sub("_Num|_Std", "", variable)
-                    qf_name = f"{variable_short}_Quality"
-                    qf = data_fields.get(qf_name, dataset)
+                    # VNP46A3/A4 always use Collection 2 path
+                    data_key = "HDFEOS/GRIDS/VIIRS_Grid_DNB_2d/Data Fields"
+                    try:
+                        data_fields = h5_data[data_key]
+                        dataset = data_fields[variable]
+                        variable_short = re.sub("_Num|_Std", "", variable)
+                        qf_name = f"{variable_short}_Quality"
+                        qf = data_fields.get(qf_name, dataset)
+                    except KeyError as e:
+                        available_vars = list(h5_data.get(data_key, {}).keys()) if data_key in h5_data else []
+                        raise KeyError(f"Unable to access {product_id} data. Variable '{variable}' not found. Available variables: {available_vars}")
 
             # Post-processing
             data = dataset[:]
