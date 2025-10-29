@@ -61,15 +61,19 @@ class BlackMarbleDownloader(BaseModel):
 
     directory: Path
         Local directory to which download
+
+    collection: str
+        NASA Black Marble collection version ('5000' for collection-1, '5200' for collection-2)
     """
 
     bearer: str
     directory: Path
+    collection: str = "5200"  # Default to collection-2
     URL: ClassVar[str] = "https://ladsweb.modaps.eosdis.nasa.gov"
 
-    def __init__(self, bearer: str, directory: Path):
+    def __init__(self, bearer: str, directory: Path, collection: str = "5200"):
         nest_asyncio.apply()
-        super().__init__(bearer=bearer, directory=directory)
+        super().__init__(bearer=bearer, directory=directory, collection=collection)
 
     async def get_manifest(
         self,
@@ -110,7 +114,7 @@ class BlackMarbleDownloader(BaseModel):
                     url = f"{self.URL}/api/v1/files"
                     params = {
                         "product": product_id.value,
-                        "collection": "5000",
+                        "collection": self.collection,
                         "dateRanges": f"{min(chunk)}..{max(chunk)}",
                         "areaOfInterest": row["bbox"],
                     }

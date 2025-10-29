@@ -3,7 +3,7 @@ import os
 import re
 import tempfile
 from pathlib import Path
-from typing import List, Optional, Union
+from typing import List, Literal, Optional, Union
 
 import geopandas as gpd
 import h5py
@@ -59,13 +59,6 @@ class BlackMarble:
         https://viirsland.gsfc.nasa.gov/PDF/BlackMarbleUserGuide_v1.2_20220916.pdf
     """
 
-    VARIABLE_DEFAULT = {
-        Product.VNP46A1: "DNB_At_Sensor_Radiance_500m",
-        Product.VNP46A2: "Gap_Filled_DNB_BRDF-Corrected_NTL",
-        Product.VNP46A3: "NearNadir_Composite_Snow_Free",
-        Product.VNP46A4: "NearNadir_Composite_Snow_Free",
-    }
-
     def __init__(
         self,
         bearer: Optional[str] = None,
@@ -73,6 +66,7 @@ class BlackMarble:
         drop_values_by_quality_flag: List[int] = [255],
         output_directory: Optional[Path] = None,
         output_skip_if_exists: bool = True,
+        collection: Literal["5000", "5200"] = "5200",
     ):
         """
         Initialize a BlackMarble instance.
@@ -83,9 +77,9 @@ class BlackMarble:
             NASA Earthdata Bearer token. If not provided, the environment variable
             `BLACKMARBLE_TOKEN` is used.
         check_all_tiles_exist: bool, default=True
-            Check whether all Black Marble nighttime light tiles exist for the region of interest. Sometimes not all tiles are available, so the full region of interest may not be covered. By default (True), it skips cases where not all tiles are available.
+            Check whether all Black Marble nighttime light tiles exist for the region of interest.
         drop_values_by_quality_flag: List[int], optional
-            List of the quality flag values for which to drop data values. Each pixel has a quality flag value, where low quality values can be removed. Values are set to ``NA`` for each value in the list.
+               List of the quality flag values for which to drop data values. Each pixel has a quality flag value, where low quality values can be removed. Values are set to ``NA`` for each value in the list.
 
             For ``VNP46A1`` and ``VNP46A2`` (daily data):
 
@@ -101,33 +95,70 @@ class BlackMarble:
             - ``2``: Gap filled NTL based on historical data
             - ``255``: Fill value
         output_directory : pathlib.Path, optional
-            Directory where output GeoTIFF or extracted data will be saved. If None, a temporary directory
-            is created and reused internally for all output operations.
+            Directory where output data will be saved. If None, a temporary directory is used.
         output_skip_if_exists: bool, default=True
-            Whether to skip downloading or extracting data if the data file for that date already exists.
+            Whether to skip processing if output already exists.
+        collection: str, default="5200"
+            NASA Black Marble collection version. Valid options: '5000' for Collection 1, '5200' for Collection 2.
         """
         self._bearer = bearer or os.getenv("BLACKMARBLE_TOKEN")
         if not self._bearer:
             raise ValueError(
-                "A NASA Earthdata bearer token must be provided, either via the 'bearer' argument "
-                "or the 'BLACKMARBLE_TOKEN' environment variable."
+                "A NASA Earthdata bearer token must be provided, either via the 'bearer' argument or the 'BLACKMARBLE_TOKEN' environment variable."
             )
 
         self.check_all_tiles_exist = check_all_tiles_exist
         self.drop_values_by_quality_flag = drop_values_by_quality_flag
         self.output_skip_if_exists = output_skip_if_exists
+        self.collection = collection
 
+        # Default variable names and grid paths by collection
+        match self.collection:
+            case "5000":
+                self.VARIABLE_DEFAULT = {
+                    Product.VNP46A1: "DNB_At_Sensor_Radiance_500m",
+                    Product.VNP46A2: "Gap_Filled_DNB_BRDF-Corrected_NTL",
+                    Product.VNP46A3: "NearNadir_Composite_Snow_Free",
+                    Product.VNP46A4: "NearNadir_Composite_Snow_Free",
+                }
+
+                self.GRID_PATH = "HDFEOS/GRIDS/VNP_Grid_DNB/Data Fields"
+
+            case "5200":
+                self.VARIABLE_DEFAULT = {
+                    Product.VNP46A1: "DNB_At_Sensor_Radiance",  # Changed in Collection 5200
+                    Product.VNP46A2: "DNB_BRDF-Corrected_NTL",  # Changed in Collection 5200
+                    Product.VNP46A3: "NearNadir_Composite_Snow_Free",
+                    Product.VNP46A4: "NearNadir_Composite_Snow_Free",
+                }
+
+                self.GRID_PATH = "HDFEOS/GRIDS/VIIRS_Grid_DNB_2d/Data Fields"
+
+            case _:
+                raise ValueError(
+                    "Invalid collection value. Valid options: '5000' for Collection 1, '5200' for Collection 2"
+                )
+
+        # Initialize temporary directory
         if output_directory is not None:
             self._output_directory = Path(output_directory).resolve()
         else:
             self._tmpdir = tempfile.TemporaryDirectory()
             self._output_directory = Path(self._tmpdir.name).resolve()
 
+        # Create output directory immediately
+        self._output_directory.mkdir(parents=True, exist_ok=True)
+        logger.debug(f"Using output directory: {self._output_directory}")
+
     def close(self):
         """Clean up temporary resources, if used."""
         if self._tmpdir:
-            self._tmpdir.cleanup()
-            self._tmpdir = None
+            try:
+                self._tmpdir.cleanup()
+            except Exception as e:
+                logger.warning(f"Error cleaning up temporary directory: {e}")
+            finally:
+                self._tmpdir = None
 
     @property
     def output_directory(self) -> Path:
@@ -297,28 +328,46 @@ class BlackMarble:
         output_path = Path(output_directory or f.parent, f.name).with_suffix(".tif")
         product_id = Product(f.stem.split(".")[0])
 
-        with h5py.File(f, "r") as h5_data:
-            attrs = h5_data.attrs
+        # Set variable if not provided
+        if variable is None:
+            variable = self.VARIABLE_DEFAULT[product_id]
+
+        try:
+            # Open HDF5 file
+            h5_data = h5py.File(f, "r", swmr=True)
 
             # Obtain TileID
+            attrs = h5_data.attrs
             h = attrs["HorizontalTileNumber"].decode("utf-8")
             v = attrs["VerticalTileNumber"].decode("utf-8")
 
+            # Get data fields and quality flags based on product type and collection
             match product_id:
                 case Product.VNP46A1:
-                    data_key = "HDFEOS/GRIDS/VNP_Grid_DNB/Data Fields"
-                    dataset = h5_data[data_key][variable]
+                    # VNP46A2 path depends on collection
+                    data_key = self.GRID_PATH
+
+                    data_fields = h5_data[data_key]
+                    dataset = data_fields[variable]
                     qf = None  # No quality flag available
+
                 case Product.VNP46A2:
-                    data_key = "HDFEOS/GRIDS/VNP_Grid_DNB/Data Fields"
-                    dataset = h5_data[data_key][variable]
-                    qf = h5_data[data_key]["Mandatory_Quality_Flag"]
+                    # VNP46A2 path depends on collection
+                    data_key = self.GRID_PATH
+
+                    data_fields = h5_data[data_key]
+                    dataset = data_fields[variable]
+                    qf = data_fields["Mandatory_Quality_Flag"]
+
                 case Product.VNP46A3 | Product.VNP46A4:
+                    # VNP46A3/A4 always use same path
                     data_key = "HDFEOS/GRIDS/VIIRS_Grid_DNB_2d/Data Fields"
-                    dataset = h5_data[data_key][variable]
+
+                    data_fields = h5_data[data_key]
+                    dataset = data_fields[variable]
                     variable_short = re.sub("_Num|_Std", "", variable)
                     qf_name = f"{variable_short}_Quality"
-                    qf = h5_data[data_key].get(qf_name, dataset)
+                    qf = data_fields.get(qf_name, dataset)
 
             # Post-processing
             data = dataset[:]
@@ -346,6 +395,24 @@ class BlackMarble:
             ) as dst:
                 dst.write(data, 1)
                 dst.update_tags(**attrs)
+
+        except KeyError:
+            available_vars = (
+                list(h5_data.get(data_key, {}).keys()) if data_key in h5_data else []
+            )
+            raise KeyError(
+                f"Unable to access {product_id} data. Variable '{variable}' not found. Available variables: {available_vars}"
+            )
+        except Exception as e:
+            if h5_data is not None:
+                h5_data.close()
+            raise e
+        finally:
+            if h5_data is not None:
+                h5_data.close()
+            import gc
+
+            gc.collect()
 
         return output_path
 
@@ -482,7 +549,9 @@ class BlackMarble:
 
         # Download NASA Black Marble tiles for the specified region and dates and
         # returns a mapping of file paths grouped by date for further processing.
-        downloader = BlackMarbleDownloader(self._bearer, self.output_directory)
+        downloader = BlackMarbleDownloader(
+            self._bearer, self.output_directory, collection=self.collection
+        )
         pathnames = downloader.download(
             gdf=gdf,
             product_id=product_id,
@@ -503,7 +572,7 @@ class BlackMarble:
         product_id: Product,
         date_range: Union[datetime.date, List[datetime.date]],
         variable: Optional[str] = None,
-        aggfunc: Union[str, List[str]] = ["mean"],
+        aggfunc: Union[str, List[str]] = ["sum"],
     ) -> pd.DataFrame:
         """Extract and aggregate nighttime lights zonal statistics from `NASA Black Marble <https://blackmarble.gsfc.nasa.gov>`_.
 

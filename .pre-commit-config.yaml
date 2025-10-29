@@ -34,9 +34,9 @@ repos:
         name: codespell
         description: Checks for common misspellings in text files
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.12.7
+    rev: v0.14.2
     hooks:
-      - id: ruff
+      - id: ruff-check
         types_or: [python, pyi, jupyter]
         args: [--fix]
       - id: ruff-format

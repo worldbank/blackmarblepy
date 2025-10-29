@@ -14,7 +14,7 @@ def bm_extract(
     product_id: Product,
     date_range: Union[datetime.date, List[datetime.date]],
     bearer: str,
-    aggfunc: Union[str, List[str]] = ["mean"],
+    aggfunc: Union[str, List[str]] = ["sum"],
     variable: Optional[str] = None,
     drop_values_by_quality_flag: List[int] = [],
     check_all_tiles_exist: bool = True,
