@@ -61,7 +61,7 @@ class BlackMarbleDownloader(BaseModel):
 
     directory: Path
         Local directory to which download
-        
+
     collection: str
         NASA Black Marble collection version ('5000' for collection-1, '5200' for collection-2)
     """
