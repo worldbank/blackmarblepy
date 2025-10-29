@@ -41,16 +41,20 @@ The [**BlackMarblePy**](https://pypi.org/project/blackmarblepy) library allows y
 
 **BlackMarblePy** is available on [PyPI](https://pypi.org) as [blackmarblepy](https://pypi.org/project/blackmarblepy). To install, it is recommended to use a modern Python package manager. While [pip](https://packaging.python.org/en/latest/key_projects/#pip) is the traditional choice, you can also use [uv](https://docs.astral.sh/uv/), which is a fast drop-in replacement for [pip](https://packaging.python.org/en/latest/key_projects/#pip) that offers improved performance and compatibility with modern workflows.
 
+#### Using uv (recommened)
+
+[uv](https://docs.astral.sh/uv/) is a modern, faster alternative for package and project management. To install with [uv](https://docs.astral.sh/uv/), use:
+
+```shell
+uv add blackmarblepy
+```
+
 #### Using pip
+
+To install with [pip](https://pip.pypa.io/en/stable/), use:
 
 ```shell
 pip install blackmarblepy
-```
-
-#### Using uv (modern, faster alternative)
-
-```shell
-uv install blackmarblepy
 ```
 
 ### Usage
