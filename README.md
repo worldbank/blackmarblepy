@@ -3,10 +3,10 @@
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![PyPI version](https://badge.fury.io/py/blackmarblepy.svg)](https://badge.fury.io/py/blackmarblepy)
 [![License: MPL 2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)
-![Python Version](https://img.shields.io/pypi/pyversions/blackmarblepy)
+![Python Version](https://img.shields.io/python/required-version-toml?tomlFilePath=https%3A%2F%2Fraw.githubusercontent.com%2Fworldbank%2Fblackmarblepy%2Fmain%2Fpyproject.toml)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10667907.svg)](https://zenodo.org/doi/10.5281/zenodo.10667907)
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/worldbank/blackmarblepy/blob/main/notebooks/blackmarblepy.ipynb)
 [![Downloads](https://static.pepy.tech/badge/blackmarblepy)](https://pepy.tech/project/blackmarblepy)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/worldbank/blackmarblepy/blob/main/notebooks/blackmarblepy.ipynb)
 [![GitHub Repo stars](https://img.shields.io/github/stars/worldbank/blackmarblepy)](https://github.com/worldbank/blackmarblepy)
 
 **BlackMarblePy** is a Python package that provides a simple way to use nighttime lights data from NASA's Black Marble project. [Black Marble](https://blackmarble.gsfc.nasa.gov) is a [NASA Earth Science Data Systems (ESDS)](https://www.earthdata.nasa.gov) project that provides a product suite of daily, monthly and yearly global [nighttime lights](https://www.earthdata.nasa.gov/learn/backgrounders/nighttime-lights). This package automates the process of downloading all relevant tiles from the [NASA LAADS DAAC](https://www.earthdata.nasa.gov/eosdis/daacs/laads) to cover a region of interest, converting the raw files (in HDF5 format) to georeferenced rasters, and mosaicking rasters together when needed.
@@ -36,25 +36,21 @@ The [**BlackMarblePy**](https://pypi.org/project/blackmarblepy) library allows y
 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![PyPI version](https://badge.fury.io/py/blackmarblepy.svg)](https://badge.fury.io/py/blackmarblepy)
-![Python Version](https://img.shields.io/pypi/pyversions/blackmarblepy)
 [![License: MPL 2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)
+![Python Version](https://img.shields.io/pypi/pyversions/blackmarblepy)
 
-**BlackMarblePy** is available on [PyPI](https://pypi.org) as [blackmarblepy](https://pypi.org/project/blackmarblepy). To install, it is recommended to use a modern Python package manager. While [pip](https://packaging.python.org/en/latest/key_projects/#pip) is the traditional choice, you can also use [uv](https://docs.astral.sh/uv/), which is a fast drop-in replacement for [pip](https://packaging.python.org/en/latest/key_projects/#pip) that offers improved performance and compatibility with modern workflows.
-
-#### Using uv (recommended)
-
-[uv](https://docs.astral.sh/uv/) is a modern, faster alternative for package and project management. To install with [uv](https://docs.astral.sh/uv/), use:
-
-```shell
-uv add blackmarblepy
-```
+[**BlackMarblePy**](https://pypi.org/project/blackmarblepy) is available on [PyPI](https://pypi.org). To install, it is recommended to use virtual environment and package manager. While [pip](https://packaging.python.org/en/latest/key_projects/#pip) is the usual choice, we recommend using [uv](https://docs.astral.sh/uv/).
 
 #### Using pip
 
-To install with [pip](https://pip.pypa.io/en/stable/), use:
-
 ```shell
 pip install blackmarblepy
+```
+
+#### Using uv (recommended)
+
+```shell
+uv install blackmarblepy
 ```
 
 ### Usage
@@ -67,56 +63,37 @@ Before downloading or extracting [NASA Black Marble data](https://blackmarble.gs
 - You have defined a region of interest `gdf` as a [`geopandas.GeoDataFrame`](https://geopandas.org/en/stable/docs/reference/api/geopandas.GeoDataFrame.html), which represents the area over which data will be queried and downloaded.
 
 ```python
-# Option 1: Class-based interface
 from blackmarble import BlackMarble, Product
 
-# Create a BlackMarble instance. If no bearer token is passed explicitly,
-# it will attempt to read from the BLACKMARBLE_TOKEN environment variable.
-bm = BlackMarble()  # or: BlackMarble(bearer="YOUR_BLACKMARBLE_TOKEN")
+# Create a BlackMarble instance: 
+# If no bearer token is passed explicitly, it will read from the BLACKMARBLE_TOKEN environment variable.
+bm = BlackMarble(bearer="YOUR_BLACKMARBLE_TOKEN")
 
-# Define your region of interest as a GeoDataFrame (gdf)
-# For example: gdf = gpd.read_file("path_to_shapefile.geojson")
+# Define your region of interest as a geopandas.GeoDataFrame:
+gdf = gpd.read_file("path/to/your/shapefile.geojson")
 
-# Retrieve VNP46A2 for date range into a Xarray Dataset
+# Retrieve product (e.g. VNP46A2) for date range into a Xarray Dataset
 daily = bm.raster(
     gdf,
     product_id=Product.VNP46A2,
-    date_range=pd.date_range("2022-01-01", "2022-03-31", freq="D"),
+    date_range=pd.date_range("2020-04-22", "2025-05-22", freq="D"),
 )
 ```
 
-Alternatively, use the [bm_raster](https://worldbank.github.io/blackmarblepy/api/blackmarble.html#blackmarble.raster.bm_raster) procedural interface to retrieve daily NASA Black Marble data (*VNP46A2*) as an [`xarray.Dataset`](https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html):
-
-```python
-# Option 2: Backward-compatible procedural interface
-from blackmarble import bm_raster, Product
-
-# Define your region of interest as a GeoDataFrame (gdf)
-# For example: gdf = gpd.read_file("path_to_shapefile.geojson")
-
-# Retrieve VNP46A2 for date range into a Xarray Dataset
-daily = bm_raster(
-    gdf,
-    product_id=Product.VNP46A2,
-    date_range=pd.date_range("2022-01-01", "2022-03-31", freq="D"),
-    bearer=bearer, # optional: can be omitted if BLACKMARBLE_TOKEN is set in the environment
-)
-```
-
-Data is sourced from the [NASA LAADS archive](https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/5000/VNP46A3/), specifically from the [**VNP46**](https://blackmarble.gsfc.nasa.gov/#product) product suite (e.g., *VNP46A1*, *VNP46A4*). For more detailed information and examples, please refer to the [examples](https://worldbank.github.io/blackmarblepy/notebooks/blackmarblepy.html).
+Alternatively, use the [bm_raster](https://worldbank.github.io/blackmarblepy/api/blackmarble.html#blackmarble.raster.bm_raster) procedural interface to retrieve daily NASA Black Marble data (*VNP46A2*) as an [`xarray.Dataset`](https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html). All data are sourced from the [NASA LAADS archive](https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/5000/VNP46A3/), specifically from the [**VNP46**](https://blackmarble.gsfc.nasa.gov/#product) product suite (e.g. *VNP46A4*). For more detailed information and examples, please refer to the [examples](https://worldbank.github.io/blackmarblepy/notebooks/blackmarblepy.html).
 
 #### Specifying NASA Black Marble Collection Version
 
-By default, BlackMarblePy uses Collection 2 (version "5200"). To choose a different collection, pass the `collection` parameter when instantiating the `BlackMarble` object. For example:
+By default, BlackMarblePy uses Collection 2 ("5200"). To choose a different collection, pass the `collection` parameter when instantiating the [`BlackMarble`](https://worldbank.github.io/blackmarblepy/api/blackmarble.html#blackmarble.core.BlackMarble) object. For example:
 
 ```python
 from blackmarble import BlackMarble, Product
 
-# For Collection 1 (version "5000")
+# For Collection 1 ("5000")
 bm = BlackMarble(bearer="YOUR_TOKEN", collection="5000")
 
-# For Collection 2 (version "5200")
-bm = BlackMarble(bearer="YOUR_TOKEN", collection="5200")
+# For Collection 2 ("5200")
+bm = BlackMarble(bearer="YOUR_TOKEN", collection="5200") # default
 ```
 
 ### Full API Reference
@@ -125,20 +102,13 @@ For a full reference of all available functions and their parameters, please ref
 
 ## Contributing
 
-We welcome contributions to improve this documentation. If you find errors, have suggestions, or want to add new content, please follow our [contribution guidelines](CONTRIBUTING.md).
+We welcome contributions to improve this documentation. If you find errors, have suggestions, or want to add new content, please follow our [contribution guidelines](CONTRIBUTING.md). Please see also [](CODE_OF_CONDUCT).
 
 ### Feedback and Issues
 
-If you have any feedback, encounter issues, or want to suggest improvements, please [open an issue](https://github.com/worldbank/blackmarblepy/issues).
-
-### Versioning
-
-This project follows the **YYYY.0M.MICRO** [CALVER](https://calver.org) scheme for versioning. If you have any questions or need more information about our versioning approach, feel free to ask.
+This project welcomes contributions of any kind! If you have any feedback, encounter issues, or want to suggest improvements, please [open an issue](https://github.com/worldbank/blackmarblepy/issues).
 
 ### Contributors
-
-This project follows the [all-contributors](https://allcontributors.org) specification.
-Contributions of any kind are welcome!
 
 <a href="https://orcid.org/0000-0001-6530-3780">
 Gabriel Stefanini Vicente
@@ -158,6 +128,11 @@ Robert Marty
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
+
+### Versioning
+
+This project follows the **YYYY.0M.MICRO** [CALVER](https://calver.org) scheme for versioning. If you have any questions or need more information about our versioning approach, feel free to ask.
+
 
 ## Citation
 
