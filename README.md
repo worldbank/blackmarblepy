@@ -65,7 +65,7 @@ Before downloading or extracting [NASA Black Marble data](https://blackmarble.gs
 ```python
 from blackmarble import BlackMarble, Product
 
-# Create a BlackMarble instance: 
+# Create a BlackMarble instance:
 # If no bearer token is passed explicitly, it will read from the BLACKMARBLE_TOKEN environment variable.
 bm = BlackMarble(bearer="YOUR_BLACKMARBLE_TOKEN")
 
@@ -108,7 +108,9 @@ We welcome contributions to improve this documentation. If you find errors, have
 
 This project welcomes contributions of any kind! If you have any feedback, encounter issues, or want to suggest improvements, please [open an issue](https://github.com/worldbank/blackmarblepy/issues).
 
-### Contributors
+### Versioning
+
+This project follows the **YYYY.0M.MICRO** [CALVER](https://calver.org) scheme for versioning. If you have any questions or need more information about our versioning approach, feel free to ask.
 
 <a href="https://orcid.org/0000-0001-6530-3780">
 Gabriel Stefanini Vicente
@@ -119,20 +121,6 @@ Gabriel Stefanini Vicente
 Robert Marty
 <img alt="ORCID logo" src="https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png" width="16" height="16" />
 </a>
-
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-
-<!-- markdownlint-restore -->
-<!-- prettier-ignore-end -->
-
-<!-- ALL-CONTRIBUTORS-LIST:END -->
-
-### Versioning
-
-This project follows the **YYYY.0M.MICRO** [CALVER](https://calver.org) scheme for versioning. If you have any questions or need more information about our versioning approach, feel free to ask.
-
 
 ## Citation
 
