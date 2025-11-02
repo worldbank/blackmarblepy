@@ -72,7 +72,7 @@ bm = BlackMarble(bearer="YOUR_BLACKMARBLE_TOKEN")
 # Define your region of interest as a geopandas.GeoDataFrame:
 gdf = gpd.read_file("path/to/your/shapefile.geojson")
 
-# Retrieve VNP46A2 for date range into a Xarray Dataset
+# Retrieve product (e.g. VNP46A2) for date range into a Xarray Dataset
 daily = bm.raster(
     gdf,
     product_id=Product.VNP46A2,

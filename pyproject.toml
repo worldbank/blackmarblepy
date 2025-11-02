@@ -60,6 +60,7 @@ docs = [
 	"docutils==0.17.1",               # https://jupyterbook.org/en/stable/content/citations.html?highlight=docutils#citations-and-bibliographies
 	"jupyter-book>=0.15.1",
 	"sphinxcontrib-apidoc>=0.4.0,<1",
+	"standard-imghdr>=3.13.0",
 ]
 examples = [
     "bokeh>=3.7.3",
