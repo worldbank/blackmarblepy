@@ -50,7 +50,7 @@ pip install blackmarblepy
 #### Using uv (recommended)
 
 ```shell
-uv install blackmarblepy
+uv add blackmarblepy
 ```
 
 ### Usage
