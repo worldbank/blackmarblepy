@@ -13,7 +13,7 @@ def bm_extract(
     gdf: gpd.GeoDataFrame,
     product_id: Product,
     date_range: Union[datetime.date, List[datetime.date]],
-    bearer: str,
+    token: str,
     aggfunc: Union[str, List[str]] = ["sum"],
     variable: Optional[str] = None,
     drop_values_by_quality_flag: List[int] = [],
@@ -43,8 +43,8 @@ def bm_extract(
     date_range: datetime.date | List[datetime.date]
         Date range (single date or list of dates) for which to retrieve NASA Black Marble data.
 
-    bearer: str
-        NASA Earthdata Bearer token. Please refer to the `documentation <https://worldbank.github.io/blackmarblepy/examples/blackmarblepy.html#nasa-earthdata-bearer-token>`_.
+    token: str
+        NASA Earthdata bearer token. Please refer to the `documentation <https://worldbank.github.io/blackmarblepy/examples/blackmarblepy.html#nasa-earthdata-~-token>`_.
 
     aggfunc: str | List[str], default=["mean"]
         Which statistics to calculate for each zone. All possible choices are listed in `rasterstats.utils.VALID_STATS <https://pythonhosted.org/rasterstats/rasterstats.html?highlight=zonal_stats#rasterstats.gen>`_.
@@ -85,7 +85,6 @@ def bm_extract(
     output_skip_if_exists: bool, default=True
         Whether to skip downloading or extracting data if the data file for that date already exists.
 
-     bearer
     Returns
     -------
     pandas.DataFrame
@@ -93,7 +92,7 @@ def bm_extract(
     """
 
     return BlackMarble(
-        bearer=bearer,
+        token=token,
         check_all_tiles_exist=check_all_tiles_exist,
         drop_values_by_quality_flag=drop_values_by_quality_flag,
         output_directory=output_directory,

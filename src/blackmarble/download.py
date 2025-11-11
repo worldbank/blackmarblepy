@@ -56,7 +56,7 @@ class BlackMarbleDownloader(BaseModel):
 
     Attributes
     ----------
-    bearer: str
+    token: str
         NASA EarthData bearer token
 
     directory: Path
@@ -66,14 +66,14 @@ class BlackMarbleDownloader(BaseModel):
         NASA Black Marble collection version ('5000' for collection-1, '5200' for collection-2)
     """
 
-    bearer: str
+    token: str
     directory: Path
     collection: str = "5200"  # Default to collection-2
     URL: ClassVar[str] = "https://ladsweb.modaps.eosdis.nasa.gov"
 
-    def __init__(self, bearer: str, directory: Path, collection: str = "5200"):
+    def __init__(self, token: str, directory: Path, collection: str = "5200"):
         nest_asyncio.apply()
-        super().__init__(bearer=bearer, directory=directory, collection=collection)
+        super().__init__(token=token, directory=directory, collection=collection)
 
     async def get_manifest(
         self,
@@ -179,7 +179,7 @@ class BlackMarbleDownloader(BaseModel):
                     "GET",
                     url,
                     follow_redirects=True,
-                    headers={"Authorization": f"Bearer {self.bearer}"},
+                    headers={"Authorization": f"Bearer {self.token}"},
                 ) as response:
                     response.raise_for_status()
                     if "text/html" in response.headers.get("Content-Type"):

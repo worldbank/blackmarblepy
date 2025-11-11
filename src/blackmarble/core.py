@@ -39,7 +39,7 @@ class BlackMarble:
     >>>
     >>> # Create a BlackMarble instance. If no bearer token is passed explicitly,
     >>> # it will attempt to read from the BLACKMARBLE_TOKEN environment variable.
-    >>> bm = BlackMarble()  # or: BlackMarble(bearer="YOUR_BLACKMARBLE_TOKEN")
+    >>> bm = BlackMarble()  # or: BlackMarble(token="YOUR_BLACKMARBLE_TOKEN")
     >>>
     >>> # Define your region of interest as a GeoDataFrame (gdf)
     >>> # For example: gdf = gpd.read_file("path_to_shapefile.geojson")
@@ -48,7 +48,7 @@ class BlackMarble:
     >>> daily = bm.raster(
     >>>     gdf,
     >>>     product_id=Product.VNP46A2,
-    >>>     date_range="2022-01-01",
+    >>>     date_range="2020-04-22",
     >>> )
 
     References
@@ -61,7 +61,7 @@ class BlackMarble:
 
     def __init__(
         self,
-        bearer: Optional[str] = None,
+        token: Optional[str] = None,
         check_all_tiles_exist: bool = True,
         drop_values_by_quality_flag: List[int] = [255],
         output_directory: Optional[Path] = None,
@@ -73,8 +73,8 @@ class BlackMarble:
 
         Parameters
         ----------
-        bearer : str, optional
-            NASA Earthdata Bearer token. If not provided, the environment variable
+        token : str, optional
+            NASA Earthdata token. If not provided, the environment variable
             `BLACKMARBLE_TOKEN` is used.
         check_all_tiles_exist: bool, default=True
             Check whether all Black Marble nighttime light tiles exist for the region of interest.
@@ -101,10 +101,10 @@ class BlackMarble:
         collection: str, default="5200"
             NASA Black Marble collection version. Valid options: '5000' for Collection 1, '5200' for Collection 2.
         """
-        self._bearer = bearer or os.getenv("BLACKMARBLE_TOKEN")
-        if not self._bearer:
+        self._token = token or os.getenv("BLACKMARBLE_TOKEN")
+        if not self._token:
             raise ValueError(
-                "A NASA Earthdata bearer token must be provided, either via the 'bearer' argument or the 'BLACKMARBLE_TOKEN' environment variable."
+                "A NASA Earthdata bearer token must be provided, either via the 'token' argument or the 'BLACKMARBLE_TOKEN' environment variable."
             )
 
         self.check_all_tiles_exist = check_all_tiles_exist
@@ -550,7 +550,7 @@ class BlackMarble:
         # Download NASA Black Marble tiles for the specified region and dates and
         # returns a mapping of file paths grouped by date for further processing.
         downloader = BlackMarbleDownloader(
-            self._bearer, self.output_directory, collection=self.collection
+            self._token, self.output_directory, collection=self.collection
         )
         pathnames = downloader.download(
             gdf=gdf,

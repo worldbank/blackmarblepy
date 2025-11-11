@@ -13,7 +13,7 @@ def bm_raster(
     gdf: gpd.GeoDataFrame,
     product_id: Product,
     date_range: Union[datetime.date, List[datetime.date]],
-    bearer: str,
+    token: str,
     variable: Optional[str] = None,
     drop_values_by_quality_flag: List[int] = [],
     check_all_tiles_exist: bool = True,
@@ -42,8 +42,8 @@ def bm_raster(
     date_range: datetime.date | List[datetime.date]
         Date range (single date or list of dates) for which to retrieve NASA Black Marble data.
 
-    bearer: str
-        NASA Earthdata Bearer token. Please refer to the `documentation <https://worldbank.github.io/blackmarblepy/examples/blackmarblepy.html#nasa-earthdata-bearer-token>`_.
+    token: str
+        NASA Earthdata bearer token. Please refer to the `documentation <https://worldbank.github.io/blackmarblepy/examples/blackmarblepy.html#nasa-earthdata-bearer-token>`_.
 
     variable: str, default = None
         Variable for which to a GeoTIFF raster. Further information, please see the `NASA Black Marble User Guide <https://viirsland.gsfc.nasa.gov/PDF/BlackMarbleUserGuide_Collection2.0.pdf>. By default, it uses the following default variables:
@@ -87,7 +87,7 @@ def bm_raster(
         `xarray.Dataset` containing a stack of nighttime lights rasters
     """
     return BlackMarble(
-        bearer,
+        token,
         check_all_tiles_exist=check_all_tiles_exist,
         drop_values_by_quality_flag=drop_values_by_quality_flag,
         output_directory=output_directory,

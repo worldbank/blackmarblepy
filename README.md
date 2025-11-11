@@ -55,32 +55,32 @@ uv add blackmarblepy
 
 ### Usage
 
-**BlackMarblePy** requires a NASA Earthdata bearer token for authenticated access to the NASA LAADS archive. To obtain a token, log in or register at Earthdata Login and generate a personal access token from your [Earthdata profile](https://urs.earthdata.nasa.gov/profile).
+**BlackMarblePy** requires a NASA Earthdata token for authenticated access to the NASA LAADS archive. To obtain a token, log in or register at Earthdata Login and generate a personal access token from your [Earthdata profile](https://urs.earthdata.nasa.gov/profile).
 
 Before downloading or extracting [NASA Black Marble data](https://blackmarble.gsfc.nasa.gov), ensure the following:
 
-- You have a valid and not expired `bearer` token set (retrieved from your [Earthdata profile](https://urs.earthdata.nasa.gov/profile)). For convenience and security, we [recommend setting your token as an `BLACKMARBLE_TOKEN` environment variable](https://duckduckgo.com/?q=how+to+set+environment+variable+linux+or+mac+or+windows).
+- You have a valid and not expired `token` set (retrieved from your [Earthdata profile](https://urs.earthdata.nasa.gov/profile)). For convenience and security, we [recommend setting your token as an `BLACKMARBLE_TOKEN` environment variable](https://duckduckgo.com/?q=how+to+set+environment+variable+linux+or+mac+or+windows).
 - You have defined a region of interest `gdf` as a [`geopandas.GeoDataFrame`](https://geopandas.org/en/stable/docs/reference/api/geopandas.GeoDataFrame.html), which represents the area over which data will be queried and downloaded.
 
 ```python
 from blackmarble import BlackMarble, Product
 
 # Create a BlackMarble instance:
-# If no bearer token is passed explicitly, it will read from the BLACKMARBLE_TOKEN environment variable.
-bm = BlackMarble(bearer="YOUR_BLACKMARBLE_TOKEN")
+# If no token is passed explicitly, it will read from the BLACKMARBLE_TOKEN environment variable.
+bm = BlackMarble(token="YOUR_BLACKMARBLE_TOKEN")
 
 # Define your region of interest as a geopandas.GeoDataFrame:
 gdf = gpd.read_file("path/to/your/shapefile.geojson")
 
-# Retrieve product (e.g. VNP46A2) for date range into a Xarray Dataset
-daily = bm.raster(
+# Retrieve VNP46A2 product for date (or date range) into a Xarray Dataset
+raster_earth_day_2025 = bm.raster(
     gdf,
     product_id=Product.VNP46A2,
-    date_range=pd.date_range("2020-04-22", "2025-05-22", freq="D"),
+    date_range="2025-04-22",
 )
 ```
 
-Alternatively, use the [bm_raster](https://worldbank.github.io/blackmarblepy/api/blackmarble.html#blackmarble.raster.bm_raster) procedural interface to retrieve daily NASA Black Marble data (*VNP46A2*) as an [`xarray.Dataset`](https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html). All data are sourced from the [NASA LAADS archive](https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/5000/VNP46A3/), specifically from the [**VNP46**](https://blackmarble.gsfc.nasa.gov/#product) product suite (e.g. *VNP46A4*). For more detailed information and examples, please refer to the [examples](https://worldbank.github.io/blackmarblepy/notebooks/blackmarblepy.html).
+Alternatively, you may use the [procedural interface](https://worldbank.github.io/blackmarblepy/api/blackmarble.html#blackmarble.raster.bm_raster) to retrieve NASA Black Marble data. All data are sourced from the [NASA LAADS archive](https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/5000/VNP46A3/), specifically from the [**VNP46**](https://blackmarble.gsfc.nasa.gov/#product) product suite (e.g. *VNP46A4*). For more detailed information and examples, please refer to the [examples](https://worldbank.github.io/blackmarblepy/notebooks/blackmarblepy.html).
 
 #### Specifying NASA Black Marble Collection Version
 
@@ -90,10 +90,10 @@ By default, BlackMarblePy uses Collection 2 ("5200"). To choose a different coll
 from blackmarble import BlackMarble, Product
 
 # For Collection 1 ("5000")
-bm = BlackMarble(bearer="YOUR_TOKEN", collection="5000")
+bm = BlackMarble(token="YOUR_TOKEN", collection="5000")
 
 # For Collection 2 ("5200")
-bm = BlackMarble(bearer="YOUR_TOKEN", collection="5200") # default
+bm = BlackMarble(token="YOUR_TOKEN", collection="5200") # default
 ```
 
 ### Full API Reference
