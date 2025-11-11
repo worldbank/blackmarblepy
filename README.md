@@ -64,7 +64,7 @@ Before downloading or extracting [NASA Black Marble data](https://blackmarble.gs
 
 ```python
 import geopandas as gpd
-import pandas as pd
+
 from blackmarble import BlackMarble, Product
 
 # Create a BlackMarble instance:

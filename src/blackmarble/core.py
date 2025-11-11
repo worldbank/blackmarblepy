@@ -537,12 +537,10 @@ class BlackMarble:
         # Normalize the date range depending on the product's temporal resolution
         match product_id:
             case Product.VNP46A3:
-                # VNP46A3 is a monthly product.
-                # Normalize all dates to the first day of their respective months
+                # VNP46A3 is monthly. Normalize dates to the first day of their respective months
                 date_range = sorted(set([d.replace(day=1) for d in date_range]))
             case Product.VNP46A4:
-                # VNP46A4 is an annual product.
-                # Normalize all dates to the first day of the year
+                # VNP46A4 is annual. Normalize dates to the first day of the year
                 date_range = sorted(
                     set([d.replace(day=1, month=1) for d in date_range])
                 )
