@@ -595,7 +595,7 @@ class BlackMarble:
             - For ``VNP46A3``, uses ``NearNadir_Composite_Snow_Free``.
             - For ``VNP46A4``, uses ``NearNadir_Composite_Snow_Free``.
 
-        aggfunc: str | List[str], default=["mean"]
+        aggfunc: str | List[str], default=["sum"]
             Which statistics to calculate for each zone. All possible choices are listed in `rasterstats.utils.VALID_STATS <https://pythonhosted.org/rasterstats/rasterstats.html?highlight=zonal_stats#rasterstats.gen>`_.
 
         Returns

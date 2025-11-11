@@ -73,7 +73,7 @@ bm = BlackMarble(token="YOUR_BLACKMARBLE_TOKEN")
 gdf = gpd.read_file("path/to/your/shapefile.geojson")
 
 # Retrieve VNP46A2 product for date (or date range) into a Xarray Dataset
-raster_earth_day_2025 = bm.raster(
+raster_earth_day = bm.raster(
     gdf,
     product_id=Product.VNP46A2,
     date_range="2025-04-22",

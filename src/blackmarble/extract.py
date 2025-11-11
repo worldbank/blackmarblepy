@@ -44,9 +44,9 @@ def bm_extract(
         Date range (single date or list of dates) for which to retrieve NASA Black Marble data.
 
     token: str
-        NASA Earthdata bearer token. Please refer to the `documentation <https://worldbank.github.io/blackmarblepy/examples/blackmarblepy.html#nasa-earthdata-~-token>`_.
+        NASA Earthdata bearer token.
 
-    aggfunc: str | List[str], default=["mean"]
+    aggfunc: str | List[str], default=["sum"]
         Which statistics to calculate for each zone. All possible choices are listed in `rasterstats.utils.VALID_STATS <https://pythonhosted.org/rasterstats/rasterstats.html?highlight=zonal_stats#rasterstats.gen>`_.
 
     variable: str, default = None

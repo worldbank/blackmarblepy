@@ -43,7 +43,7 @@ def bm_raster(
         Date range (single date or list of dates) for which to retrieve NASA Black Marble data.
 
     token: str
-        NASA Earthdata bearer token. Please refer to the `documentation <https://worldbank.github.io/blackmarblepy/examples/blackmarblepy.html#nasa-earthdata-bearer-token>`_.
+        NASA Earthdata bearer token.
 
     variable: str, default = None
         Variable for which to a GeoTIFF raster. Further information, please see the `NASA Black Marble User Guide <https://viirsland.gsfc.nasa.gov/PDF/BlackMarbleUserGuide_Collection2.0.pdf>. By default, it uses the following default variables:
