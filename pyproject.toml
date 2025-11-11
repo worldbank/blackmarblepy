@@ -4,18 +4,14 @@ description = "Georeferenced Rasters of Nighttime Lights from NASA Black Marble 
 readme = { file = "README.md", content-type = "text/markdown" }
 license = { file = "LICENSE" }
 keywords = ["nighttime lights", "nasa black marble", "world bank"]
-requires-python = ">=3.10"
-dynamic = ["version"]
-
 authors = [
-	{ name = "World Bank", email = "github@worldbank.org" }
-]
-
-maintainers = [
 	{ name = "Gabriel Stefanini Vicente", email = "gvicente@worldbank.org" },
 	{ name = "Robert Marty", email = "rmarty@worldbank.org" },
 ]
-
+maintainers = [
+	{ name = "Gabriel Stefanini Vicente", email = "gvicente@worldbank.org" },
+	{ name = "World Bank", email = "github@worldbank.org" },
+]
 classifiers = [
   "Intended Audience :: Science/Research",
   "Natural Language :: English",
@@ -29,6 +25,9 @@ classifiers = [
   "Topic :: Scientific/Engineering",
   "Topic :: Scientific/Engineering :: GIS",
 ]
+
+requires-python = ">=3.10"
+dynamic = ["version"]
 
 dependencies = [
 	"aiohttp>=3.12.7",
@@ -49,7 +48,6 @@ dependencies = [
 	"tqdm>=4.67.1",
 	"xarray>=0.7.0",
 ]
-
 [dependency-groups]
 dev = [
     "ruff>=0.11.13",
