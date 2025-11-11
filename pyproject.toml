@@ -4,18 +4,14 @@ description = "Georeferenced Rasters of Nighttime Lights from NASA Black Marble 
 readme = { file = "README.md", content-type = "text/markdown" }
 license = { file = "LICENSE" }
 keywords = ["nighttime lights", "nasa black marble", "world bank"]
-requires-python = ">=3.10"
-dynamic = ["version"]
-
 authors = [
-	{ name = "World Bank", email = "github@worldbank.org" }
-]
-
-maintainers = [
 	{ name = "Gabriel Stefanini Vicente", email = "gvicente@worldbank.org" },
 	{ name = "Robert Marty", email = "rmarty@worldbank.org" },
 ]
-
+maintainers = [
+	{ name = "Gabriel Stefanini Vicente", email = "gvicente@worldbank.org" },
+	{ name = "World Bank", email = "github@worldbank.org" },
+]
 classifiers = [
   "Intended Audience :: Science/Research",
   "Natural Language :: English",
@@ -29,6 +25,9 @@ classifiers = [
   "Topic :: Scientific/Engineering",
   "Topic :: Scientific/Engineering :: GIS",
 ]
+
+requires-python = ">=3.10"
+dynamic = ["version"]
 
 dependencies = [
 	"aiohttp>=3.12.7",
@@ -49,7 +48,6 @@ dependencies = [
 	"tqdm>=4.67.1",
 	"xarray>=0.7.0",
 ]
-
 [dependency-groups]
 dev = [
     "ruff>=0.11.13",
@@ -58,7 +56,7 @@ dev = [
 [project.optional-dependencies]
 docs = [
 	"docutils==0.17.1",               # https://jupyterbook.org/en/stable/content/citations.html?highlight=docutils#citations-and-bibliographies
-	"jupyter-book>=0.15.1",
+	"jupyter-book>=0.15.1,<2",
 	"sphinxcontrib-apidoc>=0.4.0,<1",
 	"standard-imghdr>=3.13.0",
 ]

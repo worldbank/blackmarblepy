@@ -4,7 +4,7 @@
 # re-generate this one.
 ###############################################################################
 apidoc_module_dir = "../src"
-author = "Development Data Group"
+author = "World Bank Development Data Group"
 bibtex_bibfiles = ["bibliography.bib"]
 comments_config = {"hypothesis": False, "utterances": False}
 copyright = "2023"
