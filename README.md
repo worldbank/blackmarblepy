@@ -63,6 +63,8 @@ Before downloading or extracting [NASA Black Marble data](https://blackmarble.gs
 - You have defined a region of interest `gdf` as a [`geopandas.GeoDataFrame`](https://geopandas.org/en/stable/docs/reference/api/geopandas.GeoDataFrame.html), which represents the area over which data will be queried and downloaded.
 
 ```python
+import geopandas as gpd
+import pandas as pd
 from blackmarble import BlackMarble, Product
 
 # Create a BlackMarble instance:
