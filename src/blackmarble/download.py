@@ -266,9 +266,9 @@ class BlackMarbleDownloader(BaseModel):
                     f"Tile '{row['TileID']}' for date '{row['date']}' could not be found in the manifest."
                 )
             msg = (
-                f"Manifest from NASA DAAC ({self.URL}) indicates that {len(missing_tiles)} required files could not found.\n"
-                "Some files may be missing due to recent data removals, maintenance periods, or changes in data availability.\n"
-                "Please check data availability again, or report this issue if the problem persists."
+                f"The manifest retrieved from NASA DAAC ({self.URL}) indicates that {len(missing_tiles)} required files could not found.\n"
+                "Some files may be missing due to recent data removals, maintenance periods or changes in data availability.\n"
+                "Please try adjusting the requested date range, check data availability again or report this issue if the problem persists."
             )
             raise ValueError(msg)
 
