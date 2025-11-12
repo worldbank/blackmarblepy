@@ -67,14 +67,16 @@ import geopandas as gpd
 
 from blackmarble import BlackMarble, Product
 
-# Create a BlackMarble instance:
-# If no token is passed explicitly, it will read from the BLACKMARBLE_TOKEN environment variable.
-bm = BlackMarble(token="YOUR_BLACKMARBLE_TOKEN")
-
-# Define your region of interest as a geopandas.GeoDataFrame:
+# 1. Define your region of interest as a geopandas.GeoDataFrame.
+# For example:
 gdf = gpd.read_file("path/to/your/shapefile.geojson")
 
-# Retrieve VNP46A2 product for date (or date range) into a Xarray Dataset
+# 2. Create a BlackMarble instance:
+# If no token is passed explicitly, it will attempt to use the BLACKMARBLE_TOKEN environment variable.
+bm = BlackMarble(token="YOUR_BLACKMARBLE_TOKEN")
+
+# 3. Retrieve VNP46 product data from NASA Earthdata:
+# For example, we retrieve VNP46A2 for a date into a Xarray Dataset:
 raster_earth_day = bm.raster(
     gdf,
     product_id=Product.VNP46A2,
