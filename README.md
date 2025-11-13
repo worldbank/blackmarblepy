@@ -59,22 +59,32 @@ uv add blackmarblepy
 
 Before downloading or extracting [NASA Black Marble data](https://blackmarble.gsfc.nasa.gov), ensure the following:
 
-- You have a valid and not expired `token` set (retrieved from your [Earthdata profile](https://urs.earthdata.nasa.gov/profile)). For convenience and security, we [recommend setting your token as an `BLACKMARBLE_TOKEN` environment variable](https://duckduckgo.com/?q=how+to+set+environment+variable+linux+or+mac+or+windows).
 - You have defined a region of interest `gdf` as a [`geopandas.GeoDataFrame`](https://geopandas.org/en/stable/docs/reference/api/geopandas.GeoDataFrame.html), which represents the area over which data will be queried and downloaded.
+- You have a valid and not expired `token` set (retrieved from your [Earthdata profile](https://urs.earthdata.nasa.gov/profile)). For convenience and security, we [recommend setting your token as an `BLACKMARBLE_TOKEN` environment variable](https://duckduckgo.com/?q=how+to+set+environment+variable+linux+or+mac+or+windows).
 
 ```python
 import geopandas as gpd
 
 from blackmarble import BlackMarble, Product
 
-# Create a BlackMarble instance:
-# If no token is passed explicitly, it will read from the BLACKMARBLE_TOKEN environment variable.
-bm = BlackMarble(token="YOUR_BLACKMARBLE_TOKEN")
-
-# Define your region of interest as a geopandas.GeoDataFrame:
+# ------------------------------------------------------------------------------
+# 1. Define your region of interest
+# ------------------------------------------------------------------------------
+# In this example ,we load a region from a GeoJSON.
 gdf = gpd.read_file("path/to/your/shapefile.geojson")
 
-# Retrieve VNP46A2 product for date (or date range) into a Xarray Dataset
+# ------------------------------------------------------------------------------
+# 2. Set up the BlackMarble client
+# ------------------------------------------------------------------------------
+# If the environment variable `BLACKMARBLE_TOKEN` is set, it will be used automatically.
+# You can also pass your token directly, but using the environment variable is recommended.
+bm = BlackMarble(token="YOUR_BLACKMARBLE_TOKEN")
+
+# ------------------------------------------------------------------------------
+# 3. Download VNP46 data from NASA Earthdata
+# ------------------------------------------------------------------------------
+# In this example, we request the VNP46A2 product for a specific date.
+# The data is returned as an xarray.Dataset.
 raster_earth_day = bm.raster(
     gdf,
     product_id=Product.VNP46A2,
