@@ -161,3 +161,6 @@ _build/
 
 docs/api/
 uv.lock
+
+data/
+tests/

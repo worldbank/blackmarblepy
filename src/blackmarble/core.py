@@ -371,7 +371,12 @@ class BlackMarble:
 
             # Post-processing
             data = dataset[:]
-            data = self._remove_fill_value(data, variable)
+            fill_value = dataset.attrs.get("_FillValue", None)
+            if fill_value is not None:
+                fill_value = np.asarray(fill_value).flat[0]
+                data = np.where(np.isclose(data, fill_value, equal_nan=True), np.nan, data)
+            else:
+                data = self._remove_fill_value(data, variable)
             data = self._mask_by_quality_flag(data, qf, drop_values_by_quality_flag)
 
             scale = dataset.attrs.get("scale_factor", 1)
