@@ -32,10 +32,11 @@ bibtex_bibfiles:
 #######################################################################################
 # Sphinx settings
 sphinx:
+  extra_extensions:
+    - "sphinx.ext.autodoc"
+    - "sphinx.ext.napoleon"
+    - "sphinxcontrib.apidoc"
   config:
     html_show_copyright: false
     html_last_updated_fmt: "%b %d, %Y"
     apidoc_module_dir: "../src"
-    extra_extensions:
-      - "sphinx.ext.napoleon"
-      - "sphinxcontrib.apidoc"

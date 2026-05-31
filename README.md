@@ -110,7 +110,7 @@ bm = BlackMarble(token="YOUR_TOKEN", collection="5200") # default
 
 ### Full API Reference
 
-For a full reference of all available functions and their parameters, please refer to the [official documentation](api/blackmarble.rst).
+For a full reference of all available functions and their parameters, please refer to the [official documentation](https://worldbank.github.io/blackmarblepy/api/blackmarble.html).
 
 ## Contributing
 
