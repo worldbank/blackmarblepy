@@ -290,8 +290,8 @@ class BlackMarbleDownloader(BaseModel):
             pd.DataFrame(date_range, columns=["date"]), how="cross"
         )
 
-        print(sorted(manifest["TileID"].unique()))
-        print(sorted(all_combinations["TileID"].unique()))
+        #print(sorted(manifest["TileID"].unique()))
+        #print(sorted(all_combinations["TileID"].unique()))
 
         # print(all_combinations.head())
         # print(manifest.head())
@@ -320,7 +320,7 @@ class BlackMarbleDownloader(BaseModel):
 
         # Prepare arguments for parallel download
         names = matched["downloadsLink"].tolist()
-        print(names)
+        #print(names)
         download_args = [(name, skip_if_exists) for name in names]
         total_size = humanize.naturalsize(matched["size"].astype(int).sum())
 

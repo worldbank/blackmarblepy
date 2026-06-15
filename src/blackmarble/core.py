@@ -22,6 +22,8 @@ from tqdm.auto import tqdm
 from . import TILES, logger
 from .download import BlackMarbleDownloader
 from .types import Product
+from exactextract import exact_extract
+
 
 
 class BlackMarble:
@@ -633,13 +635,14 @@ class BlackMarble:
         results = []
         for time in dataset["time"]:
             da = dataset[variable].sel(time=time)
+            output_columns = {f"ntl_{stat}": stat for stat in aggfunc}
 
-            stats = zonal_stats(
-                gdf,
-                da.values,
-                nodata=np.nan,
-                affine=affine(da),
-                stats=aggfunc,
+            stats = exact_extract(
+                vec = gdf,
+                rast = da,
+                #nodata=np.nan,
+                ops=list(output_columns.values()),
+                output = 'pandas'
             )
 
             stats_df = pd.DataFrame(stats).add_prefix("ntl_")
