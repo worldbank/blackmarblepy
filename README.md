@@ -15,7 +15,7 @@
 
 - Download *daily*, *monthly*, and *yearly* nighttime lights data for user-specified **region of interest** and **time**.
 - Parallel downloading for faster data retrieval and automatic retry mechanism for handling network errors.
-- Access [NASA Black Marble](https://blackmarble.gsfc.nasa.gov) as a [xarray.Dataset](https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html)
+- Access [NASA Black Marble](https://www.earthdata.nasa.gov/data/projects/black-marble) as a [xarray.Dataset](https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html)
   - Integrated data visualization with customization options
     - Choose between various plot types, including bar charts, line graphs, and heatmaps.
     - Customize plot appearance with color palettes, axes labels, titles, and legends.
@@ -88,29 +88,15 @@ bm = BlackMarble(token="YOUR_BLACKMARBLE_TOKEN")
 raster_earth_day = bm.raster(
     gdf,
     product_id=Product.VNP46A2,
-    date_range="2025-04-22",
+    date_range="2026-04-22",
 )
 ```
 
-Alternatively, you may use the [procedural interface](https://worldbank.github.io/blackmarblepy/api/blackmarble.html#blackmarble.raster.bm_raster) to retrieve NASA Black Marble data. All data are sourced from the [NASA LAADS archive](https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/5000/VNP46A3/), specifically from the [**VNP46**](https://blackmarble.gsfc.nasa.gov/#product) product suite (e.g. *VNP46A4*). For more detailed information and examples, please refer to the [examples](https://worldbank.github.io/blackmarblepy/notebooks/blackmarblepy.html).
-
-#### Specifying NASA Black Marble Collection Version
-
-By default, BlackMarblePy uses Collection 2 ("5200"). To choose a different collection, pass the `collection` parameter when instantiating the [`BlackMarble`](https://worldbank.github.io/blackmarblepy/api/blackmarble.html#blackmarble.core.BlackMarble) object. For example:
-
-```python
-from blackmarble import BlackMarble, Product
-
-# For Collection 1 ("5000")
-bm = BlackMarble(token="YOUR_TOKEN", collection="5000")
-
-# For Collection 2 ("5200")
-bm = BlackMarble(token="YOUR_TOKEN", collection="5200")
-```
+Alternatively, you can use the procedural [procedural interface](https://worldbank.github.io/blackmarblepy/api/blackmarble.html#blackmarble.raster.bm_raster) to retrieve NASA Black Marble data. All data are sourced from the [NASA Black Marble](https://www.earthdata.nasa.gov/data/projects/black-marble) project, specifically from the [**VNP46**](https://blackmarble.gsfc.nasa.gov/#product) product suite (e.g. *VNP46A4*). For more detailed information and examples, please refer to the [examples](https://worldbank.github.io/blackmarblepy/notebooks/blackmarblepy.html).
 
 ### Full API Reference
 
-For a full reference of all available functions and their parameters, please refer to the [official documentation](api/blackmarble.rst).
+For a full reference of all available functions and their parameters, please refer to the [official documentation](https://worldbank.github.io/blackmarblepy/api/blackmarble.html).
 
 ## Contributing
 
