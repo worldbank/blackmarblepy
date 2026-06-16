@@ -1,6 +1,6 @@
 import asyncio
 import datetime
-import json
+
 from dataclasses import dataclass
 from pathlib import Path
 from typing import ClassVar, List
@@ -15,7 +15,12 @@ import pandas as pd
 from httpx import HTTPError
 from pqdm.threads import pqdm
 from pydantic import BaseModel
-from tenacity import retry, retry_if_exception_type, wait_exponential
+from tenacity import (
+    retry,
+    retry_if_exception_type,
+    stop_after_attempt,
+    wait_exponential,
+)
 from tqdm.auto import tqdm
 
 from . import TILES, logger
@@ -68,7 +73,7 @@ class BlackMarbleDownloader(BaseModel):
 
     token: str
     directory: Path
-    collection: str = "5200"  # Default to collection-2
+    collection: str = "5200"
     URL: ClassVar[str] = "https://ladsweb.modaps.eosdis.nasa.gov"
 
     def __init__(self, token: str, directory: Path, collection: str = "5200"):
@@ -104,52 +109,55 @@ class BlackMarbleDownloader(BaseModel):
         # Create bounding box
         gdf = pd.concat([gdf, gdf.bounds], axis="columns").round(2)
         gdf["bbox"] = gdf.round(2).apply(
-            lambda row: f"x{row.minx}y{row.miny},x{row.maxx}y{row.maxy}", axis=1
+            lambda row: f"[BBOX]W{row.minx} N{row.maxy} E{row.maxx} S{row.miny}",
+            axis=1,
         )
-
         async with httpx.AsyncClient(verify=False) as client:
-            tasks = []
+            manifests = []
+
             for chunk in chunks(date_range, 250):
                 for _, row in gdf.iterrows():
-                    url = f"{self.URL}/api/v1/files"
-                    params = {
-                        "product": product_id.value,
-                        "collection": self.collection,
-                        "dateRanges": f"{min(chunk)}..{max(chunk)}",
-                        "areaOfInterest": row["bbox"],
+                    url = f"{self.URL}/api/v2/content/details"
+
+                    start_date = min(chunk).isoformat()
+                    end_date = max(chunk).isoformat()
+
+                    base_params = {
+                        "products": product_id.value,
+                        "archiveSet": self.collection,
+                        "temporalRanges": f"{start_date}..{end_date}",
+                        "regions": row["bbox"],
+                        "page": 1,
                     }
-                    logger.debug(f"{url}?{urlencode(params)}")
-                    tasks.append(asyncio.ensure_future(get_url(client, url, params)))
 
-            responses = [
-                await f
-                for f in tqdm(
-                    asyncio.as_completed(tasks),
-                    total=len(tasks),
-                    desc="OBTAINING MANIFEST...",
-                )
-            ]
+                    full_url = f"{url}?{urlencode(base_params)}"
+                    logger.debug(full_url)
 
-            # Build manifest
-            manifests = []
-            for r in responses:
-                r.raise_for_status()
-                try:
-                    data = r.json()
-                    manifests.append(pd.DataFrame(data).T)
-                except json.decoder.JSONDecodeError as e:
-                    raise (e)
+                    first_response = await get_url(client, url, base_params)
+                    first_response.raise_for_status()
+                    first_data = first_response.json()
+
+                    manifests.append(pd.DataFrame(first_data.get("content", [])))
+
+                    total_pages = first_data.get("n_pages", 1)
+                    for page in range(2, total_pages + 1):
+                        page_params = {**base_params, "page": page}
+                        response = await get_url(client, url, page_params)
+                        response.raise_for_status()
+                        page_data = response.json()
+                        manifests.append(pd.DataFrame(page_data.get("content", [])))
 
             manifest = pd.concat(manifests, ignore_index=True)
             manifest["TileID"] = (
                 manifest["name"].apply(lambda x: x.split(".")[2]).astype(str)
             )
-            manifest["date"] = pd.to_datetime(manifest["end"]).dt.date
+            manifest["date"] = pd.to_datetime(manifest["start"]).dt.date
 
             return manifest.drop_duplicates(subset="name")
 
     @retry(
         wait=wait_exponential(multiplier=1, min=1, max=60),
+        stop=stop_after_attempt(5),
         retry=retry_if_exception_type((HTTPError, InvalidHDF5File)),
         reraise=True,
     )
@@ -170,47 +178,75 @@ class BlackMarbleDownloader(BaseModel):
         filename: pathlib.Path
             Filename of downloaded data file
         """
-        url = f"{self.URL}{name}"
-        name = name.split("/")[-1]
+        url = str(name).strip()
+        if not url.startswith("http"):
+            url = f"{self.URL}{url}"
 
-        if not (filename := Path(self.directory, name)).exists() or not skip_if_exists:
-            with open(filename, "wb+") as f:
-                with httpx.stream(
-                    "GET",
-                    url,
-                    follow_redirects=True,
-                    headers={"Authorization": f"Bearer {self.token}"},
-                ) as response:
-                    response.raise_for_status()
-                    if "text/html" in response.headers.get("Content-Type"):
-                        raise ValueError(
-                            "Received an HTML response, which likely indicates an invalid or expired NASA Earthdata token.\n"
-                            "Please visit https://urs.earthdata.nasa.gov/profile to verify that your token is valid and not expired."
-                        )
-                    else:
-                        total = int(response.headers.get("Content-Length", 0))
-                        with tqdm(
-                            total=total,
-                            unit="B",
-                            unit_scale=True,
-                            leave=None,
-                        ) as pbar:
-                            pbar.set_description(f"Downloading {name}...")
-                            for chunk in response.iter_raw():
-                                f.write(chunk)
-                                pbar.update(len(chunk))
-        else:
+        name = Path(url).name
+
+        filename = Path(self.directory, name)
+        tmpfile = filename.with_suffix(filename.suffix + ".part")
+
+        if filename.exists() and skip_if_exists:
             logger.info(f"File already exists, reusing: {filename}")
+            return filename
 
-        # Validate the HDF5 file after writing
+        timeout = httpx.Timeout(connect=30.0, read=120.0, write=120.0, pool=30.0)
+        tmpfile.unlink(missing_ok=True)
+
         try:
-            with h5py.File(filename, "r"):
-                pass
-        except Exception as e:
-            filename.unlink(missing_ok=True)
-            raise InvalidHDF5File(f"HDF5 validation failed for {filename}: {e}")
+            with httpx.stream(
+                "GET",
+                url,
+                follow_redirects=True,
+                headers={"Authorization": f"Bearer {self.token}"},
+                timeout=timeout,
+            ) as response:
+                response.raise_for_status()
 
-        return filename
+                if "text/html" in response.headers.get("Content-Type", ""):
+                    raise ValueError(
+                        "Received an HTML response, which likely indicates an invalid or expired NASA Earthdata token.\n"
+                        "Please visit https://urs.earthdata.nasa.gov/profile to verify that your token is valid and not expired."
+                    )
+
+                total = int(response.headers.get("Content-Length", 0))
+                written = 0
+
+                with open(tmpfile, "wb") as f:
+                    with tqdm(
+                        total=total,
+                        unit="B",
+                        unit_scale=True,
+                        leave=None,
+                    ) as pbar:
+                        pbar.set_description(f"Downloading {name}...")
+                        for chunk in response.iter_bytes():
+                            if not chunk:
+                                continue
+                            f.write(chunk)
+                            written += len(chunk)
+                            pbar.update(len(chunk))
+
+            if total and written != total:
+                tmpfile.unlink(missing_ok=True)
+                raise InvalidHDF5File(
+                    f"Incomplete download for {filename.name}: expected {total} bytes, got {written}"
+                )
+
+            try:
+                with h5py.File(tmpfile, "r"):
+                    pass
+            except Exception as e:
+                tmpfile.unlink(missing_ok=True)
+                raise InvalidHDF5File(f"HDF5 validation failed for {tmpfile}: {e}")
+
+            tmpfile.replace(filename)
+            return filename
+
+        except Exception:
+            tmpfile.unlink(missing_ok=True)
+            raise
 
     def download(
         self,
@@ -218,6 +254,7 @@ class BlackMarbleDownloader(BaseModel):
         product_id: Product,
         date_range: List[datetime.date],
         skip_if_exists: bool = True,
+        n_jobs: int = 2,
     ):
         """
         Downloads files asynchronously from NASA Black Marble archive.
@@ -253,6 +290,7 @@ class BlackMarbleDownloader(BaseModel):
         all_combinations = gdf.merge(
             pd.DataFrame(date_range, columns=["date"]), how="cross"
         )
+
         # Merge with manifest to identify missing files
         merged = all_combinations.merge(
             manifest, on=["TileID", "date"], how="left", indicator=True
@@ -270,20 +308,22 @@ class BlackMarbleDownloader(BaseModel):
                 "Some files may be missing due to recent data removals, maintenance periods or changes in data availability.\n"
                 "Please try adjusting the requested date range, check data availability again or report this issue if the problem persists."
             )
+
             raise ValueError(msg)
 
         # Filter files to those intersecting with Black Marble tiles
         matched = manifest[manifest["name"].str.contains("|".join(gdf["TileID"]))]
 
         # Prepare arguments for parallel download
-        names = matched["fileURL"].tolist()
+        names = matched["downloadsLink"].tolist()
+
         download_args = [(name, skip_if_exists) for name in names]
         total_size = humanize.naturalsize(matched["size"].astype(int).sum())
 
         results = pqdm(
             download_args,
             self._download_file,
-            n_jobs=4,
+            n_jobs=n_jobs,
             argument_type="args",
             desc=f"Downloading ({total_size})...",
             unit="file",

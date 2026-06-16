@@ -31,6 +31,7 @@ dynamic = ["version"]
 
 dependencies = [
 	"aiohttp>=3.12.7",
+	"exactextract>=0.3.0",
 	"geopandas<2",
 	"h5py>=3.13.0",
 	"httpx>=0.28.1",

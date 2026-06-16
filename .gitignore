@@ -158,6 +158,6 @@ _build/
 .jupyter/
 *.tif
 *.h5
+uv.lock
 
 docs/api/
-uv.lock
