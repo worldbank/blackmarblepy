@@ -487,7 +487,8 @@ class BlackMarble:
 
         # Combine along time dimension
         combined = (
-            xr.concat(clipped_arrays, dim="time", combine_attrs="drop_conflicts")
+            xr
+            .concat(clipped_arrays, dim="time", combine_attrs="drop_conflicts")
             .to_dataset(name=variable, promote_attrs=True)
             .sortby("time")
             .drop_vars(["band", "spatial_ref"], errors="ignore")
@@ -602,7 +603,7 @@ class BlackMarble:
             - For ``VNP46A4``, uses ``NearNadir_Composite_Snow_Free``.
 
         aggfunc: str | List[str], default=["sum"]
-            Which statistics to calculate for each zone. All possible choices are listed in `rasterstats.utils.VALID_STATS <https://pythonhosted.org/rasterstats/rasterstats.html?highlight=zonal_stats#rasterstats.gen>`_.
+            All possible choices are listed in `Available operations <https://isciences.github.io/exactextract/operations.html>`_.
 
         Returns
         -------
