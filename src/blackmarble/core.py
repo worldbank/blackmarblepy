@@ -12,6 +12,8 @@ import pandas as pd
 import rasterio
 import rioxarray
 import xarray as xr
+
+from exactextract import exact_extract
 from pydantic import ConfigDict, validate_call
 from rasterio.transform import from_bounds, from_origin
 from rioxarray.merge import merge_arrays
@@ -21,7 +23,6 @@ from tqdm.auto import tqdm
 from . import TILES, logger
 from .download import BlackMarbleDownloader
 from .types import Product
-from exactextract import exact_extract
 
 
 class BlackMarble:
@@ -609,23 +610,11 @@ class BlackMarble:
             Zonal statistics dataframe
         """
 
-        def affine(da: xr.DataArray):
-            left, bottom, right, top = (
-                da["x"].min(),
-                da["y"].min(),
-                da["x"].max(),
-                da["y"].max(),
-            )
-            height, width = da.shape
-            return from_origin(
-                left, top, (right - left) / width, (top - bottom) / height
-            )
-
         # If no variable is explicitly specified, use the default variable associated
         if variable is None:
             variable = self.VARIABLE_DEFAULT.get(Product(product_id))
 
-        dataset = self.raster(
+        da = self.raster(
             gdf=gdf,
             product_id=product_id,
             date_range=date_range,
@@ -633,21 +622,24 @@ class BlackMarble:
         )
 
         results = []
-        for time in dataset["time"]:
-            da = dataset[variable].sel(time=time)
-            output_columns = {f"ntl_{stat}": stat for stat in aggfunc}
-
+        for time in da["time"].values:
+            rast = da["NearNadir_Composite_Snow_Free"].sel(time=time)
             stats = exact_extract(
+                rast=rast,
                 vec=gdf,
-                rast=da,
-                # nodata=np.nan,
-                ops=list(output_columns.values()),
+                ops=aggfunc,
                 output="pandas",
             )
 
-            stats_df = pd.DataFrame(stats).add_prefix("ntl_")
-            merged = pd.concat([gdf, stats_df], axis=1)
-            merged["date"] = time.values
+            merged = pd.concat(
+                [
+                    gdf.reset_index(drop=True).copy(),
+                    pd.DataFrame(stats).add_prefix("ntl_").reset_index(drop=True),
+                ],
+                axis=1,
+            )
+            merged["date"] = pd.Timestamp(time)
+
             results.append(merged)
 
         return pd.concat(results, ignore_index=True)
