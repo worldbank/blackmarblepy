@@ -14,7 +14,6 @@ import rioxarray
 import xarray as xr
 from pydantic import ConfigDict, validate_call
 from rasterio.transform import from_bounds, from_origin
-from rasterstats import zonal_stats
 from rioxarray.merge import merge_arrays
 from shapely.geometry import mapping
 from tqdm.auto import tqdm
@@ -23,7 +22,6 @@ from . import TILES, logger
 from .download import BlackMarbleDownloader
 from .types import Product
 from exactextract import exact_extract
-
 
 
 class BlackMarble:
@@ -376,7 +374,9 @@ class BlackMarble:
             fill_value = dataset.attrs.get("_FillValue", None)
             if fill_value is not None:
                 fill_value = np.asarray(fill_value).flat[0]
-                data = np.where(np.isclose(data, fill_value, equal_nan=True), np.nan, data)
+                data = np.where(
+                    np.isclose(data, fill_value, equal_nan=True), np.nan, data
+                )
             else:
                 data = self._remove_fill_value(data, variable)
             data = self._mask_by_quality_flag(data, qf, drop_values_by_quality_flag)
@@ -638,11 +638,11 @@ class BlackMarble:
             output_columns = {f"ntl_{stat}": stat for stat in aggfunc}
 
             stats = exact_extract(
-                vec = gdf,
-                rast = da,
-                #nodata=np.nan,
+                vec=gdf,
+                rast=da,
+                # nodata=np.nan,
                 ops=list(output_columns.values()),
-                output = 'pandas'
+                output="pandas",
             )
 
             stats_df = pd.DataFrame(stats).add_prefix("ntl_")
