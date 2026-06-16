@@ -34,11 +34,6 @@ The [**BlackMarblePy**](https://pypi.org/project/blackmarblepy) library allows y
 
 ### Installation
 
-[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![PyPI version](https://badge.fury.io/py/blackmarblepy.svg)](https://badge.fury.io/py/blackmarblepy)
-[![License: MPL 2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)
-![Python Version](https://img.shields.io/pypi/pyversions/blackmarblepy)
-
 [**BlackMarblePy**](https://pypi.org/project/blackmarblepy) is available on [PyPI](https://pypi.org). To install, it is recommended to use virtual environment and package manager. While [pip](https://packaging.python.org/en/latest/key_projects/#pip) is the usual choice, we recommend using [uv](https://docs.astral.sh/uv/).
 
 #### Using pip
