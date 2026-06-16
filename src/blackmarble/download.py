@@ -1,6 +1,6 @@
 import asyncio
 import datetime
-import json
+
 from dataclasses import dataclass
 from pathlib import Path
 from typing import ClassVar, List
@@ -15,7 +15,12 @@ import pandas as pd
 from httpx import HTTPError
 from pqdm.threads import pqdm
 from pydantic import BaseModel
-from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_exponential
+from tenacity import (
+    retry,
+    retry_if_exception_type,
+    stop_after_attempt,
+    wait_exponential,
+)
 from tqdm.auto import tqdm
 
 from . import TILES, logger
@@ -68,7 +73,7 @@ class BlackMarbleDownloader(BaseModel):
 
     token: str
     directory: Path
-    collection: str = "5200"  # Default to collection-2
+    collection: str = "5200"
     URL: ClassVar[str] = "https://ladsweb.modaps.eosdis.nasa.gov"
 
     def __init__(self, token: str, directory: Path, collection: str = "5200"):
@@ -104,9 +109,9 @@ class BlackMarbleDownloader(BaseModel):
         # Create bounding box
         gdf = pd.concat([gdf, gdf.bounds], axis="columns").round(2)
         gdf["bbox"] = gdf.round(2).apply(
-        lambda row: f"[BBOX]W{row.minx} N{row.maxy} E{row.maxx} S{row.miny}",
-        axis=1,
-    )
+            lambda row: f"[BBOX]W{row.minx} N{row.maxy} E{row.maxx} S{row.miny}",
+            axis=1,
+        )
         async with httpx.AsyncClient(verify=False) as client:
             manifests = []
 
@@ -143,7 +148,6 @@ class BlackMarbleDownloader(BaseModel):
                         manifests.append(pd.DataFrame(page_data.get("content", [])))
 
             manifest = pd.concat(manifests, ignore_index=True)
-            #print(manifest.columns)
             manifest["TileID"] = (
                 manifest["name"].apply(lambda x: x.split(".")[2]).astype(str)
             )
@@ -153,7 +157,7 @@ class BlackMarbleDownloader(BaseModel):
 
     @retry(
         wait=wait_exponential(multiplier=1, min=1, max=60),
-        stop = stop_after_attempt(5),
+        stop=stop_after_attempt(5),
         retry=retry_if_exception_type((HTTPError, InvalidHDF5File)),
         reraise=True,
     )
@@ -174,9 +178,6 @@ class BlackMarbleDownloader(BaseModel):
         filename: pathlib.Path
             Filename of downloaded data file
         """
-        # url = f"{self.URL}{name}"
-        # print(url)
-        # name = name.split("/")[-1]
         url = str(name).strip()
         if not url.startswith("http"):
             url = f"{self.URL}{url}"
@@ -246,7 +247,6 @@ class BlackMarbleDownloader(BaseModel):
         except Exception:
             tmpfile.unlink(missing_ok=True)
             raise
-       
 
     def download(
         self,
@@ -254,6 +254,7 @@ class BlackMarbleDownloader(BaseModel):
         product_id: Product,
         date_range: List[datetime.date],
         skip_if_exists: bool = True,
+        n_jobs: int = 2,
     ):
         """
         Downloads files asynchronously from NASA Black Marble archive.
@@ -290,11 +291,6 @@ class BlackMarbleDownloader(BaseModel):
             pd.DataFrame(date_range, columns=["date"]), how="cross"
         )
 
-        #print(sorted(manifest["TileID"].unique()))
-        #print(sorted(all_combinations["TileID"].unique()))
-
-        # print(all_combinations.head())
-        # print(manifest.head())
         # Merge with manifest to identify missing files
         merged = all_combinations.merge(
             manifest, on=["TileID", "date"], how="left", indicator=True
@@ -312,7 +308,7 @@ class BlackMarbleDownloader(BaseModel):
                 "Some files may be missing due to recent data removals, maintenance periods or changes in data availability.\n"
                 "Please try adjusting the requested date range, check data availability again or report this issue if the problem persists."
             )
-            
+
             raise ValueError(msg)
 
         # Filter files to those intersecting with Black Marble tiles
@@ -320,14 +316,14 @@ class BlackMarbleDownloader(BaseModel):
 
         # Prepare arguments for parallel download
         names = matched["downloadsLink"].tolist()
-        #print(names)
+
         download_args = [(name, skip_if_exists) for name in names]
         total_size = humanize.naturalsize(matched["size"].astype(int).sum())
 
         results = pqdm(
             download_args,
             self._download_file,
-            n_jobs=1,
+            n_jobs=n_jobs,
             argument_type="args",
             desc=f"Downloading ({total_size})...",
             unit="file",
