@@ -2,7 +2,7 @@
 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![PyPI version](https://badge.fury.io/py/blackmarblepy.svg)](https://badge.fury.io/py/blackmarblepy)
-[![License: MPL 2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)
+[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/license/mit)
 ![Python Version](https://img.shields.io/python/required-version-toml?tomlFilePath=https%3A%2F%2Fraw.githubusercontent.com%2Fworldbank%2Fblackmarblepy%2Fmain%2Fpyproject.toml)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10667907.svg)](https://zenodo.org/doi/10.5281/zenodo.10667907)
 [![Downloads](https://static.pepy.tech/badge/blackmarblepy)](https://pepy.tech/project/blackmarblepy)
@@ -21,7 +21,7 @@
     - Customize plot appearance with color palettes, axes labels, titles, and legends.
     - Save visualizations as high-resolution images for presentations or reports.
   - Perform time series analysis on nighttime lights data.
-    - Calculate zonal statistics like mean and sum.
+    - Calculate zonal statistics (via [exactextract](https://isciences.github.io/exactextract/index.html)).
     - Plot time series of nighttime lights data.
 
 ## Documentation
@@ -33,11 +33,6 @@
 The [**BlackMarblePy**](https://pypi.org/project/blackmarblepy) library allows you to interact with and manipulate data from NASA's Black Marble, which provides global nighttime lights data. Below is a guide on how to use the key functionalities of the library.
 
 ### Installation
-
-[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![PyPI version](https://badge.fury.io/py/blackmarblepy.svg)](https://badge.fury.io/py/blackmarblepy)
-[![License: MPL 2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)
-![Python Version](https://img.shields.io/pypi/pyversions/blackmarblepy)
 
 [**BlackMarblePy**](https://pypi.org/project/blackmarblepy) is available on [PyPI](https://pypi.org). To install, it is recommended to use virtual environment and package manager. While [pip](https://packaging.python.org/en/latest/key_projects/#pip) is the usual choice, we recommend using [uv](https://docs.astral.sh/uv/).
 
@@ -148,4 +143,4 @@ Looking for an R implementation? Check out the [blackmarbler](https://github.com
 
 ## License
 
-This projects is licensed under the [**Mozilla Public License**](https://opensource.org/license/mpl-2-0/) - see the **LICENSE** file for details.
+This project is licensed under the [MIT License](https://opensource.org/license/mit) together with the [World Bank IGO Rider](https://github.com/worldbank/.github/blob/main/WB-IGO-RIDER.md). The Rider is purely procedural: it reserves all privileges and immunities enjoyed by the World Bank, without adding restrictions to the MIT permissions. Please review both files before using, distributing or contributing.
