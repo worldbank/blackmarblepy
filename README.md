@@ -60,7 +60,7 @@ uv add blackmarblepy
 Before downloading or extracting [NASA Black Marble data](https://blackmarble.gsfc.nasa.gov), ensure the following:
 
 - You have defined a region of interest `gdf` as a [`geopandas.GeoDataFrame`](https://geopandas.org/en/stable/docs/reference/api/geopandas.GeoDataFrame.html), which represents the area over which data will be queried and downloaded.
-- You have a valid and not expired `token` set (retrieved from your [Earthdata profile](https://urs.earthdata.nasa.gov/profile)). For convenience and security, we [recommend setting your token as an `BLACKMARBLE_TOKEN` environment variable](https://duckduckgo.com/?q=how+to+set+environment+variable+linux+or+mac+or+windows). If not familiar with environment variables, you may pass the token directly as the `token` argument. 
+- You have a valid and not expired `token` set (retrieved from your [Earthdata profile](https://urs.earthdata.nasa.gov/profile)). For convenience and security, we [recommend setting your token as an `BLACKMARBLE_TOKEN` environment variable](https://duckduckgo.com/?q=how+to+set+environment+variable+linux+or+mac+or+windows). If not familiar with environment variables, you may pass the token directly as the `token` argument.
 
 ```python
 import geopandas as gpd
@@ -105,7 +105,7 @@ from blackmarble import BlackMarble, Product
 bm = BlackMarble(token="YOUR_TOKEN", collection="5000")
 
 # For Collection 2 ("5200")
-bm = BlackMarble(token="YOUR_TOKEN", collection="5200") # default
+bm = BlackMarble(token="YOUR_TOKEN", collection="5200")
 ```
 
 ### Full API Reference
