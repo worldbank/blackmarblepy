@@ -43,7 +43,6 @@ dependencies = [
 	"pqdm>=0.2.0",
 	"pydantic>2,<3",
 	"rasterio>=1,<2",
-	"rasterstats>=0.20.0",
 	"rioxarray>=0.15.1,<0.18.0",
 	"tenacity>=9.1.2",
 	"tqdm>=4.67.1",
