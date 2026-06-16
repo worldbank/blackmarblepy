@@ -487,8 +487,7 @@ class BlackMarble:
 
         # Combine along time dimension
         combined = (
-            xr
-            .concat(clipped_arrays, dim="time", combine_attrs="drop_conflicts")
+            xr.concat(clipped_arrays, dim="time", combine_attrs="drop_conflicts")
             .to_dataset(name=variable, promote_attrs=True)
             .sortby("time")
             .drop_vars(["band", "spatial_ref"], errors="ignore")
