@@ -15,7 +15,7 @@ import xarray as xr
 
 from exactextract import exact_extract
 from pydantic import ConfigDict, validate_call
-from rasterio.transform import from_bounds, from_origin
+from rasterio.transform import from_bounds
 from rioxarray.merge import merge_arrays
 from shapely.geometry import mapping
 from tqdm.auto import tqdm
