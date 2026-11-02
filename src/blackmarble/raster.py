@@ -1,6 +1,5 @@
 import datetime
 from pathlib import Path
-from typing import List, Optional, Union
 
 import geopandas as gpd
 
@@ -12,12 +11,12 @@ from .types import Product
 def bm_raster(
     gdf: gpd.GeoDataFrame,
     product_id: Product,
-    date_range: Union[datetime.date, List[datetime.date]],
+    date_range: datetime.date | list[datetime.date],
     token: str,
-    variable: Optional[str] = None,
-    drop_values_by_quality_flag: List[int] = [],
+    variable: str | None = None,
+    drop_values_by_quality_flag: list[int] = [],
     check_all_tiles_exist: bool = True,
-    output_directory: Optional[Path] = None,
+    output_directory: Path | None = None,
     output_skip_if_exists: bool = True,
 ):
     """Create a stack of nighttime lights rasters by retrieiving from `NASA Black Marble <https://blackmarble.gsfc.nasa.gov>`_ data.

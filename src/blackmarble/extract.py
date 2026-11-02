@@ -1,6 +1,5 @@
 import datetime
 from pathlib import Path
-from typing import List, Optional, Union
 
 import geopandas as gpd
 import pandas as pd
@@ -12,13 +11,13 @@ from .types import Product
 def bm_extract(
     gdf: gpd.GeoDataFrame,
     product_id: Product,
-    date_range: Union[datetime.date, List[datetime.date]],
+    date_range: datetime.date | list[datetime.date],
     token: str,
-    aggfunc: Union[str, List[str]] = ["sum"],
-    variable: Optional[str] = None,
-    drop_values_by_quality_flag: List[int] = [],
+    aggfunc: str | list[str] = ["sum"],
+    variable: str | None = None,
+    drop_values_by_quality_flag: list[int] = [],
     check_all_tiles_exist: bool = True,
-    output_directory: Optional[Path] = None,
+    output_directory: Path | None = None,
     output_skip_if_exists: bool = True,
 ) -> pd.DataFrame:
     """Extract and aggregate nighttime lights zonal statistics from `NASA Black Marble <https://blackmarble.gsfc.nasa.gov>`_.
