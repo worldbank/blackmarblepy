@@ -2,7 +2,7 @@ import asyncio
 import datetime
 from dataclasses import dataclass
 from pathlib import Path
-from typing import ClassVar, List
+from typing import ClassVar
 from urllib.parse import urlencode
 
 import geopandas
@@ -28,8 +28,6 @@ from .types import Product
 
 class InvalidHDF5File(Exception):
     """Raised when the downloaded HDF5 file is invalid or corrupted."""
-
-    pass
 
 
 def chunks(ls, n):
@@ -83,7 +81,7 @@ class BlackMarbleDownloader(BaseModel):
         self,
         gdf: geopandas.GeoDataFrame,
         product_id: Product,
-        date_range: datetime.date | List[datetime.date],
+        date_range: datetime.date | list[datetime.date],
     ) -> pd.DataFrame:
         """Retrieve NASA Black Marble data manifest. i.d., download links.
 
@@ -212,20 +210,22 @@ class BlackMarbleDownloader(BaseModel):
                 total = int(response.headers.get("Content-Length", 0))
                 written = 0
 
-                with open(tmpfile, "wb") as f:
-                    with tqdm(
+                with (
+                    open(tmpfile, "wb") as f,
+                    tqdm(
                         total=total,
                         unit="B",
                         unit_scale=True,
                         leave=None,
-                    ) as pbar:
-                        pbar.set_description(f"Downloading {name}...")
-                        for chunk in response.iter_bytes():
-                            if not chunk:
-                                continue
-                            f.write(chunk)
-                            written += len(chunk)
-                            pbar.update(len(chunk))
+                    ) as pbar,
+                ):
+                    pbar.set_description(f"Downloading {name}...")
+                    for chunk in response.iter_bytes():
+                        if not chunk:
+                            continue
+                        f.write(chunk)
+                        written += len(chunk)
+                        pbar.update(len(chunk))
 
             if total and written != total:
                 tmpfile.unlink(missing_ok=True)
@@ -251,7 +251,7 @@ class BlackMarbleDownloader(BaseModel):
         self,
         gdf: geopandas.GeoDataFrame,
         product_id: Product,
-        date_range: List[datetime.date],
+        date_range: list[datetime.date],
         skip_if_exists: bool = True,
         n_jobs: int = 2,
     ):

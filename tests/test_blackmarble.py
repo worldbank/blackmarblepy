@@ -23,9 +23,8 @@ def test_init_sets_token_from_env():
 
 
 def test_init_raises_when_no_token():
-    with patch.dict("os.environ", {}, clear=True):
-        with pytest.raises(ValueError):
-            BlackMarble()
+    with patch.dict("os.environ", {}, clear=True), pytest.raises(ValueError):
+        BlackMarble()
 
 
 def test_output_directory_returns_path(tmp_path):

@@ -3,7 +3,7 @@ import os
 import re
 import tempfile
 from pathlib import Path
-from typing import List, Literal, Optional, Union
+from typing import Literal
 
 import geopandas as gpd
 import h5py
@@ -12,7 +12,6 @@ import pandas as pd
 import rasterio
 import rioxarray
 import xarray as xr
-
 from exactextract import exact_extract
 from pydantic import ConfigDict, validate_call
 from rasterio.transform import from_bounds
@@ -62,10 +61,10 @@ class BlackMarble:
 
     def __init__(
         self,
-        token: Optional[str] = None,
+        token: str | None = None,
         check_all_tiles_exist: bool = True,
-        drop_values_by_quality_flag: List[int] = [255],
-        output_directory: Optional[Path] = None,
+        drop_values_by_quality_flag: list[int] = [255],
+        output_directory: Path | None = None,
         output_skip_if_exists: bool = True,
         collection: Literal["5000", "5200"] = "5200",
     ):
@@ -254,7 +253,7 @@ class BlackMarble:
         return np.where(x == fill_value, np.nan, x) if fill_value is not None else x
 
     def _mask_by_quality_flag(
-        self, data: np.ndarray, qf: np.ndarray, drop_values_by_quality_flag: List[int]
+        self, data: np.ndarray, qf: np.ndarray, drop_values_by_quality_flag: list[int]
     ) -> np.ndarray:
         """
         Set elements in `data` to np.nan where the corresponding element in `qf` matches any value in `drop_values_by_quality_flag`.
@@ -296,7 +295,7 @@ class BlackMarble:
         f: Path,
         /,
         variable: str = None,
-        drop_values_by_quality_flag: List[int] = [255],
+        drop_values_by_quality_flag: list[int] = [255],
         output_directory: Path = None,
     ):
         """
@@ -445,7 +444,7 @@ class BlackMarble:
             Dataset containing the processed variable, merged, clipped to the region of interest, and combined along the time dimension.
         """
 
-        def pivot_paths_by_date(paths: List[Path]):
+        def pivot_paths_by_date(paths: list[Path]):
             results = {}
             for p in paths:
                 key = datetime.datetime.strptime(p.stem.split(".")[1], "A%Y%j").date()
@@ -507,8 +506,8 @@ class BlackMarble:
         self,
         gdf: gpd.GeoDataFrame,
         product_id: Product,
-        date_range: datetime.date | List[datetime.date],
-        variable: Optional[str] = None,
+        date_range: datetime.date | list[datetime.date],
+        variable: str | None = None,
     ) -> xr.Dataset:
         """Create a stack of nighttime lights rasters by retrieiving from `NASA Black Marble <https://blackmarble.gsfc.nasa.gov>`_ data.
 
@@ -576,9 +575,9 @@ class BlackMarble:
         self,
         gdf: gpd.GeoDataFrame,
         product_id: Product,
-        date_range: Union[datetime.date, List[datetime.date]],
-        variable: Optional[str] = None,
-        aggfunc: Union[str, List[str]] = ["sum"],
+        date_range: datetime.date | list[datetime.date],
+        variable: str | None = None,
+        aggfunc: str | list[str] = ["sum"],
     ) -> pd.DataFrame:
         """Extract and aggregate nighttime lights zonal statistics from `NASA Black Marble <https://blackmarble.gsfc.nasa.gov>`_.
 
