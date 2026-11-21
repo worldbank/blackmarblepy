@@ -458,7 +458,7 @@ class BlackMarble:
         for date in tqdm(
             date_range, desc="COLLATING TILES | Processing...", unit="date"
         ):
-            h5_files = pivoted_paths.get(date)
+            h5_files = pivoted_paths.get(date, [])
             data_arrays = [
                 rioxarray.open_rasterio(
                     self._h5_to_geotiff(
@@ -556,7 +556,10 @@ class BlackMarble:
         # Download NASA Black Marble tiles for the specified region and dates and
         # returns a mapping of file paths grouped by date for further processing.
         downloader = BlackMarbleDownloader(
-            self._token, self.output_directory, collection=self.collection
+            self._token,
+            self.output_directory,
+            collection=self.collection,
+            check_all_tiles_exist=self.check_all_tiles_exist,
         )
         pathnames = downloader.download(
             gdf=gdf,
