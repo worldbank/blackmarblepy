@@ -623,7 +623,7 @@ class BlackMarble:
 
         results = []
         for time in da["time"].values:
-            rast = da["NearNadir_Composite_Snow_Free"].sel(time=time)
+            rast = da[variable].sel(time=time)
             stats = exact_extract(
                 rast=rast,
                 vec=gdf,
