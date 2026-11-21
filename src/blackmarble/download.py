@@ -68,16 +68,31 @@ class BlackMarbleDownloader(BaseModel):
 
     collection: str
         NASA Black Marble collection version ('5000' for collection-1, '5200' for collection-2)
+
+    check_all_tiles_exist: bool
+        Whether to raise an error when a tile is missing from the manifest. If False, missing tiles are skipped with a warning.
     """
 
     token: str
     directory: Path
     collection: str = "5200"
+    check_all_tiles_exist: bool = True
     URL: ClassVar[str] = "https://ladsweb.modaps.eosdis.nasa.gov"
 
-    def __init__(self, token: str, directory: Path, collection: str = "5200"):
+    def __init__(
+        self,
+        token: str,
+        directory: Path,
+        collection: str = "5200",
+        check_all_tiles_exist: bool = True,
+    ):
         nest_asyncio.apply()
-        super().__init__(token=token, directory=directory, collection=collection)
+        super().__init__(
+            token=token,
+            directory=directory,
+            collection=collection,
+            check_all_tiles_exist=check_all_tiles_exist,
+        )
 
     async def get_manifest(
         self,
@@ -302,6 +317,7 @@ class BlackMarbleDownloader(BaseModel):
                 logger.warning(
                     f"Tile '{row['TileID']}' for date '{row['date']}' could not be found in the manifest."
                 )
+        if not missing_tiles.empty and self.check_all_tiles_exist:
             msg = (
                 f"The manifest retrieved from NASA DAAC ({self.URL}) indicates that {len(missing_tiles)} required files could not found.\n"
                 "Some files may be missing due to recent data removals, maintenance periods or changes in data availability.\n"
